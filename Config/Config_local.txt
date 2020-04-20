@@ -1,0 +1,77 @@
+################################################################################
+# Magma-UT
+# Copyright (C) 2013–2020 Ulrich Thiel
+# Licensed under GNU GPLv3, see COPYING.
+# https://github.com/ulthiel/magma-ut
+# math@ulthiel.com
+#
+# Magma-UT environment variables
+#
+# This file is sourced by the startup script magma-ut or magma-ut.bat and the
+# variables below are defined as environment variables before starting Magma.
+# This works both under Unix and Windows (the # comments are also ignored
+# under Windows).
+#
+# You can use an already defined variable VAR via $VAR under Unix or %VAR%
+# under Windows. The variable MAGMA_UT_DIR will be set to the MAGMA_UT base
+# directory by the startup script, so you can use this one for example.
+#
+# NOTE FOR DEVELOPERS:
+# The startup script also sources the file Config_local.txt if it exists.
+# This allows you to add another config with local parameters which is then
+# not in the Git repository: you don't want your Pushover token etc. in the
+# public repository!
+#
+################################################################################
+
+################################################################################
+# You may manually define the directory of the Magma executable here
+################################################################################
+#MAGMA_UT_MAGMA_DIR=
+
+################################################################################
+# Names and directories of databases.
+# This is a comma separated list (no space between commas).
+# Path is ABSOLUTE. You can use the variable $MAGMA_UT_BASE_DIR.
+################################################################################
+#MAGMA_UT_DB_NAMES=
+
+#MAGMA_UT_DB_DIRS=
+
+################################################################################
+# MAGMA_UT temporary directory (is Tmp in the base directory if not set)
+################################################################################
+#MAGMA_UT_TEMP_DIR=
+
+################################################################################
+# HTML viewer
+################################################################################
+#MAGMA_UT_HTML_VIEWER=
+
+################################################################################
+# Text editor
+################################################################################
+#MAGMA_UT_EDITOR=
+
+################################################################################
+# Pushover user and token to send notifications to your phone.
+# You need to set up an account at https://pushover.net.
+################################################################################
+#MAGMA_UT_PUSHOVER_USER=
+#MAGMA_UT_PUSHOVER_TOKEN=
+
+################################################################################
+# We set Magma memory limit to system total memory minus MAGMA_UT_SAVE_MEMORY.
+# It's best to leave at least 2 GB for the system; this prevents swapping.
+################################################################################
+MAGMA_UT_SAVE_MEM=2147483648
+
+################################################################################
+# Chunk size in bytes for POpen reading in SystemCall. 128kiB seems best.
+################################################################################
+MAGMA_UT_POPEN_CHUNK_SIZE=131072
+
+################################################################################
+# SQLite command
+################################################################################
+MAGMA_UT_SQLITE_COMMAND=sqlite3

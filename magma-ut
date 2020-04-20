@@ -1,0 +1,178 @@
+#!/usr/bin/env bash
+################################################################################
+# Magma-UT
+# Copyright (C) 2020 Ulrich Thiel
+# Licensed under GNU GPLv3, see COPYING.
+# https://github.com/ulthiel/magma-ut
+# thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+#
+# Start Magma-UT (and automatically set the necessary environment variables)
+#
+################################################################################
+
+################################################################################
+# Set up all the environment variables for Magma-UT
+################################################################################
+
+# Magma-UT base directory (neat trick)
+MAGMA_UT_BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export MAGMA_UT_BASE_DIR=$MAGMA_UT_BASE_DIR
+
+# OS type is always Unix here
+export MAGMA_UT_OS_TYPE="Unix"
+export MAGMA_UT_OS=`uname -s`
+
+# Check if there's a local config; if not, copy default config
+if [ ! -f $MAGMA_UT_BASE_DIR/Config/Config.txt ]; then
+	cp $MAGMA_UT_BASE_DIR/Config/Config_org.txt $MAGMA_UT_BASE_DIR/Config/Config.txt
+fi
+
+# Source the Variables file (again, neat trick)
+set -a
+. $MAGMA_UT_BASE_DIR/Config/Config.txt
+set +a
+
+# If MAGMA_UT_TEMP_DIR not defined (in the Variables file), set to Tmp
+#if [ -z ${MAGMA_UT_TEMP_DIR+x} ]; then
+#    export MAGMA_UT_TEMP_DIR=$MAGMA_UT_BASE_DIR/Tmp
+#fi
+#mkdir -p "$MAGMA_UT_TEMP_DIR"
+
+# Get Magma-UT version. I'll cd into the Magma-UT directory to avoid git -C
+# since this didn't exist before Git 1.8.5 (Nov 2013).
+curdir=`pwd`
+cd "$MAGMA_UT_BASE_DIR"
+git describe >/dev/null 2>/dev/null
+if [ $? -eq 0 ]; then
+    export MAGMA_UT_VER=`git describe`
+else
+    cat Version.txt >/dev/null 2>/dev/null
+    if [ $? -eq 0 ]; then
+        export MAGMA_UT_VER=`cat Version.txt`
+    fi
+fi
+cd "$curdir"
+
+# Check if curl or wget is available. I prefer curl and will use it if it's
+# available. Otherwise, fallback to wget.
+if command -v "curl" >/dev/null 2>&1; then
+    export MAGMA_UT_DWN_TOOL="curl"
+else
+    if command -v "wget" >/dev/null 2>&1; then
+        export MAGMA_UT_DWN_TOOL="wget"
+    fi
+fi
+
+# Get the OS version (more detailed than MAGMA_UT_OS)
+if [ "$MAGMA_UT_OS" == "Darwin" ]; then
+    #Mac OS
+    OS=`sw_vers -productName`
+    VER=`sw_vers -productVersion`
+elif [ -f /etc/os-release ]; then
+    # freedesktop.org and systemd
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+elif type lsb_release >/dev/null 2>&1; then
+    # linuxbase.org
+    OS=$(lsb_release -si)
+    VER=$(lsb_release -sr)
+elif [ -f /etc/lsb-release ]; then
+    # For some versions of Debian/Ubuntu without lsb_release command
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+elif [ -f /etc/debian_version ]; then
+    # Older Debian/Ubuntu/etc.
+    OS=Debian
+    VER=$(cat /etc/debian_version)
+else
+    # Fall back to uname
+    OS=$(uname -s)
+    VER=$(uname -r)
+fi
+
+export MAGMA_UT_OS_VER="$OS $VER"
+
+export MAGMA_UT_HOSTNAME=`hostname`
+
+if [ "$MAGMA_UT_OS" == "Darwin" ]; then
+    export MAGMA_UT_CPU=`sysctl -n machdep.cpu.brand_string`
+else
+    export MAGMA_UT_CPU=`cat /proc/cpuinfo | grep 'model name' | tail -n 1 | awk -v FS=': ' '{print $2}'`
+fi
+
+export MAGMA_UT_OS_ARCH=`uname -m`
+
+# Set HTML viewer
+if [ -z ${MAGMA_UT_HTML_VIEWER+x} ]; then
+		if [ "$MAGMA_UT_OS" == "Darwin" ]; then
+				export MAGMA_UT_HTML_VIEWER="open"
+		fi
+fi
+
+# Get memory
+if [ "$MAGMA_UT_OS" == "Darwin" ]; then
+    export MAGMA_UT_TOTAL_MEM=`sysctl -n hw.memsize`
+else
+    export MAGMA_UT_TOTAL_MEM=`grep MemTotal /proc/meminfo | awk '{print $2}'`
+fi
+
+################################################################################
+# Find Magma (first user defined path, then environment path, then trying
+# some directories, then give up).
+################################################################################
+MAGMA_EXEC=""
+
+if [ ! -z ${MAGMA_UT_MAGMA_DIR+x} ]; then
+  export MAGMA_DIR=$MAGMA_UT_MAGMA_DIR
+  export MAGMA_EXEC=$MAGMA_DIR/magma
+fi
+
+if [ "$MAGMA_EXEC" == "" ]; then
+	if command -v "magma" >/dev/null 2>&1; then
+		MAGMA_EXEC="magma"
+	fi
+fi
+
+if [ "$MAGMA_EXEC" == "" ]; then
+	if [ -f "/Applications/Magma/magma" ]; then
+		MAGMA_EXEC="/Applications/Magma/magma"
+	fi
+fi
+
+if [ "$MAGMA_EXEC" == "" ]; then
+	if [ -f "/usr/local/bin/magma" ]; then
+		MAGMA_EXEC="/usr/local/bin/magma"
+	fi
+fi
+
+if [ "$MAGMA_EXEC" == "" ]; then
+	if [ -f "/usr/local/magma/magma" ]; then
+		MAGMA_EXEC="/usr/local/magma/magma"
+	fi
+fi
+
+if [ "$MAGMA_EXEC" == "" ]; then
+	if [ -f "/usr/bin/magma" ]; then
+		MAGMA_EXEC="/usr/bin/magma"
+	fi
+fi
+
+if [ "$MAGMA_EXEC" == "" ]; then
+    echo -e "\033[0;31mError: cannot find Magma."
+    echo -e "Either add Magma installation directory in the Config file or in the PATH environment variable.\033[0m"
+    exit 1
+fi
+
+################################################################################
+# Now, start Magma with the Startup script from the Config directory
+################################################################################
+
+# Add the Magma-UT spec file to the Magma startup spec variable
+export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Sources/Magma-UT/Magma-UT.s.m:$MAGMA_USER_SPEC
+
+# Set the Magma-UT startup file as Magma startup file
+export MAGMA_STARTUP_FILE=$MAGMA_UT_BASE_DIR/Sources/Magma-UT/Startup/Startup.m
+
+$MAGMA_EXEC -b "$@"
