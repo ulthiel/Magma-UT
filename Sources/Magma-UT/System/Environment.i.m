@@ -72,16 +72,6 @@ intrinsic GetUnixTool(name::MonStgElt) -> MonStgElt
 end intrinsic;
 
 //##############################################################################
-//  Editor for viewing text files
-//##############################################################################
-intrinsic GetEditor() -> MonStgElt
-{}
-
-  return GetEnv("MAGMA_UT_EDITOR");
-
-end intrinsic;
-
-//##############################################################################
 //  Pushover token
 //##############################################################################
 intrinsic IsPushoverTokenDefined() -> BoolElt
@@ -173,6 +163,16 @@ intrinsic GetPOpenChunkSize() -> RngIntElt
 {The operating system architecture.}
 
   return StringToInteger(GetEnv("MAGMA_UT_POPEN_CHUNK_SIZE"));
+
+end intrinsic;
+
+//##############################################################################
+//  Editor for viewing text files
+//##############################################################################
+intrinsic GetEditor() -> MonStgElt
+{}
+
+  return GetEnv("MAGMA_UT_EDITOR");
 
 end intrinsic;
 

@@ -32,12 +32,6 @@ set -a
 . $MAGMA_UT_BASE_DIR/Config/Config.txt
 set +a
 
-# If MAGMA_UT_TEMP_DIR not defined (in the Variables file), set to Tmp
-#if [ -z ${MAGMA_UT_TEMP_DIR+x} ]; then
-#    export MAGMA_UT_TEMP_DIR=$MAGMA_UT_BASE_DIR/Tmp
-#fi
-#mkdir -p "$MAGMA_UT_TEMP_DIR"
-
 # Get Magma-UT version. I'll cd into the Magma-UT directory to avoid git -C
 # since this didn't exist before Git 1.8.5 (Nov 2013).
 curdir=`pwd`

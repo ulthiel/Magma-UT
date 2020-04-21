@@ -56,8 +56,8 @@ del "%MAGMA_UT_BASE_DIR%\Config\Config_win.txt"
 
 :: Replace forward slash by backward slash in DB directories
 if defined MAGMA_UT_DB_DIRS (
-    for /F "tokens=1 USEBACKQ" %%F in (`echo %MAGMA_UT_DB_DIRS% ^| "%MAGMA_UT_BASE_DIRS%\Tools\UnixTools\sed.exe" -e "s/\//\\/g"`) DO (
-        set MAGMA_UT_DB_DIR=%%F
+    for /F "tokens=1 USEBACKQ" %%F in (`echo %MAGMA_UT_DB_DIRS% ^| "%MAGMA_UT_BASE_DIR%\Tools\UnixTools\sed.exe" -e "s/\//\\/g"`) DO (
+        set MAGMA_UT_DB_DIRS=%%F
     )
 )
 

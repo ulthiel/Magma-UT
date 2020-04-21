@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -136,11 +136,21 @@ intrinsic AddDB(url::MonStgElt, dbname::MonStgElt)
 		error "Git LFS extension not installed. See https://git-lfs.github.com.";
 	end try;
 
+	//Check if directory exists already
+	dir := MakePath([GetBaseDir(), "Databases"]);
+	if DirectoryExists(MakePath([dir, dbname])) then
+		error "Database with this name exists already";
+	end if;
+
 	//Add DB
 	try
-		dir := MakePath([GetBaseDir(), "Databases"]);
 		MakeDirectory(dir);
-		res := SystemCall("cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" "*dbname);
+		if GetOSType() eq "Windows" then
+			cmd := "cd \""*dir*"\" && set \"GIT_LFS_SKIP_SMUDGE=1\" & git submodule add "*url*" \""*dbname*"\"";
+		else
+			cmd := "cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*MakePath([dir,dbname])*"\"";
+		end if;
+		res := SystemCall(cmd);
 	catch e
 		error "Error adding database";
 	end try;
@@ -162,14 +172,24 @@ intrinsic AddDB(url::MonStgElt, dbname::MonStgElt)
 		elif Position(line, "#MAGMA_UT_DB_DIRS=") ne 0 then
 			newconfig *:= "MAGMA_UT_DB_DIRS=$MAGMA_UT_BASE_DIR/Databases/"*dbname;
 		elif Position(line, "MAGMA_UT_DB_DIRS=") ne 0 then
-			newconfig *:= line*","*dir;
+			newconfig *:= line*",$MAGMA_UT_BASE_DIR/Databases/"*dbname;
 		else
 			newconfig *:= line;
 		end if;
 		newconfig *:= "\n";
 	end while;
 
+	delete config; //closed configfile
 	Write(configfile, newconfig : Overwrite:=true);
+
+	//The newline \n under Windows becomes \r\n, and then it doesn't work
+	//under Unix anymore on the same system. Hence, rewrite config file to Unix
+	//line endings.
+	if GetOSType() eq "Windows" then
+		configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
+		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
+		res := SystemCall(cmd);
+	end if;
 
 	print "Success. Please restart Magma-UT now.";
 
@@ -177,6 +197,7 @@ end intrinsic;
 
 intrinsic AddDB(url::MonStgElt)
 {}
+
 
 	//Determine repo name
 	dbname := url;
