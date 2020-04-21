@@ -46,9 +46,9 @@ git describe >/dev/null 2>/dev/null
 if [ $? -eq 0 ]; then
     export MAGMA_UT_VER=`git describe`
 else
-    cat Version.txt >/dev/null 2>/dev/null
+    cat version.txt >/dev/null 2>/dev/null
     if [ $? -eq 0 ]; then
-        export MAGMA_UT_VER=`cat Version.txt`
+        export MAGMA_UT_VER=`cat version.txt`
     fi
 fi
 cd "$curdir"
