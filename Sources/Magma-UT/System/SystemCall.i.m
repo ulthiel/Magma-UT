@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -33,7 +33,11 @@ intrinsic SystemCall(Command::MonStgElt : ChunkSize:=0) -> MonStgElt
   end if;
 
   //Execute command and echo __MAGMA_UT_SYSTEMCALL_FAILED__ if failed
-  cmd := "("*Command*" 2>/dev/null) || echo __MAGMA_UT_SYSTEMCALL_FAILED__";
+  if GetOSType() eq "Unix" then
+    cmd := "("*Command*" 2>/dev/null) || echo __MAGMA_UT_SYSTEMCALL_FAILED__";
+  else
+    cmd := "("*Command*" 2>NUL) || echo __MAGMA_UT_SYSTEMCALL_FAILED__";
+  end if;
   pipe := POpen(cmd, "r");
 
   output := "";
