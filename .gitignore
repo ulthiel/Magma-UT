@@ -1,3 +1,4 @@
 *.DS_Store
 *.sig
 Config.txt
+Tools/Selfcheck/Log
