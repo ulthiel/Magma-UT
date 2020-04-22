@@ -9,6 +9,10 @@
 #
 # Run selfcheck on a package. This is quite a nice and generic script actually.
 #
+# Run ./selfcheck -p=PACKAGE_NAME (SELFCHECKS)
+#
+# If SELFCHECKS are not specified, then all available selfchecks are executed.
+#
 # This script needs to be started from this folder to not mess up paths.
 # It will then load the files given as arguments into Magma and
 # report any errors, also things like when a command didn't exist.
@@ -24,12 +28,6 @@
 #
 # Is then X is not equal to X, this throws an error. You should look at the
 # examples provided.
-#
-# If no argument is given, the script will go through all the files in the
-# selfcheck directory of the package.
-#
-# If the option --report is given, the result will be reported to my
-# server.
 #
 ################################################################################
 
@@ -71,8 +69,6 @@ if [ -z ${SELFCHECKS+x} ]; then
   cd ../../Packages/$PACKAGE/Selfchecks/
   SELFCHECKS=`(echo *.m)`
   cd ../../../Tools/Selfcheck
-else
-  SELFCHECKS="$@"
 fi
 
 # Gather some system information for reporting

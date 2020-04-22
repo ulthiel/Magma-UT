@@ -35,8 +35,8 @@ intrinsic SendNotification(msg::MonStgElt)
     end if;
 
     //I don't want to spit out a runtime error, so just a debug message.
-    if res ne 0 then
-        vprint MAGMA_UT, 1: "Error sending notification message.";
-    end if;
+    //if res ne 0 then
+    //    vprint MAGMA_UT, 1: "Error sending notification message.";
+    //end if;
 
 end intrinsic;

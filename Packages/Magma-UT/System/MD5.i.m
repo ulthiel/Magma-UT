@@ -43,7 +43,7 @@ intrinsic MD5OfString(str::MonStgElt) -> MonStgElt
 
   //We don't have a bidirectional pipe really (not at all under Windows, and the
   //Unix one is unrealiable. So, I write stuff to a file.
-  file := MakePath([GetChampTempDir(), Tempname("md5str")]);
+  file := MakePath([GetTempDir(), Tempname("md5str")]);
   Write(file, str : Overwrite:=true);
   md5 := MD5OfFile(file);
   DeleteFile(file);
