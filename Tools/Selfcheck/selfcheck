@@ -11,6 +11,10 @@
 #
 # Run ./selfcheck -p=PACKAGE_NAME (SELFCHECKS)
 #
+# e.g.
+#
+# ./selfcheck -p=Magma-UT Files MD5 Strings
+#
 # If SELFCHECKS are not specified, then all available selfchecks are executed.
 #
 # This script needs to be started from this folder to not mess up paths.
@@ -40,6 +44,7 @@ fi
 
 # Parse arguments
 # Cheers to https://pretzelhands.com/posts/command-line-flags
+SELFCHECKS=()
 for arg in "$@"
 do
   case $arg in
@@ -53,10 +58,15 @@ do
     ;;
     *)
     SELFCHECKS+=("$1")
+    echo "$1"
     shift # Remove generic argument from processing
     ;;
   esac
 done
+
+echo ""
+echo $SELFCHECKS
+exit 0
 
 # Check if package specified
 if [ -z ${PACKAGE+x} ]; then
@@ -170,7 +180,8 @@ SetQuitOnError(true);
 AttachSpec("../../Packages/$PACKAGE/$PACKAGE.s.m");
 printf "MAGMA_UT_SELFCHECK_MAGMA=%o\n", GetVersionString();
 MAGMA_UT_SELFCHECK_TIME := Cputime();
-load "../../Packages/$PACKAGE/Selfchecks/$f";
+assert FileExists("../../Packages/$PACKAGE/Selfchecks/$NAME.m");
+load "../../Packages/$PACKAGE/Selfchecks/$NAME.m";
 printf "MAGMA_UT_SELFCHECK_TIME=%o\n", Cputime(MAGMA_UT_SELFCHECK_TIME);
 printf "MAGMA_UT_SELFCHECK_MEM=%o\n", Round(GetMemoryUsage()/1000^2);
 DeleteFile("Log/$NAME.lck");

@@ -1,6 +1,6 @@
 Checksum/Adler32.i.m
 
-Database/Database.i.m
+Databases/Databases.i.m
 
 Misc/VersionString.i.m
 
