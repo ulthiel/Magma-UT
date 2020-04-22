@@ -164,9 +164,9 @@ fi
 ################################################################################
 
 # Add the Magma-UT spec file to the Magma startup spec variable
-export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Sources/Magma-UT/Magma-UT.s.m:$MAGMA_USER_SPEC
+export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Magma-UT.s.m:$MAGMA_USER_SPEC
 
 # Set the Magma-UT startup file as Magma startup file
-export MAGMA_STARTUP_FILE=$MAGMA_UT_BASE_DIR/Sources/Magma-UT/Startup/Startup.m
+export MAGMA_STARTUP_FILE=$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Startup/Startup.m
 
 $MAGMA_EXEC -b "$@"
