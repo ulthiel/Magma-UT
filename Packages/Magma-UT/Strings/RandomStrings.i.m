@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -63,7 +63,7 @@ Unit can be one of B, kB, MB, GB, KiB, MiB, GiB.}
     if not GetOSType() eq "Unix" then
       error "Method urandom only available under Unix.";
     end if;
-    cmd := Sprintf("cat /dev/urandom | LC_CTYPE=C tr -dc [:print:] | head -c %o & exec 1>&-", n);
+    cmd := Sprintf("cat /dev/urandom | LC_ALL=C tr -dc [:print:] | head -c %o & exec 1>&-", n);
     ret := SystemCall(cmd);
     return Substring(ret, 1, n);
 
