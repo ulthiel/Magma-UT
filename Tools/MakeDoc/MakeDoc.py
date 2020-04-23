@@ -120,3 +120,77 @@ for intrinsic in sorted(intrinsics.keys()):
     docfile.write(desc+"\n")
 docfile.write("</body></html>")
 docfile.close()
+
+
+# Find all functions called in selfchecks
+selfchecked = set()
+for dirpath, dirnames, filenames in os.walk("Selfchecks"):
+  for filename in [f for f in filenames if f.endswith(".m")]:
+    checkfile = os.path.join(dirpath, filename)
+    with open(checkfile) as f:
+      content = f.readlines()
+    content = [x.strip() for x in content]
+    for line in content:
+      m = re.findall('([a-zA-Z0-9_]+)\(', line)
+      for match in m:
+        selfchecked.add(match)
+
+intrinsicsshort = set()
+intrinsicsshortsource = dict()
+for intrinsic in intrinsics:
+  #m = re.search('(.*)\(', intrinsic)
+  #f = m.group(1)
+  p = intrinsic.find('(')
+  f = intrinsic[:p]
+  intrinsicsshort.add(f)
+  intrinsicsshortsource[f] = intrinsics[intrinsic]["Source"]
+
+notchecked = sorted(intrinsicsshort.difference(selfchecked))
+
+docfile = open("Doc/Intrinsics Table.html","w")
+docfile.write("""
+<html>
+<head>
+  <title>"""+package+""" SelfChecks</title>
+  <link rel="stylesheet" type="text/css" media="all" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#example').DataTable( {
+        "paging":   false,
+        "ordering": true,
+        "info":     false,
+        "order": [[ 2, "desc"] , [1, "asc" ], [0, "asc"]]
+    } );
+} );
+</script>
+</head>
+<body>
+""")
+docfile.write("<h1>"+package+" Intrinsics and Selfchecks</h1>\n")
+docfile.write("<table id=\"example\" class=\"display\">\n")
+docfile.write("""
+<thead>
+<tr>
+<th>Intrinsic</th>
+<th>Source</th>
+<th>Has selfcheck</th>
+</tr>
+</thead>
+<tbody>
+""")
+
+for f in sorted(intrinsicsshort):
+  if f in selfchecked:
+    checked = "&#10003"
+    str = "<tr>"
+  else:
+    checked = "&#10007"
+    str = "<tr style=\"color:red\">"
+
+  docfile.write(str+"<td>"+f+"</td><td>"+intrinsicsshortsource[f]+"</td><td>"+checked+"</td></tr>\n")
+
+docfile.write("</tbody></table>\n")
+docfile.write("</body></html>")
