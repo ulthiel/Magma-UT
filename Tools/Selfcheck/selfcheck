@@ -9,13 +9,17 @@
 #
 # Run selfcheck on a package. This is quite a nice and generic script actually.
 #
-# Run ./selfcheck -p=PACKAGE_NAME (SELFCHECKS)
+# Run ./selfcheck -p=PACKAGE_NAME (SELFCHECK1 SELFCHECK2 ...)
 #
 # e.g.
 #
 # ./selfcheck -p=Magma-UT Files MD5 Strings
 #
-# If SELFCHECKS are not specified, then all available selfchecks are executed.
+# Running
+#
+# ./selfcheck -p=Magma-UT
+#
+# runs all selfchecks.
 #
 # This script needs to be started from this folder to not mess up paths.
 # It will then load the files given as arguments into Magma and
@@ -44,7 +48,6 @@ fi
 
 # Parse arguments
 # Cheers to https://pretzelhands.com/posts/command-line-flags
-SELFCHECKS=()
 for arg in "$@"
 do
   case $arg in
@@ -57,16 +60,11 @@ do
     shift # Remove --package= from processing
     ;;
     *)
-    SELFCHECKS+=("$1")
-    echo "$1"
+    SELFCHECKS="$SELFCHECKS $1"
     shift # Remove generic argument from processing
     ;;
   esac
 done
-
-echo ""
-echo $SELFCHECKS
-exit 0
 
 # Check if package specified
 if [ -z ${PACKAGE+x} ]; then
