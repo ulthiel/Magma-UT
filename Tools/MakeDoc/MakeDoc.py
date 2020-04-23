@@ -137,6 +137,7 @@ for dirpath, dirnames, filenames in os.walk("Selfchecks"):
 
 intrinsicsshort = set()
 intrinsicsshortsource = dict()
+intrinsicscommented = dict()
 for intrinsic in intrinsics:
   #m = re.search('(.*)\(', intrinsic)
   #f = m.group(1)
@@ -144,6 +145,7 @@ for intrinsic in intrinsics:
   f = intrinsic[:p]
   intrinsicsshort.add(f)
   intrinsicsshortsource[f] = intrinsics[intrinsic]["Source"]
+  intrinsicscommented[f] = intrinsics[intrinsic]["Description"]
 
 notchecked = sorted(intrinsicsshort.difference(selfchecked))
 
@@ -162,7 +164,7 @@ $(document).ready(function() {
         "paging":   false,
         "ordering": true,
         "info":     false,
-        "order": [[ 2, "desc"] , [1, "asc" ], [0, "asc"]]
+        "order": [[ 1, "asc"] , [0, "asc" ], [2, "desc"], [3,"desc"]]
     } );
 } );
 </script>
@@ -176,7 +178,8 @@ docfile.write("""
 <tr>
 <th>Intrinsic</th>
 <th>Source</th>
-<th>Has selfcheck</th>
+<th>Selfchecked</th>
+<th>Commented</th>
 </tr>
 </thead>
 <tbody>
@@ -188,9 +191,15 @@ for f in sorted(intrinsicsshort):
     str = "<tr>"
   else:
     checked = "&#10007"
-    str = "<tr style=\"color:red\">"
+    str = "<tr>"
+    #str = "<tr style=\"color:red\">"
 
-  docfile.write(str+"<td>"+f+"</td><td>"+intrinsicsshortsource[f]+"</td><td>"+checked+"</td></tr>\n")
+  if intrinsicscommented[f] != "":
+    commented = "&#10003"
+  else:
+    commented = "&#10007"
+
+  docfile.write(str+"<td>"+f+"</td><td>"+intrinsicsshortsource[f]+"</td><td>"+checked+"</td><td>"+commented+"</td></tr>\n")
 
 docfile.write("</tbody></table>\n")
 docfile.write("</body></html>")
