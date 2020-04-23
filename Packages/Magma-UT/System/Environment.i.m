@@ -195,3 +195,13 @@ intrinsic GetSQLiteCommand() -> MonStgElt
   return GetEnv("MAGMA_UT_SQLITE_COMMAND");
 
 end intrinsic;
+
+//##############################################################################
+//  Magma version as string
+//##############################################################################
+intrinsic GetVersionString() -> MonStgElt
+{Magma version as a string.}
+
+	a,b,c := GetVersion();
+	return Sprint(a)*"."*Sprint(b)*"-"*Sprint(c);
+end intrinsic;

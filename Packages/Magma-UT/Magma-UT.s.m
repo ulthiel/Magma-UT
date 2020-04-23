@@ -2,8 +2,6 @@ Checksum/Adler32.i.m
 
 Databases/Databases.i.m
 
-Misc/VersionString.i.m
-
 Output/Messages.i.m
 Output/Notification.i.m
 Output/PrintCentered.i.m

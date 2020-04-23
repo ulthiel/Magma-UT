@@ -1,0 +1,142 @@
+<html>
+<head>
+<title>Magma-UT Intrinsics</title>
+</head>
+<body>
+<h2>Magma-UT Intrinsics</h2>
+<h3>Statistics</h3>
+Lines: 1521<br>
+Commands: 1121<br>
+Intrinsics: 116<br>
+Source files: 23<br>
+<h3>Intrinsics</h3>
+<h4>AddDB(url::MonStgElt)</h4>
+<h4>AddDB(url::MonStgElt, dbname::MonStgElt)</h4>
+Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the Databases directory.
+<h4>Adler32(m::MonStgElt) -> MonStgElt</h4>
+Adler32 checksum of the string m.
+<h4>ArrayProduct(X::SeqEnum : EmptyProduct:=One(Integers())) -> RngElt</h4>
+The product of the elements in X. If X is empty, returns EmptyProduct; this is the one integers by default.
+<h4>ArraySum(X::SeqEnum : EmptySum:=Zero(Integers())) -> RngElt</h4>
+The sum of the elements in X. If X is empty, returns EmptySum; this is the zero integer by default.
+<h4>Clear(M::Message_t)</h4>
+<h4>CodesToString(code::SeqEnum[RngIntElt]) -> MonStgElt</h4>
+The string defined by the (ASCII) code sequenc code.
+<h4>CreateDB(dbdir::MonStgElt)</h4>
+<h4>Date(: Format:="", UTC:=false) -> MonStgElt</h4>
+The current date and time. Format can be a format specifier or "ISO".
+<h4>DeleteFile(file::MonStgElt)</h4>
+Deletes file.
+<h4>DirectoryExists(dir::MonStgElt) -> BoolElt</h4>
+Returns true if directory exists, false otherwise.
+<h4>DirectoryName(f::MonStgElt) -> MonStgElt</h4>
+Returns the directory of a full file name
+<h4>DirectorySeparator() -> MonStgElt</h4>
+Either / under Unix or \ under Windows.
+<h4>Download(file::MonStgElt, url::MonStgElt) -> RngIntElt</h4>
+Downloads file from url and save it to file.
+<h4>Download(url::MonStgElt) -> MonStgElt</h4>
+Downloads url and returns contents as string.
+<h4>ExistsInDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> BoolElt</h4>
+<h4>FileExists(file::MonStgElt) -> BoolElt</h4>
+Returns true if file exists, false otherwise.
+<h4>FileName(f::MonStgElt) -> MonStgElt</h4>
+Returns the file name of a full file name, i.e., split off the directory
+<h4>Flush(M::Message_t)</h4>
+<h4>GetBaseDir() -> MonStgElt</h4>
+<h4>GetCPU() -> MonStgElt</h4>
+The brand name of the CPU Magma is running on.
+<h4>GetDBDir(dbname::MonStgElt) -> MonStgElt</h4>
+<h4>GetDBDirs() -> MonStgElt</h4>
+<h4>GetDBNames() -> MonStgElt</h4>
+<h4>GetDownloadTool() -> MonStgElt</h4>
+<h4>GetEditor() -> MonStgElt</h4>
+<h4>GetFileSize(F::MonStgElt) -> RngIntElt</h4>
+Returns the size of a file
+<h4>GetFromDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .</h4>
+<h4>GetHTMLViewer() -> MonStgElt</h4>
+<h4>GetHostname() -> MonStgElt</h4>
+The name of the host Magma is running on.
+<h4>GetOS() -> MonStgElt</h4>
+Returns the operating system (Darwin/Linux/Windows_NT). Output should equal uname -s.
+<h4>GetOSArch() -> MonStgElt</h4>
+The operating system architecture.
+<h4>GetOSType() -> MonStgElt</h4>
+Returns the operating system type (Unix/Windows).
+<h4>GetOSVersion() -> MonStgElt</h4>
+More specific operating system name.
+<h4>GetPOpenChunkSize() -> RngIntElt</h4>
+The operating system architecture.
+<h4>GetPushoverToken() -> MonStgElt, MonStgElt</h4>
+<h4>GetSQLiteCommand() -> MonStgElt</h4>
+<h4>GetUnixTool(name::MonStgElt) -> MonStgElt</h4>
+<h4>GetVersionString() -> MonStgElt</h4>
+<h4>HumanReadableTime(t::FldReElt) -> MonStgElt</h4>
+Prints a time in seconds in human readable format.
+<h4>HumanReadableTime(t::RngIntElt) -> MonStgElt</h4>
+Prints a time in seconds in human readable format.
+<h4>IsPushoverTokenDefined() -> BoolElt</h4>
+<h4>ListDirectories(dir::MonStgElt) -> SeqEnum</h4>
+Array of all subdirectories in a directory (non-recursive).
+<h4>ListFiles(dir::MonStgElt) -> SeqEnum</h4>
+Array of all files in a directory (non-recursive).
+<h4>MD5OfFile(file::MonStgElt) -> MonStgElt</h4>
+MD5 sum of the file.
+<h4>MD5OfString(str::MonStgElt) -> MonStgElt</h4>
+<h4>MagmaUTWelcome()</h4>
+<h4>MakeDirectory(dir::MonStgElt)</h4>
+Create directory dir. Raises no error if it already exists.
+<h4>MakePath(X::SeqEnum[MonStgElt]) -> MonStgElt</h4>
+Concatenates the components of X with the current directory separator.
+<h4>MakeURL(X::SeqEnum[MonStgElt]) -> MonStgElt</h4>
+Concatenates the components of X with the Unix separator /.
+<h4>Message() -> Message_t</h4>
+<h4>MoveFile(target::MonStgElt, dest::MonStgElt)</h4>
+Deletes file.
+<h4>Permutation(X::SeqEnum, Y::SeqEnum) -> SeqEnum</h4>
+The permutation sigma such that Y[sigma] = X.
+<h4>PrintCentered(msg::SeqEnum[MonStgElt] : MaxWidth:=0)</h4>
+Print the array of strings aligned centrally.
+<h4>PrintMessage(M::Message_t : Debug:=0)</h4>
+<h4>PrintMessage(M::Message_t, msg::MonStgElt)</h4>
+<h4>PrintPercentage(M::Message_t, msg::MonStgElt, value::RngIntElt, final::RngIntElt : Precision:=2)</h4>
+<h4>RandomString(n::RngIntElt : Unit:="B", Method:="OpenSSL") -> MonStgElt</h4>
+Returns a random string of size n (using openssl). Unit can be one of B, kB, MB, GB, KiB, MiB, GiB.
+<h4>ReadCompressed(F::MonStgElt) -> MonStgElt</h4>
+Decompresses the gzip compressed file F and reads the data.
+<h4>RemoveCharacter(str::MonStgElt, chr::MonStgElt) -> MonStgElt</h4>
+Removes the character chr from str. This has the same features as the ReplaceCharacters intrinsic.
+<h4>RemoveNewline(str::MonStgElt) -> MonStgElt</h4>
+Removes newline \n from str.
+<h4>RemoveSpace(str::MonStgElt) -> MonStgElt</h4>
+Removes all space characters (whitespace, newlines, etc.).
+<h4>RemoveWhitespace(str::MonStgElt) -> MonStgElt</h4>
+Removes whitespace from str.
+<h4>Replace(str::MonStgElt, reg::MonStgElt, rep::MonStgElt) -> MonStgElt</h4>
+Replaces all occurences of the regular expression reg by rep in the string str using the tool sed. See https://en.wikipedia.org/wiki/Sed. This should have the same behavior under Unix and under Windows. But sed can behave strangely and also differently on different systems (e.g., newlines), so better be careful here and test your code.
+<h4>ReplaceCharacter(str::MonStgElt, chr1::MonStgElt, chr2::MonStgElt) -> MonStgElt</h4>
+Replaces the characters in chr1 by the characters in chr2 in the string str. This uses the tr tool and also supports character classes. Both chr1 and chr2 will be surrounded by quotation marks "" for the tr call, so they have to be escaped respectively. As an example, to replace a backslash \ you need to enter \\\\\\\\, yes 8 backslashes: this becomes four backslashes \\\\ when sent to tr and this is interpreted as an escaped backslash. But the behavior under Unix and Windows is the same. See https://en.wikipedia.org/wiki/Tr_(Unix) and http://pubs.opengroup.org/onlinepubs/9699919799/utilities/tr.html. 
+<h4>SQLiteQuery(file::MonStgElt, query::MonStgElt) -> BoolElt, MonStgElt</h4>
+<h4>SaveToDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")</h4>
+<h4>SendNotification(msg::MonStgElt)</h4>
+Sends a notification via Pushover.
+<h4>SetBackCursor(n::RngIntElt)</h4>
+Sets back the curser by n characters.
+<h4>Sleep(n::FldReElt)</h4>
+Sleep n seconds.
+<h4>Sleep(n::RngElt)</h4>
+Sleep n seconds.
+<h4>StringToCodes(str::MonStgElt) -> SeqEnum</h4>
+The (ASCII) code sequence of the string str.
+<h4>SystemCall(Command::MonStgElt : ChunkSize:=0) -> MonStgElt</h4>
+Call system command "Command" and return output.
+<h4>URLExists(url::MonStgElt) -> BoolElt</h4>
+Returns true iff url exists (request returns 200 OK).
+<h4>UnixFilename(f::MonStgElt) -> MonStgElt</h4>
+Replaces Windows \ by Unix /.
+<h4>UnixTimeStamp() -> RngIntElt</h4>
+<h4>WindowsFilename(f::MonStgElt) -> MonStgElt</h4>
+Replaces Unix / by Windows \.
+<h4>WriteCompressed(F::MonStgElt, X::. : Level:=4)</h4>
+Saves X compressed with gzip to the file F.
+</body></html>

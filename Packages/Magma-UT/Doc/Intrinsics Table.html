@@ -1,0 +1,106 @@
+
+<html>
+<head>
+  <title>Magma-UT SelfChecks</title>
+  <link rel="stylesheet" type="text/css" media="all" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#example').DataTable( {
+        "paging":   false,
+        "ordering": true,
+        "info":     false,
+        "order": [[ 2, "desc"] , [1, "asc" ], [0, "asc"]]
+    } );
+} );
+</script>
+</head>
+<body>
+<h1>Magma-UT Intrinsics and SelfChecks</h1>
+<table id="example" class="display">
+
+<thead>
+<tr>
+<th>Intrinsic</th>
+<th>Source</th>
+<th>Has selfcheck</th>
+</tr>
+</thead>
+<tbody>
+<tr style="color:red"><td>AddDB</td><td>Databases/Databases</td><td>&#10007</td></tr>
+<tr><td>Adler32</td><td>Checksum/Adler32</td><td>&#10003</td></tr>
+<tr><td>ArrayProduct</td><td>SetsSequences/SetsSequences</td><td>&#10003</td></tr>
+<tr><td>ArraySum</td><td>SetsSequences/SetsSequences</td><td>&#10003</td></tr>
+<tr><td>Clear</td><td>Output/Messages</td><td>&#10003</td></tr>
+<tr><td>CodesToString</td><td>Strings/Strings</td><td>&#10003</td></tr>
+<tr style="color:red"><td>CreateDB</td><td>Databases/Databases</td><td>&#10007</td></tr>
+<tr><td>Date</td><td>System/Date</td><td>&#10003</td></tr>
+<tr><td>DeleteFile</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>DirectoryExists</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>DirectoryName</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>DirectorySeparator</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>Download</td><td>System/Download</td><td>&#10003</td></tr>
+<tr style="color:red"><td>ExistsInDB</td><td>Databases/Databases</td><td>&#10007</td></tr>
+<tr><td>FileExists</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>FileName</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>Flush</td><td>Output/Messages</td><td>&#10003</td></tr>
+<tr><td>GetBaseDir</td><td>System/Environment</td><td>&#10003</td></tr>
+<tr style="color:red"><td>GetCPU</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetDBDir</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetDBDirs</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetDBNames</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetDownloadTool</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetEditor</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr><td>GetFileSize</td><td>System/Files</td><td>&#10003</td></tr>
+<tr style="color:red"><td>GetFromDB</td><td>Databases/Databases</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetHTMLViewer</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetHostname</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetOS</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetOSArch</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr><td>GetOSType</td><td>System/Environment</td><td>&#10003</td></tr>
+<tr style="color:red"><td>GetOSVersion</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetPOpenChunkSize</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetPushoverToken</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetSQLiteCommand</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetUnixTool</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr style="color:red"><td>GetVersionString</td><td>Misc/VersionString</td><td>&#10007</td></tr>
+<tr><td>HumanReadableTime</td><td>System/Date</td><td>&#10003</td></tr>
+<tr style="color:red"><td>IsPushoverTokenDefined</td><td>System/Environment</td><td>&#10007</td></tr>
+<tr><td>ListDirectories</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>ListFiles</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>MD5OfFile</td><td>System/MD5</td><td>&#10003</td></tr>
+<tr><td>MD5OfString</td><td>System/MD5</td><td>&#10003</td></tr>
+<tr style="color:red"><td>MagmaUTWelcome</td><td>Startup/Welcome</td><td>&#10007</td></tr>
+<tr><td>MakeDirectory</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>MakePath</td><td>System/Files</td><td>&#10003</td></tr>
+<tr style="color:red"><td>MakeURL</td><td>System/Download</td><td>&#10007</td></tr>
+<tr><td>Message</td><td>Output/Messages</td><td>&#10003</td></tr>
+<tr style="color:red"><td>MoveFile</td><td>System/Files</td><td>&#10007</td></tr>
+<tr style="color:red"><td>Permutation</td><td>SetsSequences/SetsSequences</td><td>&#10007</td></tr>
+<tr style="color:red"><td>PrintCentered</td><td>Output/PrintCentered</td><td>&#10007</td></tr>
+<tr><td>PrintMessage</td><td>Output/Messages</td><td>&#10003</td></tr>
+<tr><td>PrintPercentage</td><td>Output/Messages</td><td>&#10003</td></tr>
+<tr><td>RandomString</td><td>Strings/RandomStrings</td><td>&#10003</td></tr>
+<tr><td>ReadCompressed</td><td>System/Compression</td><td>&#10003</td></tr>
+<tr><td>RemoveCharacter</td><td>Strings/Strings</td><td>&#10003</td></tr>
+<tr><td>RemoveNewline</td><td>Strings/Strings</td><td>&#10003</td></tr>
+<tr><td>RemoveSpace</td><td>Strings/Strings</td><td>&#10003</td></tr>
+<tr><td>RemoveWhitespace</td><td>Strings/Strings</td><td>&#10003</td></tr>
+<tr><td>Replace</td><td>Strings/Strings</td><td>&#10003</td></tr>
+<tr><td>ReplaceCharacter</td><td>Strings/Strings</td><td>&#10003</td></tr>
+<tr style="color:red"><td>SQLiteQuery</td><td>System/SQLite</td><td>&#10007</td></tr>
+<tr style="color:red"><td>SaveToDB</td><td>Databases/Databases</td><td>&#10007</td></tr>
+<tr style="color:red"><td>SendNotification</td><td>Output/Notification</td><td>&#10007</td></tr>
+<tr><td>SetBackCursor</td><td>Output/Messages</td><td>&#10003</td></tr>
+<tr style="color:red"><td>Sleep</td><td>System/Sleep</td><td>&#10007</td></tr>
+<tr><td>StringToCodes</td><td>Strings/Strings</td><td>&#10003</td></tr>
+<tr><td>SystemCall</td><td>System/SystemCall</td><td>&#10003</td></tr>
+<tr><td>URLExists</td><td>System/Download</td><td>&#10003</td></tr>
+<tr><td>UnixFilename</td><td>System/Files</td><td>&#10003</td></tr>
+<tr style="color:red"><td>UnixTimeStamp</td><td>System/Date</td><td>&#10007</td></tr>
+<tr><td>WindowsFilename</td><td>System/Files</td><td>&#10003</td></tr>
+<tr><td>WriteCompressed</td><td>System/Compression</td><td>&#10003</td></tr>
+</tbody></table>
+</body></html>
