@@ -95,12 +95,12 @@ print "Number of source files: %o" % sourcecount
 
 if not os.path.exists("Doc"):
   os.mkdir("Doc")
-  
+
 docfile = open("Doc/Intrinsics.html","w")
 docfile.write("<html>\n")
 docfile.write("<head>\n")
-docfile.write("<link rel=\"stylesheet\" href=\"styles.css\">\n")
-docfile.write("<title>CHAMP Intrinsics</title>\n")
+#docfile.write("<link rel=\"stylesheet\" href=\"styles.css\">\n")
+docfile.write("<title>"+package+" Intrinsics</title>\n")
 docfile.write("</head>\n")
 docfile.write("<body>\n")
 docfile.write("<h2>"+package+" Intrinsics</h2>\n")

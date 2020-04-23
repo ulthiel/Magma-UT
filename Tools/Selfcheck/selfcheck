@@ -145,7 +145,7 @@ if [ "$REPORT" == "YES" ]; then
 fi
 
 # Create Log directory
-mkdir -p Log
+mkdir -p "Log/$PACKAGE"
 
 # Determine maximal length of file name for nice printing
 MAXLEN=0
@@ -169,7 +169,7 @@ for f in $SELFCHECKS; do
 
   printf "%-${MAXLEN}s" $NAME
 
-  touch Log/$NAME.lck
+  touch "Log/$PACKAGE/$NAME.lck"
 
   # This is the initial Magma code to start and report the selfcheck
   INIT=$(cat << END
@@ -182,31 +182,31 @@ assert FileExists("../../Packages/$PACKAGE/Selfchecks/$NAME.m");
 load "../../Packages/$PACKAGE/Selfchecks/$NAME.m";
 printf "MAGMA_UT_SELFCHECK_TIME=%o\n", Cputime(MAGMA_UT_SELFCHECK_TIME);
 printf "MAGMA_UT_SELFCHECK_MEM=%o\n", Round(GetMemoryUsage()/1000^2);
-DeleteFile("Log/$NAME.lck");
+DeleteFile("Log/$PACKAGE/$NAME.lck");
 quit;
 END
   )
 
-  rm -f Log/$NAME.log >/dev/null 2>&1
+  rm -f Log/$PACKAGE/$NAME.log >/dev/null 2>&1
 
-  echo "$INIT" | ../../magma-ut >Log/$NAME.log 2>&1
+  echo "$INIT" | ../../magma-ut >Log/$PACKAGE/$NAME.log 2>&1
 
   RES=$?
 
-  grep -q -i "error" "Log/$NAME.log"
+  grep -q -i "error" "Log/$PACKAGE/$NAME.log"
 
   RESULT=0
 
-  if [ -f Log/$NAME.lck ] || [ ! $RES -eq 0 ] || [ $? -eq 0 ]; then
+  if [ -f Log/$PACKAGE/$NAME.lck ] || [ ! $RES -eq 0 ] || [ $? -eq 0 ]; then
     RESULT=1
     echo -e "\033[31;5;7mFAILED\033[0m"
   else
-    TIME=`grep MAGMA_UT_SELFCHECK_TIME "Log/$NAME.log" | awk -F'=' '{print $2}'`
-    MEM=`grep MAGMA_UT_SELFCHECK_MEM "Log/$NAME.log" | awk -F'=' '{print $2}'`
+    TIME=`grep MAGMA_UT_SELFCHECK_TIME "Log/$PACKAGE/$NAME.log" | awk -F'=' '{print $2}'`
+    MEM=`grep MAGMA_UT_SELFCHECK_MEM "Log/$PACKAGE/$NAME.log" | awk -F'=' '{print $2}'`
     echo -e "\033[0;32mOK\033[0m  ${TIME}s\t${MEM}MB"
   fi
 
-  MAGMA_VER=`grep MAGMA_UT_SELFCHECK_MAGMA "Log/$NAME.log" | awk -F'=' '{print $2}'`
+  MAGMA_VER=`grep MAGMA_UT_SELFCHECK_MAGMA "Log/$PACKAGE/$NAME.log" | awk -F'=' '{print $2}'`
 
 done
 
