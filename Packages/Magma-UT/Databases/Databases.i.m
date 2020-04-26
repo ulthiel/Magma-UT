@@ -119,8 +119,16 @@ end intrinsic;
 //##############################################################################
 //	Adds a database
 //##############################################################################
-intrinsic AddDB(url::MonStgElt, dbname::MonStgElt)
-{Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the Databases directory.}
+intrinsic AddDB(url::MonStgElt)
+{Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the local Databases directory. The database is then added to the Config.txt file. A restart is necessary to register the database.}
+
+	//Determine repo name
+	dbname := url;
+	pos := Position(dbname, "/");
+	while pos gt 0 do
+		dbname := dbname[pos+1..#dbname];
+		pos := Position(dbname, "/");
+	end while;
 
 	//Check Git
 	try
@@ -148,8 +156,9 @@ intrinsic AddDB(url::MonStgElt, dbname::MonStgElt)
 		if GetOSType() eq "Windows" then
 			cmd := "cd \""*dir*"\" && set \"GIT_LFS_SKIP_SMUDGE=1\" & git submodule add "*url*" \""*dbname*"\"";
 		else
-			cmd := "cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*MakePath([dir,dbname])*"\"";
+			cmd := "cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*dbname*"\"";
 		end if;
+		print cmd;
 		res := SystemCall(cmd);
 	catch e
 		error "Error adding database";
@@ -195,18 +204,19 @@ intrinsic AddDB(url::MonStgElt, dbname::MonStgElt)
 
 end intrinsic;
 
-intrinsic AddDB(url::MonStgElt)
-{}
+intrinsic DeleteDB(dbname::MonStgElt)
+{Deletes a Git LFS database which was cloned as a submodule. Use with caution.}
 
+	dir := GetDBDir(dbname);
+	res := SystemCall("git submodule deinit -f \""*dir*"\"");
 
-	//Determine repo name
-	dbname := url;
-	pos := Position(dbname, "/");
-	while pos gt 0 do
-		dbname := dbname[pos+1..#dbname];
-		pos := Position(dbname, "/");
-	end while;
+	dir := MakePath([GetBaseDir(), ".git", "modules", dir]);
+	DeleteFile(dir);
 
-	AddDB(url, dbname);
+	res := SystemCall("cd \""*dir*"\" && git rm -rf test-db");
+
+	dir := MakePath([GetBaseDir(), ".git", "modules", "Databases", "test-db"]);
+	DeleteFile(dir);
+
 
 end intrinsic;

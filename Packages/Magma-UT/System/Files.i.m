@@ -121,7 +121,7 @@ end intrinsic;
 //  Move file or directory
 //##############################################################################
 intrinsic MoveFile(target::MonStgElt, dest::MonStgElt)
-{Deletes file.}
+{Moves file.}
 
   cmd := GetUnixTool("mv")*" \""*target*"\" \""*dest*"\"";
   ret := System(cmd);
