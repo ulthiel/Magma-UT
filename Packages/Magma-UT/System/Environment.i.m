@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -204,4 +204,31 @@ intrinsic GetVersionString() -> MonStgElt
 
 	a,b,c := GetVersion();
 	return Sprint(a)*"."*Sprint(b)*"-"*Sprint(c);
+end intrinsic;
+
+//##############################################################################
+//  Git
+//##############################################################################
+intrinsic IsGitInstalled() -> BoolElt
+{}
+
+	try
+		res := SystemCall("git --version");
+	catch e
+		return false;
+	end try;
+	return true;
+
+end intrinsic;
+
+intrinsic IsGitLFSInstalled() -> BoolElt
+{}
+
+	try
+		res := SystemCall("git lfs env");
+	catch e
+		return false;
+	end try;
+	return true;
+
 end intrinsic;

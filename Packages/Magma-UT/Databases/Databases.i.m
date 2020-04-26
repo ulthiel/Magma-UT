@@ -131,18 +131,14 @@ intrinsic AddDB(url::MonStgElt)
 	end while;
 
 	//Check Git
-	try
-		res := SystemCall("git --version");
-	catch e
-		error "Git not installed";
-	end try;
+	if not IsGitInstalled() then
+		error "Git need but not installed. See https://git-scm.com.";
+	end if;
 
 	//Check Git LFS extension
-	try
-		res := SystemCall("git lfs env");
-	catch e;
-		error "Git LFS extension not installed. See https://git-lfs.github.com.";
-	end try;
+	if not IsGitLFSInstalled() then
+		error "Git LFS extension needed but not installed. See https://git-lfs.github.com.";
+	end if;
 
 	//Check if directory exists already
 	dir := MakePath([GetBaseDir(), "Databases"]);
@@ -164,7 +160,7 @@ intrinsic AddDB(url::MonStgElt)
 		error "Error adding database";
 	end try;
 
-	//Now, add to Config.txt
+	//Now, add to Config.txt. I'll rewrite the file.
 	config := "";
 	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
 	config :=  Open(configfile, "r");
@@ -188,7 +184,7 @@ intrinsic AddDB(url::MonStgElt)
 		newconfig *:= "\n";
 	end while;
 
-	delete config; //closed configfile
+	delete config; //close configfile
 	Write(configfile, newconfig : Overwrite:=true);
 
 	//The newline \n under Windows becomes \r\n, and then it doesn't work
