@@ -16,20 +16,20 @@
 
 # Magma-UT base directory (neat trick)
 MAGMA_UT_BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export MAGMA_UT_BASE_DIR=$MAGMA_UT_BASE_DIR
+export MAGMA_UT_BASE_DIR="$MAGMA_UT_BASE_DIR"
 
 # OS type is always Unix here
 export MAGMA_UT_OS_TYPE="Unix"
 export MAGMA_UT_OS=`uname -s`
 
 # Check if there's a local config; if not, copy default config
-if [ ! -f $MAGMA_UT_BASE_DIR/Config/Config.txt ]; then
-	cp $MAGMA_UT_BASE_DIR/Config/Config_org.txt $MAGMA_UT_BASE_DIR/Config/Config.txt
+if [ ! -f "$MAGMA_UT_BASE_DIR/Config/Config.txt" ]; then
+	cp "$MAGMA_UT_BASE_DIR/Config/Config_org.txt" "$MAGMA_UT_BASE_DIR/Config/Config.txt"
 fi
 
 # Source the Variables file (again, neat trick)
 set -a
-. $MAGMA_UT_BASE_DIR/Config/Config.txt
+. "$MAGMA_UT_BASE_DIR/Config/Config.txt"
 set +a
 
 # Get Magma-UT version. I'll cd into the Magma-UT directory to avoid git -C
@@ -119,8 +119,8 @@ fi
 MAGMA_EXEC=""
 
 if [ ! -z ${MAGMA_UT_MAGMA_DIR+x} ]; then
-  export MAGMA_DIR=$MAGMA_UT_MAGMA_DIR
-  export MAGMA_EXEC=$MAGMA_DIR/magma
+  export MAGMA_DIR="$MAGMA_UT_MAGMA_DIR"
+  export MAGMA_EXEC="$MAGMA_DIR/magma"
 fi
 
 if [ "$MAGMA_EXEC" == "" ]; then
@@ -167,6 +167,6 @@ fi
 export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Magma-UT.s.m:$MAGMA_USER_SPEC
 
 # Set the Magma-UT startup file as Magma startup file
-export MAGMA_STARTUP_FILE=$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Startup/Startup.m
+export MAGMA_STARTUP_FILE="$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Startup/Startup.m"
 
 $MAGMA_EXEC -b "$@"
