@@ -13,6 +13,13 @@ $servername = "localhost";
 $username = "";
 $password = "";
 $dbname = "";
+$token = "";
+
+// Check token
+if ($_GET["Token"] != $token) {
+    exit();
+}
+unset($_GET["Token"]);
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

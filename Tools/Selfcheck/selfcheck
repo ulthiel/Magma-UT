@@ -72,6 +72,18 @@ if [ -z ${PACKAGE+x} ]; then
   exit 1
 fi
 
+# If reporting activated, get selfcheck token from Config file
+if [ "$REPORT" == "YES" ]; then
+  set -a
+  . ../../Config/Config.txt
+  set +a
+
+  if [ -z ${MAGMA_UT_SELFCHECK_TOKEN+x} ]; then
+    echo "Error: You selected reporting option. For security you need to define a selfcheck token in Config.txt"
+    exit 1
+  fi
+fi
+
 # If no selfcheck files given, take all of them
 if [ -z ${SELFCHECKS+x} ]; then
   cd ../../Packages/$PACKAGE/Selfchecks/
@@ -207,6 +219,18 @@ END
   fi
 
   MAGMA_VER=`grep MAGMA_UT_SELFCHECK_MAGMA "Log/$PACKAGE/$NAME.log" | awk -F'=' '{print $2}'`
+
+  # Report result
+  if [ "$REPORT" == "YES" ]; then
+    if [ "$RESULT" == "0" ]; then
+    URL="https://ulthiel.com/magma-ut/selfcheck-commit.php?Date=$DATE&Package=$PACKAGE&Test=$NAME&Result=$RESULT&Time=$TIME&Memory=$MEM&PackageVer=$PKG_VER&MagmaVer=$MAGMA_VER&Host=$HOST&OS=$OS_VER&CPU=$CPU&Token=$MAGMA_UT_SELFCHECK_TOKEN"
+  else
+    URL="https://ulthiel.com/magma-ut/selfcheck-commit.php?Date=$DATE&Package=$PACKAGE&Test=$NAME&Result=$RESULT&PackageVer=$PKG_VER&MagmaVer=$MAGMA_VER&Host=$HOST&OS=$OS_VER&CPU=$CPU&Token=$MAGMA_UT_SELFCHECK_TOKEN"
+  fi
+  URL_ESC=`echo "$URL" | sed 's/ /%20/g'`
+
+  $DWN_TOOL "$URL_ESC" >/dev/null 2>/dev/null
+  fi
 
 done
 
