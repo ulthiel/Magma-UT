@@ -154,7 +154,7 @@ intrinsic AddDB(url::MonStgElt)
 		else
 			cmd := "cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*dbname*"\"";
 		end if;
-		print cmd;
+		//print cmd;
 		res := SystemCall(cmd);
 	catch e
 		error "Error adding database";
@@ -212,17 +212,21 @@ intrinsic DeleteDB(dbname::MonStgElt)
 
 	dir := MakePath(["Databases", dbname]);
 
-	cmd := "cd \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
-	print cmd;
-	res := SystemCall(cmd);
+	try
+		cmd := "cd \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
+		//print cmd;
+		res := SystemCall(cmd);
 
-	cmd := "cd \""*GetBaseDir()*"\" && git rm -rf "*dir;
-	print cmd;
-	res := SystemCall(cmd);
+		cmd := "cd \""*GetBaseDir()*"\" && git rm -rf "*dir;
+		//print cmd;
+		res := SystemCall(cmd);
 
-	dir := MakePath([GetBaseDir(), ".git", "modules", "Databases", dbname]);
-	print dir;
-	DeleteFile(dir);
+		dir := MakePath([GetBaseDir(), ".git", "modules", "Databases", dbname]);
+		//print dir;
+		DeleteFile(dir);
+	catch e
+		error e;
+	end try;
 
 	//Now, remove from Config.txt. I'll rewrite the file.
 	config := "";
