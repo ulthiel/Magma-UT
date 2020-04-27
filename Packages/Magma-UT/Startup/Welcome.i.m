@@ -36,6 +36,7 @@ intrinsic MagmaUTWelcome()
   Append(~msg, "Copyright (C) 2020 Ulrich Thiel");
   Append(~msg, "https://github/com/ulthiel/magma-ut");
   Append(~msg, "thiel@mathematik.uni-kl.de");
+  Append(~msg, "Magma: "*GetVersionString());
 
 //
   PrintCentered(msg : MaxWidth:=62);

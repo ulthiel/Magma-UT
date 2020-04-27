@@ -105,11 +105,12 @@ end intrinsic;
 //	Creates an empty database
 //##############################################################################
 intrinsic CreateDB(dbdir::MonStgElt)
-{}
+{Creates an empty database in the specified directory.}
 
 	MakeDirectory(dbdir);
 	try
-		res := SystemCall("cd \""*dbdir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"");
+		cmd := "cd \""*dbdir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
+		res := SystemCall(cmd);
 	catch e
 		error "Error creating database";
 	end try;
