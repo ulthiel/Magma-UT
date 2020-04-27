@@ -1,3 +1,0 @@
-[submodule "Databases/test-db"]
-	path = Databases/test-db
-	url = https://github.com/ulthiel/test-db
