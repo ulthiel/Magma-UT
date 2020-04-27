@@ -1,1 +1,1 @@
-Pushover("Test");
+Pushover("Test message from selfcheck@"*GetHostname());
