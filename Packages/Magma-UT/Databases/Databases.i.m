@@ -155,6 +155,7 @@ intrinsic AddDB(url::MonStgElt)
 			cmd := "cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*dbname*"\"";
 		end if;
 		print cmd;
+		return;
 		res := SystemCall(cmd);
 	catch e
 		error "Error adding database";
@@ -203,15 +204,18 @@ end intrinsic;
 intrinsic DeleteDB(dbname::MonStgElt)
 {Deletes a Git LFS database which was cloned as a submodule. Use with caution.}
 
-	dir := GetDBDir(dbname);
-	res := SystemCall("git submodule deinit -f \""*dir*"\"");
+	if not DirectoryExists(MakePath([GetBaseDir(), "Databases", dbname])) then
+		error "No database with this name registered as submodule in Databases directory";
+	end if;
 
-	dir := MakePath([GetBaseDir(), ".git", "modules", dir]);
-	DeleteFile(dir);
+	dir := MakePath(["Databases", dbname]);
+	cmd := "cd \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
+	res := SystemCall(cmd);
+	res := SystemCall("cd \""*GetBaseDir()*"\" && git rm -rf "*dir);
 
-	res := SystemCall("cd \""*dir*"\" && git rm -rf test-db");
+	dir := MakePath([GetBaseDir(), ".git", "modules", "Databases", dbname]);
+	print dir;
 
-	dir := MakePath([GetBaseDir(), ".git", "modules", "Databases", "test-db"]);
 	DeleteFile(dir);
 
 

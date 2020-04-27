@@ -155,7 +155,7 @@ fi
 
 if [ "$MAGMA_EXEC" == "" ]; then
     echo -e "\033[0;31mError: cannot find Magma."
-    echo -e "Either add Magma installation directory in the Config file or in the PATH environment variable.\033[0m"
+    echo -e "Either add Magma installation directory in the Config.txt file or in the PATH environment variable.\033[0m"
     exit 1
 fi
 
@@ -169,4 +169,4 @@ export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Magma-UT.s.m:$MAGMA_
 # Set the Magma-UT startup file as Magma startup file
 export MAGMA_STARTUP_FILE="$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Startup/Startup.m"
 
-$MAGMA_EXEC -b "$@"
+"$MAGMA_EXEC" -b "$@"
