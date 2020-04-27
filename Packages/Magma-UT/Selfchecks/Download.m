@@ -8,4 +8,4 @@ str := Download("https://www.kernel.org/index.html");
 assert Position(str, "stable") ne 0;
 DeleteFile(file);
 
-assert MakeURL(["wiki", "main_page"]) eq "wiki/mainpage";
+assert MakeURL(["wiki", "main_page"]) eq "wiki/main_page";

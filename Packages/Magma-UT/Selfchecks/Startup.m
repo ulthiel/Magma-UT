@@ -1,2 +1,2 @@
-PrintCentered("Blah");
+PrintCentered(["Blah", "Ulrich Thiel"]);
 MagmaUTWelcome();
