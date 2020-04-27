@@ -133,7 +133,7 @@ intrinsic AddDB(url::MonStgElt)
 
 	//Check Git
 	if not IsGitInstalled() then
-		error "Git need but not installed. See https://git-scm.com.";
+		error "Git needed but not installed. See https://git-scm.com.";
 	end if;
 
 	//Check Git LFS extension

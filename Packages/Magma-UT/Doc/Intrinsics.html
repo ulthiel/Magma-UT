@@ -5,14 +5,13 @@
 <body>
 <h2>Magma-UT Intrinsics</h2>
 <h3>Statistics</h3>
-Lines: 1520<br>
-Commands: 1120<br>
-Intrinsics: 116<br>
+Lines: 1626<br>
+Commands: 1203<br>
+Intrinsics: 120<br>
 Source files: 22<br>
 <h3>Intrinsics</h3>
 <h4>AddDB(url::MonStgElt)</h4>
-<h4>AddDB(url::MonStgElt, dbname::MonStgElt)</h4>
-Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the Databases directory.
+Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the local Databases directory. The database is then added to the Config.txt file. A restart is necessary to register the database.
 <h4>Adler32(m::MonStgElt) -> MonStgElt</h4>
 Adler32 checksum of the string m.
 <h4>ArrayProduct(X::SeqEnum : EmptyProduct:=One(Integers())) -> RngElt</h4>
@@ -23,8 +22,11 @@ The sum of the elements in X. If X is empty, returns EmptySum; this is the zero 
 <h4>CodesToString(code::SeqEnum[RngIntElt]) -> MonStgElt</h4>
 The string defined by the (ASCII) code sequenc code.
 <h4>CreateDB(dbdir::MonStgElt)</h4>
+Creates an empty database in the specified directory.
 <h4>Date(: Format:="", UTC:=false) -> MonStgElt</h4>
 The current date and time. Format can be a format specifier or "ISO".
+<h4>DeleteDB(dbname::MonStgElt)</h4>
+Deletes a Git LFS database which was cloned as a submodule. Use with caution.
 <h4>DeleteFile(file::MonStgElt)</h4>
 Deletes file.
 <h4>DirectoryExists(dir::MonStgElt) -> BoolElt</h4>
@@ -76,6 +78,8 @@ Magma version as a string.
 Prints a time in seconds in human readable format.
 <h4>HumanReadableTime(t::RngIntElt) -> MonStgElt</h4>
 Prints a time in seconds in human readable format.
+<h4>IsGitInstalled() -> BoolElt</h4>
+<h4>IsGitLFSInstalled() -> BoolElt</h4>
 <h4>IsPushoverTokenDefined() -> BoolElt</h4>
 <h4>ListDirectories(dir::MonStgElt) -> SeqEnum</h4>
 Array of all subdirectories in a directory (non-recursive).
@@ -93,7 +97,7 @@ Concatenates the components of X with the current directory separator.
 Concatenates the components of X with the Unix separator /.
 <h4>Message() -> Message_t</h4>
 <h4>MoveFile(target::MonStgElt, dest::MonStgElt)</h4>
-Deletes file.
+Moves file.
 <h4>Permutation(X::SeqEnum, Y::SeqEnum) -> SeqEnum</h4>
 The permutation sigma such that Y[sigma] = X.
 <h4>PrintCentered(msg::SeqEnum[MonStgElt] : MaxWidth:=0)</h4>
