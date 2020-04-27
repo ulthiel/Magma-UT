@@ -117,7 +117,7 @@ intrinsic CreateDB(dbdir::MonStgElt)
 end intrinsic;
 
 //##############################################################################
-//	Adds a database
+//	Adds a Git LFS database
 //##############################################################################
 intrinsic AddDB(url::MonStgElt)
 {Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the local Databases directory. The database is then added to the Config.txt file. A restart is necessary to register the database.}
@@ -155,7 +155,6 @@ intrinsic AddDB(url::MonStgElt)
 			cmd := "cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*dbname*"\"";
 		end if;
 		print cmd;
-		return;
 		res := SystemCall(cmd);
 	catch e
 		error "Error adding database";
@@ -201,6 +200,9 @@ intrinsic AddDB(url::MonStgElt)
 
 end intrinsic;
 
+//##############################################################################
+//	Deletes a local Git LFS database
+//##############################################################################
 intrinsic DeleteDB(dbname::MonStgElt)
 {Deletes a Git LFS database which was cloned as a submodule. Use with caution.}
 
@@ -209,14 +211,69 @@ intrinsic DeleteDB(dbname::MonStgElt)
 	end if;
 
 	dir := MakePath(["Databases", dbname]);
+
 	cmd := "cd \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
+	print cmd;
 	res := SystemCall(cmd);
-	res := SystemCall("cd \""*GetBaseDir()*"\" && git rm -rf "*dir);
+
+	cmd := "cd \""*GetBaseDir()*"\" && git rm -rf "*dir;
+	print cmd;
+	res := SystemCall(cmd);
 
 	dir := MakePath([GetBaseDir(), ".git", "modules", "Databases", dbname]);
 	print dir;
-
 	DeleteFile(dir);
 
+	//Now, remove from Config.txt. I'll rewrite the file.
+	config := "";
+	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
+	config :=  Open(configfile, "r");
+	newconfig := "";
+	while true do
+		line := Gets(config);
+		if IsEof(line) then
+			break;
+		end if;
+		if Position(line, "MAGMA_UT_DB_NAMES=") ne 0 then
+			line := "MAGMA_UT_DB_NAMES=";
+			dbs := GetDBNames();
+			for i:=1 to #dbs do
+				if dbs[i] eq dbname then
+					continue;
+				end if;
+				line *:= dbs[i];
+				if i lt #dbs then
+					line *:= ",";
+				end if;
+			end for;
+		elif Position(line, "MAGMA_UT_DB_DIRS=") ne 0 then
+			line := "MAGMA_UT_DB_DIRS=";
+			dbs := GetDBNames();
+			for i:=1 to #dbs do
+				if dbs[i] eq dbname then
+					continue;
+				end if;
+				line *:= GetDBDir(dbs[i]);
+				if i lt #dbs then
+					line *:= ",";
+				end if;
+			end for;
+		end if;
+		newconfig *:= line*"\n";
+	end while;
+
+	delete config; //close configfile
+	Write(configfile, newconfig : Overwrite:=true);
+
+	//The newline \n under Windows becomes \r\n, and then it doesn't work
+	//under Unix anymore on the same system. Hence, rewrite config file to Unix
+	//line endings.
+	if GetOSType() eq "Windows" then
+		configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
+		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
+		res := SystemCall(cmd);
+	end if;
+
+	print "Success. Please restart Magma-UT now.";
 
 end intrinsic;
