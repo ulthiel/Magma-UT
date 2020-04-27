@@ -5,8 +5,8 @@
 <body>
 <h2>Magma-UT Intrinsics</h2>
 <h3>Statistics</h3>
-Lines: 1626<br>
-Commands: 1203<br>
+Lines: 1625<br>
+Commands: 1202<br>
 Intrinsics: 120<br>
 Source files: 22<br>
 <h3>Intrinsics</h3>
@@ -105,6 +105,8 @@ Print the array of strings aligned centrally.
 <h4>PrintMessage(M::Message_t : Debug:=0)</h4>
 <h4>PrintMessage(M::Message_t, msg::MonStgElt)</h4>
 <h4>PrintPercentage(M::Message_t, msg::MonStgElt, value::RngIntElt, final::RngIntElt : Precision:=2)</h4>
+<h4>Pushover(msg::MonStgElt)</h4>
+Sends a notification via Pushover.
 <h4>RandomString(n::RngIntElt : Unit:="B", Method:="OpenSSL") -> MonStgElt</h4>
 Returns a random string of size n (using openssl). Unit can be one of B, kB, MB, GB, KiB, MiB, GiB.
 <h4>ReadCompressed(F::MonStgElt) -> MonStgElt</h4>
@@ -123,8 +125,6 @@ Replaces all occurences of the regular expression reg by rep in the string str u
 Replaces the characters in chr1 by the characters in chr2 in the string str. This uses the tr tool and also supports character classes. Both chr1 and chr2 will be surrounded by quotation marks "" for the tr call, so they have to be escaped respectively. As an example, to replace a backslash \ you need to enter \\\\\\\\, yes 8 backslashes: this becomes four backslashes \\\\ when sent to tr and this is interpreted as an escaped backslash. But the behavior under Unix and Windows is the same. See https://en.wikipedia.org/wiki/Tr_(Unix) and http://pubs.opengroup.org/onlinepubs/9699919799/utilities/tr.html. 
 <h4>SQLiteQuery(file::MonStgElt, query::MonStgElt) -> BoolElt, MonStgElt</h4>
 <h4>SaveToDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")</h4>
-<h4>SendNotification(msg::MonStgElt)</h4>
-Sends a notification via Pushover.
 <h4>SetBackCursor(n::RngIntElt)</h4>
 Sets back the curser by n characters.
 <h4>Sleep(n::FldReElt)</h4>

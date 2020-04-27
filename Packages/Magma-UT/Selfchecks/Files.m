@@ -10,6 +10,8 @@ else
 end if;
 assert FileExists(tmpfile);
 assert GetFileSize(tmpfile) eq 0;
+MoveFile(tmpfile, tmpfile*"-1");
+MoveFile(tmpfile*"-1", tmpfile);
 DeleteFile(tmpfile);
 assert FileExists(tmpfile) eq false;
 
@@ -34,6 +36,8 @@ MakeDirectory(tmpdir2);
 assert DirectoryExists(tmpdir2);
 assert ListFiles(tmpdir) eq ["temp file"];
 assert ListDirectories(tmpdir) eq ["another dir to test"];
+MoveFile(tmpdir, tmpdir*"-1");
+MoveFile(tmpdir*"-1", tmpdir);
 DeleteFile(tmpdir);
 assert DirectoryExists(tmpdir) eq false;
 

@@ -1,0 +1,16 @@
+GetCPU();
+GetDownloadTool();
+GetEditor();
+GetHostname();
+GetHTMLViewer();
+GetOS();
+GetOSArch();
+GetOSVersion();
+GetPOpenChunkSize();
+GetPushoverToken();
+GetSQLiteCommand();
+GetUnixTool("wget");
+GetVersionString();
+IsGitInstalled();
+IsGitLFSInstalled();
+IsPushoverTokenDefined();

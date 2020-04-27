@@ -1,0 +1,2 @@
+PrintCentered("Blah");
+MagmaUTWelcome();

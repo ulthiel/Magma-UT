@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -13,8 +13,7 @@ freeze;
 //  to Config/Config.txt.
 //
 //##############################################################################
-
-intrinsic SendNotification(msg::MonStgElt)
+intrinsic Pushover(msg::MonStgElt)
 {Sends a notification via Pushover.}
 
     user, token := GetPushoverToken();
@@ -33,10 +32,5 @@ intrinsic SendNotification(msg::MonStgElt)
     	cmd := Sprintf("%o -s --form-string \"token=%o\" --form-string \"user=%o\" --form-string \"message=%o\" https://api.pushover.net/1/messages.json >NUL 2>NUL", GetUnixTool("curl"), token, user, msg);
     	res := System(cmd);
     end if;
-
-    //I don't want to spit out a runtime error, so just a debug message.
-    //if res ne 0 then
-    //    vprint MAGMA_UT, 1: "Error sending notification message.";
-    //end if;
 
 end intrinsic;

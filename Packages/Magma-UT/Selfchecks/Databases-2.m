@@ -1,4 +1,9 @@
 //We assume Databases-1 has been called before so that test-db exists
+assert "test-db" in GetDBNames();
+GetDBDir("test-db");
+GetDBDir();
+GetDBDirs();
+
 assert ExistsInDB("test-db", "F4", "GrpMat");
 
 G := GetFromDB("test-db", "F4", "GrpMat");

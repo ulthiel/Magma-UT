@@ -7,3 +7,5 @@ assert MD5OfFile(file) eq "0fc073b5274bf26103eadad5918ad8e1";
 str := Download("https://www.kernel.org/index.html");
 assert Position(str, "stable") ne 0;
 DeleteFile(file);
+
+assert MakeURL(["wiki", "main_page"]) eq "wiki/mainpage";
