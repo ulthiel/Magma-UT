@@ -19,6 +19,7 @@ The product of the elements in X. If X is empty, returns EmptyProduct; this is t
 <h4>ArraySum(X::SeqEnum : EmptySum:=Zero(Integers())) -> RngElt</h4>
 The sum of the elements in X. If X is empty, returns EmptySum; this is the zero integer by default.
 <h4>Clear(M::Message_t)</h4>
+Clears the message buffer of M.
 <h4>CodesToString(code::SeqEnum[RngIntElt]) -> MonStgElt</h4>
 The string defined by the (ASCII) code sequenc code.
 <h4>CreateDB(dbdir::MonStgElt)</h4>
@@ -40,23 +41,33 @@ Downloads file from url and save it to file.
 <h4>Download(url::MonStgElt) -> MonStgElt</h4>
 Downloads url and returns contents as string.
 <h4>ExistsInDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> BoolElt</h4>
+Check if object exists in database.
 <h4>FileExists(file::MonStgElt) -> BoolElt</h4>
 Returns true if file exists, false otherwise.
 <h4>FileName(f::MonStgElt) -> MonStgElt</h4>
 Returns the file name of a full file name, i.e., split off the directory
 <h4>Flush(M::Message_t)</h4>
+Flushes printing. Use this before destruction of M.
 <h4>GetBaseDir() -> MonStgElt</h4>
+The Magma-UT base directory.
 <h4>GetCPU() -> MonStgElt</h4>
 The brand name of the CPU Magma is running on.
 <h4>GetDBDir(dbname::MonStgElt) -> MonStgElt</h4>
+The database directory for a given database name as defined in Config.txt.
 <h4>GetDBDirs() -> MonStgElt</h4>
+Sequence of database directories defined in Config.txt.
 <h4>GetDBNames() -> MonStgElt</h4>
+Sequence of database names defined in Config.txt.
 <h4>GetDownloadTool() -> MonStgElt</h4>
+The download tool defined in Config.txt (or the one set automatically by the startup script).
 <h4>GetEditor() -> MonStgElt</h4>
+The editor defined in Config.txt.
 <h4>GetFileSize(F::MonStgElt) -> RngIntElt</h4>
 Returns the size of a file
 <h4>GetFromDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .</h4>
+Retrieve object from database. If the database is a Git LFS database and the file is not there yet, it will be downloaded.
 <h4>GetHTMLViewer() -> MonStgElt</h4>
+The HTML viewer defined in Config.txt.
 <h4>GetHostname() -> MonStgElt</h4>
 The name of the host Magma is running on.
 <h4>GetOS() -> MonStgElt</h4>
@@ -70,8 +81,11 @@ More specific operating system name.
 <h4>GetPOpenChunkSize() -> RngIntElt</h4>
 The operating system architecture.
 <h4>GetPushoverToken() -> MonStgElt, MonStgElt</h4>
+Returns the pushover token defined in Config.txt
 <h4>GetSQLiteCommand() -> MonStgElt</h4>
+The SQLite command defined in Config.txt.
 <h4>GetUnixTool(name::MonStgElt) -> MonStgElt</h4>
+Returns correct path to Unix tool for Windows (this is in Tools/UnixTools of the Magma-UT base directory).
 <h4>GetVersionString() -> MonStgElt</h4>
 Magma version as a string.
 <h4>HumanReadableTime(t::FldReElt) -> MonStgElt</h4>
@@ -79,8 +93,11 @@ Prints a time in seconds in human readable format.
 <h4>HumanReadableTime(t::RngIntElt) -> MonStgElt</h4>
 Prints a time in seconds in human readable format.
 <h4>IsGitInstalled() -> BoolElt</h4>
+True iff Git is installed and can be executed on the command line.
 <h4>IsGitLFSInstalled() -> BoolElt</h4>
+True iff Git LFS extension is installed.
 <h4>IsPushoverTokenDefined() -> BoolElt</h4>
+True iff a Pushover token is set in Config.txt.
 <h4>ListDirectories(dir::MonStgElt) -> SeqEnum</h4>
 Array of all subdirectories in a directory (non-recursive).
 <h4>ListFiles(dir::MonStgElt) -> SeqEnum</h4>
@@ -88,7 +105,9 @@ Array of all files in a directory (non-recursive).
 <h4>MD5OfFile(file::MonStgElt) -> MonStgElt</h4>
 MD5 sum of the file.
 <h4>MD5OfString(str::MonStgElt) -> MonStgElt</h4>
+MD5 sum of the given string.
 <h4>MagmaUTWelcome()</h4>
+Prints the Magma-UT welcome message.
 <h4>MakeDirectory(dir::MonStgElt)</h4>
 Create directory dir. Raises no error if it already exists.
 <h4>MakePath(X::SeqEnum[MonStgElt]) -> MonStgElt</h4>
@@ -96,6 +115,7 @@ Concatenates the components of X with the current directory separator.
 <h4>MakeURL(X::SeqEnum[MonStgElt]) -> MonStgElt</h4>
 Concatenates the components of X with the Unix separator /.
 <h4>Message() -> Message_t</h4>
+Create new message object.
 <h4>MoveFile(target::MonStgElt, dest::MonStgElt)</h4>
 Moves file.
 <h4>Permutation(X::SeqEnum, Y::SeqEnum) -> SeqEnum</h4>
@@ -103,8 +123,11 @@ The permutation sigma such that Y[sigma] = X.
 <h4>PrintCentered(msg::SeqEnum[MonStgElt] : MaxWidth:=0)</h4>
 Print the array of strings aligned centrally.
 <h4>PrintMessage(M::Message_t : Debug:=0)</h4>
+Prints the message set in M.
 <h4>PrintMessage(M::Message_t, msg::MonStgElt)</h4>
+Sets msg to message of M and prints it.
 <h4>PrintPercentage(M::Message_t, msg::MonStgElt, value::RngIntElt, final::RngIntElt : Precision:=2)</h4>
+Sets message of M to percentage value/final*100 and prints it.
 <h4>Pushover(msg::MonStgElt)</h4>
 Sends a notification via Pushover.
 <h4>RandomString(n::RngIntElt : Unit:="B", Method:="OpenSSL") -> MonStgElt</h4>
@@ -124,7 +147,9 @@ Replaces all occurences of the regular expression reg by rep in the string str u
 <h4>ReplaceCharacter(str::MonStgElt, chr1::MonStgElt, chr2::MonStgElt) -> MonStgElt</h4>
 Replaces the characters in chr1 by the characters in chr2 in the string str. This uses the tr tool and also supports character classes. Both chr1 and chr2 will be surrounded by quotation marks "" for the tr call, so they have to be escaped respectively. As an example, to replace a backslash \ you need to enter \\\\\\\\, yes 8 backslashes: this becomes four backslashes \\\\ when sent to tr and this is interpreted as an escaped backslash. But the behavior under Unix and Windows is the same. See https://en.wikipedia.org/wiki/Tr_(Unix) and http://pubs.opengroup.org/onlinepubs/9699919799/utilities/tr.html. 
 <h4>SQLiteQuery(file::MonStgElt, query::MonStgElt) -> BoolElt, MonStgElt</h4>
+Executes query on the sqlite database specified by file.
 <h4>SaveToDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")</h4>
+Save object (given as evaluateable string) to database.
 <h4>SetBackCursor(n::RngIntElt)</h4>
 Sets back the curser by n characters.
 <h4>Sleep(n::FldReElt)</h4>
@@ -140,6 +165,7 @@ Returns true iff url exists (request returns 200 OK).
 <h4>UnixFilename(f::MonStgElt) -> MonStgElt</h4>
 Replaces Windows \ by Unix /.
 <h4>UnixTimeStamp() -> RngIntElt</h4>
+The current unix timestamp (returned as an integer).
 <h4>WindowsFilename(f::MonStgElt) -> MonStgElt</h4>
 Replaces Unix / by Windows \.
 <h4>WriteCompressed(F::MonStgElt, X::. : Level:=4)</h4>

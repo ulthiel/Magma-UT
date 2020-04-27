@@ -49,7 +49,7 @@ declare attributes Message_t:
 //Constructors
 //##############################################################################
 intrinsic Message() -> Message_t
-{}
+{Create new message object.}
 
   M := New(Message_t);
   M`Width := 0;
@@ -64,7 +64,7 @@ end intrinsic;
 //  exactly what I don't want!
 //##############################################################################
 intrinsic PrintMessage(M::Message_t : Debug:=0)
-{}
+{Prints the message set in M.}
 
   SetBackCursor(M`Width);
   printf M`Message;
@@ -80,11 +80,10 @@ intrinsic PrintMessage(M::Message_t : Debug:=0)
   //For debugging
   //Sleep(2);
 
-
 end intrinsic;
 
 intrinsic PrintMessage(M::Message_t, msg::MonStgElt)
-{}
+{Sets msg to message of M and prints it.}
 
   M`Message := msg;
   PrintMessage(M);
@@ -92,7 +91,7 @@ intrinsic PrintMessage(M::Message_t, msg::MonStgElt)
 end intrinsic;
 
 intrinsic PrintPercentage(M::Message_t, msg::MonStgElt, value::RngIntElt, final::RngIntElt : Precision:=2)
-{}
+{Sets message of M to percentage value/final*100 and prints it.}
 
   //format string (more escaping of % since this is given to printf later)
   fmt := Sprintf("%o%%%o.%oo%%%%%%%%", msg, 3+1+Precision, Precision);
@@ -108,7 +107,7 @@ end intrinsic;
 //  Clear message
 //##############################################################################
 intrinsic Clear(M::Message_t)
-{}
+{Clears the message buffer of M.}
 
   SetBackCursor(M`Width);
   str := "";
@@ -122,7 +121,7 @@ intrinsic Clear(M::Message_t)
 end intrinsic;
 
 intrinsic Flush(M::Message_t)
-{}
+{Flushes printing. Use this before destruction of M.}
 
   print "";
   M`Width := 0;

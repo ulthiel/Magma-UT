@@ -12,7 +12,7 @@ freeze;
 //##############################################################################
 
 intrinsic MagmaUTWelcome()
-{}
+{Prints the Magma-UT welcome message.}
 
   printf "\b"; //this is a little trick to get correct printing when
               //starting with the -b option.

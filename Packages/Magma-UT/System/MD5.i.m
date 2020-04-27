@@ -39,7 +39,7 @@ intrinsic MD5OfFile(file::MonStgElt) -> MonStgElt
 end intrinsic;
 
 intrinsic MD5OfString(str::MonStgElt) -> MonStgElt
-{}
+{MD5 sum of the given string.}
 
   //We don't have a bidirectional pipe really (not at all under Windows, and the
   //Unix one is unrealiable. So, I write stuff to a file.

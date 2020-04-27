@@ -11,13 +11,11 @@ freeze;
 //
 //##############################################################################
 
-
-
 //##############################################################################
 //	Check if object exists in DB
 //##############################################################################
 intrinsic SQLiteQuery(file::MonStgElt, query::MonStgElt) -> BoolElt, MonStgElt
-{}
+{Executes query on the sqlite database specified by file.}
 
   res := SystemCall(GetSQLiteCommand()*" \""*file*"\" \""*query*"\"");
 

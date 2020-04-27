@@ -15,7 +15,7 @@
 //	Check if an object exists in the database
 //##############################################################################
 intrinsic ExistsInDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> BoolElt
-{}
+{Check if object exists in database.}
 
 	return FileExists(MakePath([GetDBDir(dbname), dbdir, object*".o.m.gz"]));
 
@@ -26,7 +26,7 @@ end intrinsic;
 //	be downloaded from LFS.
 //##############################################################################
 intrinsic GetFromDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .
-{}
+{Retrieve object from database. If the database is a Git LFS database and the file is not there yet, it will be downloaded.}
 
 	file := MakePath([GetDBDir(dbname), dbdir, object*".o.m.gz"]);
 
@@ -78,7 +78,7 @@ end intrinsic;
 //	Save object to database
 //##############################################################################
 intrinsic SaveToDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")
-{}
+{Save object (given as evaluateable string) to database.}
 
 	filedir := MakePath([GetDBDir(dbname), dbdir]);
 	MakeDirectory(filedir);

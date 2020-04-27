@@ -35,7 +35,7 @@ intrinsic Date(: Format:="", UTC:=false) -> MonStgElt
 end intrinsic;
 
 intrinsic UnixTimeStamp() -> RngIntElt
-{}
+{The current unix timestamp (returned as an integer).}
 
   return StringToInteger(Date(:Format:="%s",UTC:=true));
 

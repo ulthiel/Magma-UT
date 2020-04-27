@@ -22,7 +22,7 @@
 //  Magma-UT base directory
 //##############################################################################
 intrinsic GetBaseDir() -> MonStgElt
-{}
+{The Magma-UT base directory.}
 
   return GetEnv("MAGMA_UT_BASE_DIR");
 
@@ -32,7 +32,7 @@ end intrinsic;
 //  Magma-UT DB directory
 //##############################################################################
 intrinsic GetDBDirs() -> MonStgElt
-{}
+{Sequence of database directories defined in Config.txt.}
 
   basedir := GetBaseDir();
   return Split(GetEnv("MAGMA_UT_DB_DIRS"), ",");
@@ -40,14 +40,14 @@ intrinsic GetDBDirs() -> MonStgElt
 end intrinsic;
 
 intrinsic GetDBNames() -> MonStgElt
-{}
+{Sequence of database names defined in Config.txt.}
 
   return Split(GetEnv("MAGMA_UT_DB_NAMES"), ",");
 
 end intrinsic;
 
 intrinsic GetDBDir(dbname::MonStgElt) -> MonStgElt
-{}
+{The database directory for a given database name as defined in Config.txt.}
 
   pos := Position(GetDBNames(), dbname);
   if pos eq 0 then
@@ -61,7 +61,7 @@ end intrinsic;
 //  Path for the UnixTools
 //##############################################################################
 intrinsic GetUnixTool(name::MonStgElt) -> MonStgElt
-{}
+{Returns correct path to Unix tool for Windows (this is in Tools/UnixTools of the Magma-UT base directory).}
 
   if GetOSType() eq "Unix" then
     return name;
@@ -75,7 +75,7 @@ end intrinsic;
 //  Pushover token
 //##############################################################################
 intrinsic IsPushoverTokenDefined() -> BoolElt
-{}
+{True iff a Pushover token is set in Config.txt.}
 
   user := GetEnv("MAGMA_UT_PUSHOVER_USER");
   token := GetEnv("MAGMA_UT_PUSHOVER_TOKEN");
@@ -88,7 +88,7 @@ intrinsic IsPushoverTokenDefined() -> BoolElt
 end intrinsic;
 
 intrinsic GetPushoverToken() -> MonStgElt, MonStgElt
-{}
+{Returns the pushover token defined in Config.txt}
 
   user := GetEnv("MAGMA_UT_PUSHOVER_USER");
   token := GetEnv("MAGMA_UT_PUSHOVER_TOKEN");
@@ -103,7 +103,7 @@ end intrinsic;
 //  The download tool to be used (curl/wget with preference on wget)
 //##############################################################################
 intrinsic GetDownloadTool() -> MonStgElt
-{}
+{The download tool defined in Config.txt (or the one set automatically by the startup script).}
 
   return GetEnv("MAGMA_UT_DWN_TOOL");
 
@@ -170,7 +170,7 @@ end intrinsic;
 //  Editor for viewing text files
 //##############################################################################
 intrinsic GetEditor() -> MonStgElt
-{}
+{The editor defined in Config.txt.}
 
   return GetEnv("MAGMA_UT_EDITOR");
 
@@ -180,7 +180,7 @@ end intrinsic;
 //  HTML viewer
 //##############################################################################
 intrinsic GetHTMLViewer() -> MonStgElt
-{}
+{The HTML viewer defined in Config.txt.}
 
   return GetEnv("MAGMA_UT_HTML_VIEWER");
 
@@ -190,7 +190,7 @@ end intrinsic;
 //  SQLite command
 //##############################################################################
 intrinsic GetSQLiteCommand() -> MonStgElt
-{}
+{The SQLite command defined in Config.txt.}
 
   return GetEnv("MAGMA_UT_SQLITE_COMMAND");
 
@@ -210,7 +210,7 @@ end intrinsic;
 //  Git
 //##############################################################################
 intrinsic IsGitInstalled() -> BoolElt
-{}
+{True iff Git is installed and can be executed on the command line.}
 
 	try
 		res := SystemCall("git --version");
@@ -222,7 +222,7 @@ intrinsic IsGitInstalled() -> BoolElt
 end intrinsic;
 
 intrinsic IsGitLFSInstalled() -> BoolElt
-{}
+{True iff Git LFS extension is installed.}
 
 	try
 		res := SystemCall("git lfs env");
