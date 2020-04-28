@@ -88,7 +88,7 @@ intrinsic AddPackage(url::MonStgElt)
 		if Position(line, "#MAGMA_UT_PACKAGES=") ne 0 then
 			newconfig *:= "MAGMA_UT_PACKAGES=$MAGMA_UT_BASE_DIR/Packages/"*pkgname*"/"*pkgname*".s.m";
 		elif Position(line, "MAGMA_UT_PACKAGES=") ne 0 then
-			newconfig *:= line*":$MAGMA_UT_BASE_DIR/Packages/"*pkgname*"/"*pkgname*".s.m";
+			newconfig *:= line*",$MAGMA_UT_BASE_DIR/Packages/"*pkgname*"/"*pkgname*".s.m";
 		else
 			newconfig *:= line;
 		end if;
@@ -170,7 +170,7 @@ intrinsic DeletePackage(pkgname::MonStgElt)
 				end if;
 				line *:= pkgs[i];
 				if i lt #pkgs then
-					line *:= ":";
+					line *:= ",";
 				end if;
 			end for;
 		end if;

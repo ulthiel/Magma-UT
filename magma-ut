@@ -32,6 +32,11 @@ set -a
 . "$MAGMA_UT_BASE_DIR/Config/Config.txt"
 set +a
 
+# Replace comma by colon in package list
+if [ ! -z ${MAGMA_UT_PACKAGES+x} ]; then
+  export MAGMA_UT_PACKAGES_CONV=`echo "$MAGMA_UT_PACKAGES" | sed -e 's/,/:/g'`
+fi
+
 # Get Magma-UT version. I'll cd into the Magma-UT directory to avoid git -C
 # since this didn't exist before Git 1.8.5 (Nov 2013).
 curdir=`pwd`
@@ -164,9 +169,9 @@ fi
 ################################################################################
 
 # Add the Magma-UT spec file to the Magma startup spec variable
-export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Magma-UT.s.m:$MAGMA_UT_PACKAGES:$MAGMA_USER_SPEC
+export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Packages/magma-ut/magma-ut.s.m:$MAGMA_UT_PACKAGES_CONV:$MAGMA_USER_SPEC
 
 # Set the Magma-UT startup file as Magma startup file
-export MAGMA_STARTUP_FILE="$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Startup/Startup.m"
+export MAGMA_STARTUP_FILE="$MAGMA_UT_BASE_DIR/Packages/magma-ut/Startup/Startup.m"
 
 "$MAGMA_EXEC" -b "$@"
