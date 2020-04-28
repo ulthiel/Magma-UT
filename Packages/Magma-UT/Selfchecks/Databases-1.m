@@ -1,1 +1,1 @@
-AddDB("https://github.com/ulthiel/test-db");
+AddDB("https://github.com/ulthiel/magma-ut-test-db");

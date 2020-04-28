@@ -120,15 +120,20 @@ end intrinsic;
 //##############################################################################
 //	Creates an empty database
 //##############################################################################
-intrinsic CreateDB(dbdir::MonStgElt)
+intrinsic CreateDB(dir::MonStgElt, dbname::MonStgElt)
 {Creates an empty database in the specified directory.}
 
-	MakeDirectory(dbdir);
+	dir := MakePath([dir, dbname]);
+	if DirectoryExists(dir) then
+		error "Directory exists";
+	end if;
+
+	MakeDirectory(dir);
 	try
 		if GetOSType() eq "Unix" then
-			cmd := "cd \""*dbdir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
+			cmd := "cd \""*dir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
 		else
-			cmd := "cd /d \""*dbdir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
+			cmd := "cd /d \""*dir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
 		end if;
 		res := SystemCall(cmd);
 	catch e

@@ -232,3 +232,13 @@ intrinsic IsGitLFSInstalled() -> BoolElt
 	return true;
 
 end intrinsic;
+
+//##############################################################################
+//  Packages
+//##############################################################################
+intrinsic GetPackages() -> MonStgElt
+{List of spec files attached at startup.}
+
+  return Split(GetEnv("MAGMA_UT_PACKAGES"), ":");
+
+end intrinsic;

@@ -59,6 +59,8 @@ Unit can be one of B, kB, MB, GB, KiB, MiB, GiB.}
       return Substring(ret, 1, n);
     end if;
 
+  //The urandom part is buggy somehow. In MacOS it sometimes doesn't work,
+  //and then tr also keeps running. You shouldn't use it (or repeair it).
   elif Method eq "urandom" then
     if not GetOSType() eq "Unix" then
       error "Method urandom only available under Unix.";

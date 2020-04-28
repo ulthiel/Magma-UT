@@ -6,6 +6,8 @@ Output/Messages.i.m
 Output/Pushover.i.m
 Output/PrintCentered.i.m
 
+Packages/Packages.i.m
+
 SetsSequences/SetsSequences.i.m
 
 Startup/Welcome.i.m
