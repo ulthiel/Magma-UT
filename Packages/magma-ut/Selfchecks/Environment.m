@@ -7,10 +7,11 @@ GetOS();
 GetOSArch();
 GetOSVersion();
 GetPOpenChunkSize();
-GetPushoverToken();
+if IsPushoverTokenDefined() then
+	GetPushoverToken();
+end if;
 GetSQLiteCommand();
 GetUnixTool("wget");
 GetVersionString();
 IsGitInstalled();
 IsGitLFSInstalled();
-IsPushoverTokenDefined();
