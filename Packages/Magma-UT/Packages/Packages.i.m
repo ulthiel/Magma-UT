@@ -25,9 +25,9 @@ intrinsic CreatePackage(dir::MonStgElt, pkgname::MonStgElt)
 	MakeDirectory(dir);
 	try
 		if GetOSType() eq "Unix" then
-			cmd := "cd \""*dir*"\" && git init && touch Readme.md && touch \""*pkgname*"\".s.m && git add Readme.md \""*pkgname*"\" && git commit -a -m \"Initial\"";
+			cmd := "cd \""*dir*"\" && git init && echo \"# "*pkgname*"\" > Readme.md && touch \""*pkgname*"\".s.m && git add Readme.md \""*pkgname*"\".s.m && git commit -a -m \"Initial\"";
 		else
-			cmd := "cd /d \""*dir*"\" && git init && touch Readme.md && touch \""*pkgname*"\".s.m && git add Readme.md \""*pkgname*"\" && git commit -a -m \"Initial\"";
+			cmd := "cd /d \""*dir*"\" && git init && echo \"# "*pkgname*"\" > Readme.md && touch \""*pkgname*"\".s.m && git add Readme.md \""*pkgname*"\".s.m && git commit -a -m \"Initial\"";
 		end if;
 		res := SystemCall(cmd);
 	catch e
@@ -125,7 +125,7 @@ intrinsic DeletePackage(pkgname::MonStgElt)
 
 	dir := MakePath(["Packages", pkgname]);
 
-	DetachSpec(MakePath([dir, pkgname, pkgname*".s.m"]));
+	DetachSpec(MakePath([GetBaseDir(), dir, pkgname*".s.m"]));
 
 	try
 		if GetOSType() eq "Unix" then
