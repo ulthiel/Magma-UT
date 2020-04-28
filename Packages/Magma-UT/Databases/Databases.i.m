@@ -51,11 +51,19 @@ intrinsic GetFromDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .
 			filedir := MakePath([GetDBDir(dbname), dbdir]);
 
 			//directory of file relative to repo (needed for pull)
-			filereldir := SystemCall("cd \""*filedir*"\" && git rev-parse --show-prefix");
+			if GetOSType() eq "Unix" then
+				filereldir := SystemCall("cd \""*filedir*"\" && git rev-parse --show-prefix");
+			else
+				filereldir := SystemCall("cd /d \""*filedir*"\" && git rev-parse --show-prefix");
+			end if;
 			filereldir := filereldir[1..#filereldir-1]; //remove newline
 
 			//pull file
-			stat := SystemCall("cd \""*filedir*"\" && git lfs pull --include \""*MakePath([filereldir, object*".o.m.gz"])*"\"");
+			if GetOSType() eq "Unix" then
+				stat := SystemCall("cd \""*filedir*"\" && git lfs pull --include \""*MakePath([filereldir, object*".o.m.gz"])*"\"");
+			else
+				stat := SystemCall("cd /d \""*filedir*"\" && git lfs pull --include \""*MakePath([filereldir, object*".o.m.gz"])*"\"");
+			end if;
 
 			//decompress file
 			res := ReadCompressed(file);
@@ -90,11 +98,19 @@ intrinsic SaveToDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt, X::Mo
 		filedir := MakePath([GetDBDir(dbname), dbdir]);
 
 		//directory of file relative to repo (needed for pull)
-		filereldir := SystemCall("cd \""*filedir*"\" && git rev-parse --show-prefix");
+		if GetOSType() eq "Unix" then
+			filereldir := SystemCall("cd \""*filedir*"\" && git rev-parse --show-prefix");
+		else
+			filereldir := SystemCall("cd /d \""*filedir*"\" && git rev-parse --show-prefix");
+		end if;
 		filereldir := filereldir[1..#filereldir-1]; //remove newline
 
 		//add file to repo
-		stat := SystemCall("cd \""*filedir*"\" && git add \""*object*".o.m.gz\"");
+		if GetOSType() eq "Unix" then
+			stat := SystemCall("cd \""*filedir*"\" && git add \""*object*".o.m.gz\"");
+		else
+			stat := SystemCall("cd /d \""*filedir*"\" && git add \""*object*".o.m.gz\"");
+		end if;
 	catch e
 		;
 	end try;
@@ -109,7 +125,11 @@ intrinsic CreateDB(dbdir::MonStgElt)
 
 	MakeDirectory(dbdir);
 	try
-		cmd := "cd \""*dbdir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
+		if GetOSType() eq "Unix" then
+			cmd := "cd \""*dbdir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
+		else
+			cmd := "cd /d \""*dbdir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
+		end if;
 		res := SystemCall(cmd);
 	catch e
 		error "Error creating database";
@@ -153,7 +173,7 @@ intrinsic AddDB(url::MonStgElt)
 		if GetOSType() eq "Windows" then
 			cmd := "cd \""*dir*"\" && set \"GIT_LFS_SKIP_SMUDGE=1\" & git submodule add "*url*" \""*dbname*"\"";
 		else
-			cmd := "cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*dbname*"\"";
+			cmd := "cd /d \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*dbname*"\"";
 		end if;
 		//print cmd;
 		res := SystemCall(cmd);
@@ -214,11 +234,19 @@ intrinsic DeleteDB(dbname::MonStgElt)
 	dir := MakePath(["Databases", dbname]);
 
 	try
-		cmd := "cd \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
+		if GetOSType() eq "Unix" then
+			cmd := "cd \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
+		else
+			cmd := "cd /d \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
+		end if;
 		//print cmd;
 		res := SystemCall(cmd);
 
-		cmd := "cd \""*GetBaseDir()*"\" && git rm -rf "*dir;
+		if GetOSType() eq "Unix" then
+			cmd := "cd \""*GetBaseDir()*"\" && git rm -rf "*dir;
+		else
+			cmd := "cd /d \""*GetBaseDir()*"\" && git rm -rf "*dir;
+		end if;
 		//print cmd;
 		res := SystemCall(cmd);
 
