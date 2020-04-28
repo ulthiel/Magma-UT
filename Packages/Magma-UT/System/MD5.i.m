@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -39,12 +39,17 @@ intrinsic MD5OfFile(file::MonStgElt) -> MonStgElt
 end intrinsic;
 
 intrinsic MD5OfString(str::MonStgElt) -> MonStgElt
-{MD5 sum of the given string.}
+{MD5 sum of the given string. Note: as I assume the string may be big, I save it to a temporary file, and then take md5 of this file. This is different from directly computing md5 of a string.}
 
-  //We don't have a bidirectional pipe really (not at all under Windows, and the
-  //Unix one is unrealiable. So, I write stuff to a file.
   file := MakePath([GetTempDir(), Tempname("md5str")]);
   Write(file, str : Overwrite:=true);
+
+  //Windowns problem: Write under Windows uses different line endings. For
+  //consistency, I convert to Unix file endings.
+  if GetOSType() eq "Windows" then
+		cmd := GetUnixTool("dos2unix")*" -f \""*file*"\"";
+		res := SystemCall(cmd);
+	end if;
   md5 := MD5OfFile(file);
   DeleteFile(file);
   return md5;
