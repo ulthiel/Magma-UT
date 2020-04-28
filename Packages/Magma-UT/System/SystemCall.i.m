@@ -38,7 +38,7 @@ intrinsic SystemCall(Command::MonStgElt : ChunkSize:=0) -> MonStgElt
   else
     cmd := "("*Command*" 2>NUL) || echo __MAGMA_UT_SYSTEMCALL_FAILED__";
   end if;
-  //print cmd;
+  print cmd;
   pipe := POpen(cmd, "r");
 
   output := "";

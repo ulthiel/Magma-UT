@@ -12,7 +12,7 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :: clear screen
-cls
+::cls
 
 :: prevent output
 @echo off
@@ -63,7 +63,7 @@ if defined MAGMA_UT_DB_DIRS (
 
 :: Replace forward slash by backward slash in Magma directory
 if defined MAGMA_UT_MAGMA_DIR (
-    for /F "tokens=1 USEBACKQ" %%F in (`echo %MAGMA_UT_MAGMA_DIR% ^| "%MAGMA_UT_MAGMA_DIR%\Tools\UnixTools\sed.exe" -e "s/\//\\/g"`) do (
+    for /F "tokens=1 USEBACKQ" %%F in (`echo %MAGMA_UT_MAGMA_DIR% ^| "%MAGMA_UT_BASE_DIR%\Tools\UnixTools\sed.exe" -e "s/\//\\/g"`) do (
         set MAGMA_UT_MAGMA_DIR=%%F
     )
 )
