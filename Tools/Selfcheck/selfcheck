@@ -76,18 +76,6 @@ if [ -z ${PACKAGE+x} ]; then
   exit 1
 fi
 
-# If reporting activated, get selfcheck token from Config file
-if [ "$REPORT" == "YES" ]; then
-  set -a
-  . ../../Config/Config.txt
-  set +a
-
-  if [ -z ${MAGMA_UT_SELFCHECK_TOKEN+x} ]; then
-    echo "Error: You selected reporting option. For security you need to define a selfcheck token in Config.txt"
-    exit 1
-  fi
-fi
-
 # If no selfcheck files given, take all of them
 if [ -z ${SELFCHECKS+x} ]; then
   cd ../../Packages/$PACKAGE/Selfchecks/
@@ -97,6 +85,16 @@ fi
 
 # Gather some system information for reporting
 if [ "$REPORT" == "YES" ]; then
+
+  # Get selfcheck token from Config file
+  set -a
+  . ../../Config/Config.txt
+  set +a
+
+  if [ -z ${MAGMA_UT_SELFCHECK_TOKEN+x} ]; then
+    echo "Error: You selected reporting option. For security you need to define a selfcheck token in Config.txt"
+    exit 1
+  fi
 
   HOST=`uname -n`
 
@@ -148,15 +146,10 @@ if [ "$REPORT" == "YES" ]; then
     exit 1
   fi
 
-  #Magma-UT version
-  git describe >/dev/null 2>/dev/null
+  #Package version
+  git --git-dir ../../Packages/$PACKAGE describe >/dev/null 2>/dev/null
   if [ $? -eq 0 ]; then
-    MAGMA_UT_VER=`git describe`
-  else
-    cat ../../version.txt >/dev/null 2>/dev/null
-    if [ $? -eq 0 ]; then
-      MAGMA_UT_VER=`cat ../../version.txt`
-    fi
+    PKG_VER=`git --git-dir ../../Packages/$PACKAGE describe`
   fi
 fi
 

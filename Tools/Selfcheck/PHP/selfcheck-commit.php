@@ -37,5 +37,5 @@ $sql = "INSERT INTO selfchecks ($columns) VALUES ($values)";
 $result = $conn->query($sql);
 
 $conn->close();
-echo $sql;
+//echo $sql;
 ?>

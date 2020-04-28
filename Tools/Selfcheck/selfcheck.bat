@@ -58,6 +58,14 @@ if "%selfcheckCount%"=="0" (
 :: Gather some system information for reporting
 if "%REPORT%"=="1" (
 
+  :: Get selfcheck token from Config file
+  for /f "eol=# delims=" %%i in ('type "..\..\Config\Config.txt"') do (call set "%%i")
+
+  if not defined MAGMA_UT_SELFCHECK_TOKEN (
+    echo Error: You selected reporting option. For security you need to define a selfcheck token in Config.txt
+    exit /b
+  )
+
   :: Hostname
   FOR /F "tokens=* USEBACKQ" %%F IN (`hostname`) DO (
     SET HOST=%%F
@@ -74,14 +82,10 @@ if "%REPORT%"=="1" (
   )
 
   :: CHAMP version
-  git describe >NUL 2>NUL
-  if %ERRORLEVEL% equ 0 (
-    FOR /F "tokens=* USEBACKQ" %%F IN (`git describe`) DO (
-      SET CHAMP_VER=%%F
-    )
-  ) else (
-    if exist "..\..\version.txt" (
-      set /p CHAMP_VER= < ..\..\version.txt
+  git --git-dir ..\..\Packages\%PACKAGE% describe >NUL 2>NUL
+  if !ERRORLEVEL! equ 0 (
+    FOR /F "tokens=* USEBACKQ" %%F IN (`git --git-dir ..\..\Packages\%PACKAGE% describe`) DO (
+      SET PKG_VER=%%F
     )
   )
 )
@@ -193,14 +197,16 @@ quit;
   rem Report result
   if "!REPORT!"=="1" (
     if "!RESULT!"=="0" (
-      set URL="https://ulthiel.com/champ/selfcheck-commit.php?Date=!SELFCHECK_DATE!&Test=!NAME!&Result=!RESULT!&Time=!CHAMP_TIME!&Memory=!CHAMP_MEM!&CHAMP=!CHAMP_VER!&Magma=!MAGMA_VER!&Host=!HOST!&OS=!OS_VER!&CPU=!CPU!"
+      set URL="https://ulthiel.com/magma-ut/selfcheck-commit.php?Date=!SELFCHECK_DATE!&Package=!PACKAGE!&Test=!NAME!&Result=!RESULT!&Time=!MAGMA_UT_TIME!&Memory=!MAGMA_UT_MEM!&PackageVer=!PKG_VER!&MagmaVer=!MAGMA_VER!&Host=!HOST!&OS=!OS_VER!&CPU=!CPU!&Token=!MAGMA_UT_SELFCHECK_TOKEN!"
     ) else (
-      set URL="https://ulthiel.com/champ/selfcheck-commit.php?Date=!SELFCHECK_DATE!&Test=!NAME!&Result=!RESULT!&CHAMP=!CHAMP_VER!&Magma=!MAGMA_VER!&Host=!HOST!&OS=!OS_VER!&CPU=!CPU!"
+      set URL="https://ulthiel.com/magma-ut/selfcheck-commit.php?Date=!SELFCHECK_DATE!&Package=!PACKAGE!&Test=!NAME!&Result=!RESULT!&PackageVer=!PKG_VER!&MagmaVer=!MAGMA_VER!&Host=!HOST!&OS=!OS_VER!&CPU=!CPU!&Token=!MAGMA_UT_SELFCHECK_TOKEN!"
     )
 
-    FOR /F "tokens=* USEBACKQ" %%F IN (`echo !URL! ^| ..\UnixTools\sed.exe "s/ /%%20/g"`) DO (
+    FOR /F "tokens=* USEBACKQ" %%F IN (`echo !URL!^| ..\UnixTools\sed.exe "s/ /%%20/g"`) DO (
       SET URL_ESC=%%F
     )
+
+    rem echo !URL_ESC!
 
     ..\UnixTools\curl.exe !URL_ESC! >NUL 2>NUL
   )
