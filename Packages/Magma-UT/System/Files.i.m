@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -69,10 +69,21 @@ intrinsic MakePath(X::SeqEnum[MonStgElt]) -> MonStgElt
 
 end intrinsic;
 
+//Absurdly, the intrinsic Reverse for MonStgElt exists in 2.24 but not in 2.25
+//anymore. Hence, I'm implementing a simple function here; I don't need an
+//efficient one here.
+function Reverse_internal(f)
+  g := "";
+  for i:=#f to 1 by -1 do
+    g *:= f[i];
+  end for;
+  return g;
+end function;
+
 intrinsic FileName(f::MonStgElt) -> MonStgElt
 {Returns the file name of a full file name, i.e., split off the directory}
 
-  pos := Position(Reverse(f), DirectorySeparator()); //matches last slash in f
+  pos := Position(Reverse_internal(f), DirectorySeparator()); //matches last slash in f
 
   if pos eq 0 then
     name := f;
@@ -87,7 +98,7 @@ end intrinsic;
 intrinsic DirectoryName(f::MonStgElt) -> MonStgElt
 {Returns the directory of a full file name}
 
-  pos := Position(Reverse(f), DirectorySeparator()); //matches last slash in f
+  pos := Position(Reverse_internal(f), DirectorySeparator()); //matches last slash in f
 
   if pos eq 0 then
     dir := ".";
@@ -268,7 +279,7 @@ intrinsic ListDirectories(dir::MonStgElt) -> SeqEnum
     ret := SystemCall(cmd);
   else
     //the * doesn't work under windows
-    cmd := "cd "*dir*" && "*GetUnixTool("find")*" . -type d -maxdepth 1 -printf %P\\n";
+    cmd := "cd /d "*dir*" && "*GetUnixTool("find")*" . -type d -maxdepth 1 -printf %P\\n";
     ret := SystemCall(cmd);
   end if;
 
@@ -313,7 +324,7 @@ intrinsic ListFiles(dir::MonStgElt) -> SeqEnum
     end try;
   else
     //the * doesn't work under windows but printf exists
-    cmd := "cd "*dir*" && "*GetUnixTool("find")*" . -type f -maxdepth 1 -printf %P\\n";
+    cmd := "cd /d "*dir*" && "*GetUnixTool("find")*" . -type f -maxdepth 1 -printf %P\\n";
     ret := SystemCall(cmd);
   end if;
 
