@@ -151,7 +151,7 @@ echo Either add Magma installation directory to Config.txt or to PATH environmen
 pause
 exit /b
 
-
+:: From here on, everything is fine
 :startmagma
 
 :: add the MAGMA_UT spec file to the Magma startup spec variable
@@ -161,6 +161,6 @@ set MAGMA_USER_SPEC=%MAGMA_UT_BASE_DIR%\Packages\Magma-UT\Magma-UT.s.m;%MAGMA_US
 set MAGMA_STARTUP_FILE=%MAGMA_UT_BASE_DIR%\Packages\Magma-UT\Startup\Startup.m
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-::now, start magma with the Startup script from the Config directory
+::Now, start Magma with the Startup script from the Config directory
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 %MAGMA_EXEC% -b %*

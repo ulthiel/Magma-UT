@@ -24,7 +24,7 @@ from optparse import OptionParser
 ###############################################################################
 #parse options
 parser = OptionParser()
-parser.add_option("-p", "--package", dest="package",help="Package name, e.g. -p=Magma-UT")
+parser.add_option("-p", "--package", dest="package",help="Package name, e.g. -p Magma-UT")
 (options, args) = parser.parse_args()
 package = options.package
 
