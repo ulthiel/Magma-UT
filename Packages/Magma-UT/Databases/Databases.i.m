@@ -199,11 +199,11 @@ intrinsic AddDB(url::MonStgElt)
 		if Position(line, "#MAGMA_UT_DB_NAMES=") ne 0 then
 			newconfig *:= "MAGMA_UT_DB_NAMES="*dbname;
 		elif Position(line, "MAGMA_UT_DB_NAMES=") ne 0 then
-			newconfig *:= line*","*dbname;
+			newconfig *:= line*":"*dbname;
 		elif Position(line, "#MAGMA_UT_DB_DIRS=") ne 0 then
 			newconfig *:= "MAGMA_UT_DB_DIRS=$MAGMA_UT_BASE_DIR/Databases/"*dbname;
 		elif Position(line, "MAGMA_UT_DB_DIRS=") ne 0 then
-			newconfig *:= line*",$MAGMA_UT_BASE_DIR/Databases/"*dbname;
+			newconfig *:= line*":$MAGMA_UT_BASE_DIR/Databases/"*dbname;
 		else
 			newconfig *:= line;
 		end if;
@@ -281,7 +281,7 @@ intrinsic DeleteDB(dbname::MonStgElt)
 				end if;
 				line *:= dbs[i];
 				if i lt #dbs then
-					line *:= ",";
+					line *:= ":";
 				end if;
 			end for;
 		elif Position(line, "MAGMA_UT_DB_DIRS=") ne 0 then
@@ -293,7 +293,7 @@ intrinsic DeleteDB(dbname::MonStgElt)
 				end if;
 				line *:= GetDBDir(dbs[i]);
 				if i lt #dbs then
-					line *:= ",";
+					line *:= ":";
 				end if;
 			end for;
 		end if;

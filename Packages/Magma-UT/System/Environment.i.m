@@ -35,14 +35,14 @@ intrinsic GetDBDirs() -> MonStgElt
 {Sequence of database directories defined in Config.txt.}
 
   basedir := GetBaseDir();
-  return Split(GetEnv("MAGMA_UT_DB_DIRS"), ",");
+  return Split(GetEnv("MAGMA_UT_DB_DIRS"), ":");
 
 end intrinsic;
 
 intrinsic GetDBNames() -> MonStgElt
 {Sequence of database names defined in Config.txt.}
 
-  return Split(GetEnv("MAGMA_UT_DB_NAMES"), ",");
+  return Split(GetEnv("MAGMA_UT_DB_NAMES"), ":");
 
 end intrinsic;
 

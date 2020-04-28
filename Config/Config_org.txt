@@ -25,7 +25,7 @@
 
 ################################################################################
 # Names and directories of databases.
-# This is a comma separated list (no space between commas).
+# This is a COLON separated list (no space between commas).
 # Path should be ABSOLUTE. You can use the variable $MAGMA_UT_BASE_DIR.
 ################################################################################
 #MAGMA_UT_DB_NAMES=
@@ -33,7 +33,7 @@
 #MAGMA_UT_DB_DIRS=
 
 ################################################################################
-# Spec files of packages to be attached.
+# Spec files of packages to be attached. This is a COLON separated list.
 ################################################################################
 #MAGMA_UT_PACKAGES=
 
