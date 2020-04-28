@@ -18,5 +18,4 @@ assert G eq H;
 
 DeleteDB("magma-ut-test-db");
 
-dir := MakePath([GetTempDir(), Tempname("magma-ut")]);
-CreateDB(dir);
+CreateDB(GetTempDir(), "magma-ut");

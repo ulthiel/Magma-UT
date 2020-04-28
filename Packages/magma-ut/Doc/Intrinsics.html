@@ -1,17 +1,19 @@
 <html>
 <head>
-<title>Magma-UT Intrinsics</title>
+<title>magma-ut Intrinsics</title>
 </head>
 <body>
-<h2>Magma-UT Intrinsics</h2>
+<h2>magma-ut Intrinsics</h2>
 <h3>Statistics</h3>
-Lines: 1625<br>
-Commands: 1202<br>
-Intrinsics: 120<br>
-Source files: 22<br>
+Lines: 2076<br>
+Commands: 1365<br>
+Intrinsics: 124<br>
+Source files: 23<br>
 <h3>Intrinsics</h3>
 <h4>AddDB(url::MonStgElt)</h4>
 Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the local Databases directory. The database is then added to the Config.txt file. A restart is necessary to register the database.
+<h4>AddPackage(url::MonStgElt)</h4>
+Clones a Git Package into the Packages directory.
 <h4>Adler32(m::MonStgElt) -> MonStgElt</h4>
 Adler32 checksum of the string m.
 <h4>ArrayProduct(X::SeqEnum : EmptyProduct:=One(Integers())) -> RngElt</h4>
@@ -22,14 +24,18 @@ The sum of the elements in X. If X is empty, returns EmptySum; this is the zero 
 Clears the message buffer of M.
 <h4>CodesToString(code::SeqEnum[RngIntElt]) -> MonStgElt</h4>
 The string defined by the (ASCII) code sequenc code.
-<h4>CreateDB(dbdir::MonStgElt)</h4>
+<h4>CreateDB(dir::MonStgElt, dbname::MonStgElt)</h4>
 Creates an empty database in the specified directory.
+<h4>CreatePackage(dir::MonStgElt, pkgname::MonStgElt)</h4>
+Creates an empty package in the specified directory.
 <h4>Date(: Format:="", UTC:=false) -> MonStgElt</h4>
 The current date and time. Format can be a format specifier or "ISO".
 <h4>DeleteDB(dbname::MonStgElt)</h4>
 Deletes a Git LFS database which was cloned as a submodule. Use with caution.
 <h4>DeleteFile(file::MonStgElt)</h4>
 Deletes file.
+<h4>DeletePackage(pkgname::MonStgElt)</h4>
+Deletes a package which was cloned as a submodule. Use with caution!
 <h4>DirectoryExists(dir::MonStgElt) -> BoolElt</h4>
 Returns true if directory exists, false otherwise.
 <h4>DirectoryName(f::MonStgElt) -> MonStgElt</h4>
@@ -80,6 +86,8 @@ Returns the operating system type (Unix/Windows).
 More specific operating system name.
 <h4>GetPOpenChunkSize() -> RngIntElt</h4>
 The operating system architecture.
+<h4>GetPackages() -> MonStgElt</h4>
+List of spec files attached at startup.
 <h4>GetPushoverToken() -> MonStgElt, MonStgElt</h4>
 Returns the pushover token defined in Config.txt
 <h4>GetSQLiteCommand() -> MonStgElt</h4>
@@ -105,7 +113,7 @@ Array of all files in a directory (non-recursive).
 <h4>MD5OfFile(file::MonStgElt) -> MonStgElt</h4>
 MD5 sum of the file.
 <h4>MD5OfString(str::MonStgElt) -> MonStgElt</h4>
-MD5 sum of the given string.
+MD5 sum of the given string. Note: as I assume the string may be big, I save it to a temporary file, and then take md5 of this file. This is different from directly computing md5 of a string.
 <h4>MagmaUTWelcome()</h4>
 Prints the Magma-UT welcome message.
 <h4>MakeDirectory(dir::MonStgElt)</h4>
