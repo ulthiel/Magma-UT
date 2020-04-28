@@ -170,10 +170,10 @@ intrinsic AddDB(url::MonStgElt)
 	//Add DB
 	try
 		MakeDirectory(dir);
-		if GetOSType() eq "Windows" then
-			cmd := "cd \""*dir*"\" && set \"GIT_LFS_SKIP_SMUDGE=1\" & git submodule add "*url*" \""*dbname*"\"";
+		if GetOSType() eq "Unix" then
+			cmd := "cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*dbname*"\"";
 		else
-			cmd := "cd /d \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*dbname*"\"";
+			cmd := "cd /d \""*dir*"\" && set \"GIT_LFS_SKIP_SMUDGE=1\" & git submodule add "*url*" \""*dbname*"\"";
 		end if;
 		//print cmd;
 		res := SystemCall(cmd);
