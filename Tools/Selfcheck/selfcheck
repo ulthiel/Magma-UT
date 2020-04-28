@@ -81,6 +81,9 @@ if [ -z ${SELFCHECKS+x} ]; then
   cd ../../Packages/$PACKAGE/Selfchecks/
   SELFCHECKS=`(echo *.m)`
   cd ../../../Tools/Selfcheck
+
+  #Cleanup sig files
+  sh cleansig.sh
 fi
 
 # Gather some system information for reporting
