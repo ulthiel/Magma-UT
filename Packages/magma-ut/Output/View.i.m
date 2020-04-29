@@ -18,10 +18,10 @@ intrinsic View(x::., L::MonStgElt)
 	if GetEditor() eq "" then
 		error "No editor defined";
 	end if;
-	file := MakePath([GetTempDir(), Tempname("magma-ut-")*".txt"]);
-	Write(file, Sprint(x,L));
+	file := MakePath([GetTempDir(), Tempname("magma-ut-view-")*".txt"]);
+	Write(file, Sprint(x,L) : Overwrite := true);
 	try
-		res := SystemCall(GetEditor()*" \""*file*"\"");
+		res := SystemCall(GetEditor()*" \""*file*"\" &");
 	catch e;
 		error e;
 	end try;
