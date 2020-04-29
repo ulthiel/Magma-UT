@@ -21,6 +21,7 @@ System/Date.i.m
 System/Download.i.m
 System/Environment.i.m
 System/Files.i.m
+System/Git.i.m
 System/MD5.i.m
 System/Sleep.i.m
 System/SQLite.i.m

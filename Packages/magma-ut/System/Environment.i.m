@@ -207,33 +207,6 @@ intrinsic GetVersionString() -> MonStgElt
 end intrinsic;
 
 //##############################################################################
-//  Git
-//##############################################################################
-intrinsic IsGitInstalled() -> BoolElt
-{True iff Git is installed and can be executed on the command line.}
-
-	try
-		res := SystemCall("git --version");
-	catch e
-		return false;
-	end try;
-	return true;
-
-end intrinsic;
-
-intrinsic IsGitLFSInstalled() -> BoolElt
-{True iff Git LFS extension is installed.}
-
-	try
-		res := SystemCall("git lfs env");
-	catch e
-		return false;
-	end try;
-	return true;
-
-end intrinsic;
-
-//##############################################################################
 //  Packages
 //##############################################################################
 intrinsic GetPackages() -> MonStgElt

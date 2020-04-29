@@ -194,6 +194,7 @@ assert FileExists("../../Packages/$PACKAGE/Selfchecks/$NAME.m");
 load "../../Packages/$PACKAGE/Selfchecks/$NAME.m";
 printf "MAGMA_UT_SELFCHECK_TIME=%o\n", Cputime(MAGMA_UT_SELFCHECK_TIME);
 printf "MAGMA_UT_SELFCHECK_MEM=%o\n", Round(GetMemoryUsage()/1000^2);
+try; printf "MAGMA_UT_SELFCHECK_PKG_VER=%o\n", GetRepositoryVersion("../../Packages/$PACKAGE"); catch e; end try;
 DeleteFile("Log/$PACKAGE/$NAME.lck");
 quit;
 END
@@ -216,6 +217,7 @@ END
     TIME=`grep MAGMA_UT_SELFCHECK_TIME "Log/$PACKAGE/$NAME.log" | awk -F'=' '{print $2}'`
     MEM=`grep MAGMA_UT_SELFCHECK_MEM "Log/$PACKAGE/$NAME.log" | awk -F'=' '{print $2}'`
     echo -e "\033[0;32mOK\033[0m  ${TIME}s\t${MEM}MB"
+    PKG_VER=`grep PKG_VER "Log/$PACKAGE/$NAME.log" | awk -F'=' '{print $2}'`
   fi
 
   MAGMA_VER=`grep MAGMA_UT_SELFCHECK_MAGMA "Log/$PACKAGE/$NAME.log" | awk -F'=' '{print $2}'`

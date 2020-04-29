@@ -11,7 +11,6 @@
 //  Viewing stuff in an editor.
 //
 //##############################################################################
-
 intrinsic View(x::., L::MonStgElt)
 {View Sprint(x,L) in an external text editor.}
 

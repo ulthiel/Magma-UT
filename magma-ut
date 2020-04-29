@@ -37,21 +37,6 @@ if [ ! -z ${MAGMA_UT_PACKAGES+x} ]; then
   export MAGMA_UT_PACKAGES_CONV=`echo "$MAGMA_UT_PACKAGES" | sed -e 's/,/:/g'`
 fi
 
-# Get Magma-UT version. I'll cd into the Magma-UT directory to avoid git -C
-# since this didn't exist before Git 1.8.5 (Nov 2013).
-curdir=`pwd`
-cd "$MAGMA_UT_BASE_DIR"
-git describe >/dev/null 2>/dev/null
-if [ $? -eq 0 ]; then
-    export MAGMA_UT_VER=`git describe`
-else
-    cat version.txt >/dev/null 2>/dev/null
-    if [ $? -eq 0 ]; then
-        export MAGMA_UT_VER=`cat version.txt`
-    fi
-fi
-cd "$curdir"
-
 # Get the OS version (more detailed than MAGMA_UT_OS)
 if [ "$MAGMA_UT_OS" == "Darwin" ]; then
     #Mac OS

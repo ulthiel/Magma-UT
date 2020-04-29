@@ -129,6 +129,7 @@ assert FileExists("..\\..\\Packages\\%PACKAGE%\\Selfchecks\\!NAME!.m"^); ^
 load "..\\..\\Packages\\%PACKAGE%\\Selfchecks\\!NAME!.m"; ^
 printf "MAGMA_UT_SELFCHECK_TIME=%%o\n", Cputime(MAGMA_UT_SELFCHECK_TIME^); ^
 printf "MAGMA_UT_SELFCHECK_MEM=%%o\n", Round(GetMemoryUsage(^)/1000000^); ^
+try; printf "MAGMA_UT_SELFCHECK_PKG_VER=%%o\n", GetRepositoryVersion("../../Packages/$PACKAGE"^); catch e; end try; ^
 DeleteFile("Log\\%PACKAGE%\\!NAME!.lck"^); ^
 quit;
 
@@ -183,6 +184,16 @@ quit;
     )
 
     echo.!TAB![32m OK [0m!TAB!!MAGMA_UT_TIME!s!TAB!!MAGMA_UT_MEM!MB
+
+    #Get package version
+    FOR /F "tokens=* USEBACKQ" %%F IN (`..\UnixTools\grep.exe "MAGMA_UT_SELFCHECK_PKG_VER" "Log\%PACKAGE%\!NAME!.log"`) DO (
+      SET OUTPUT=%%F
+    )
+
+    for /F "tokens=1,2 delims=^=" %%a in ("!OUTPUT!") do (
+    SET PKG_VER=%%b
+    )
+
   )
 
   rem Get Magma version
