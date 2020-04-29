@@ -85,17 +85,17 @@ end intrinsic;
 //##############################################################################
 //	Save object to database
 //##############################################################################
-intrinsic SaveToDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")
+intrinsic SaveToDB(dbname::MonStgElt, dir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")
 {Save object (given as evaluateable string) to database.}
 
-	filedir := MakePath([GetDBDir(dbname), dbdir]);
+	filedir := MakePath([GetDBDir(dbname), dir]);
 	MakeDirectory(filedir);
 	file := MakePath([filedir, object*".o.m.gz"]);
 	WriteCompressed(file, X);
 
 	try
 		//directory of file
-		filedir := MakePath([GetDBDir(dbname), dbdir]);
+		filedir := MakePath([GetDBDir(dbname), dir]);
 
 		//directory of file relative to repo (needed for pull)
 		if GetOSType() eq "Unix" then
@@ -229,7 +229,7 @@ intrinsic DeleteDB(dbname::MonStgElt)
 		error "No database with this name found in Databases directory";
 	end if;
 
-	dir := MakePath(["Databases", dbname]);
+	dir := MakePath([GetBaseDir(), "Databases", dbname]);
 
 	try
 		DeleteFile(dir);

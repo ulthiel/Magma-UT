@@ -113,10 +113,10 @@ intrinsic DeletePackage(pkgname::MonStgElt)
 {Deletes a package which was cloned as a submodule. Use with caution!}
 
 	if not DirectoryExists(MakePath([GetBaseDir(), "Packages", pkgname])) then
-		error "No package with this name registered as submodule in Packages directory";
+		error "No package with this name found in Packages directory";
 	end if;
 
-	dir := MakePath(["Packages", pkgname]);
+	dir := MakePath([GetBaseDir(), "Packages", pkgname]);
 
 	DetachSpec(MakePath([GetBaseDir(), dir, pkgname*".s.m"]));
 
