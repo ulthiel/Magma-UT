@@ -61,19 +61,12 @@ intrinsic AddPackage(url::MonStgElt)
 		error "Package with this name exists already";
 	end if;
 
-	//Add DB
-	try
-		MakeDirectory(dir);
-		if GetOSType() eq "Unix" then
-			cmd := "cd \""*dir*"\" && git submodule add "*url*" \""*pkgname*"\"";
-		else
-			cmd := "cd /d \""*dir*"\" && git submodule add "*url*" \""*pkgname*"\"";
-		end if;
-		//print cmd;
-		res := SystemCall(cmd);
-	catch e
-		error "Error adding database";
-	end try;
+	//Clone repo into dir
+	GitCloneRemote(url, dir);
+
+	//Ignore this directory (alternative to .gitignore, and better for this
+	//purpose as local only)
+	Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Packages/"*pkgname);
 
 	//Now, add to Config.txt. I'll rewrite the file.
 	config := "";
@@ -128,27 +121,9 @@ intrinsic DeletePackage(pkgname::MonStgElt)
 	DetachSpec(MakePath([GetBaseDir(), dir, pkgname*".s.m"]));
 
 	try
-		if GetOSType() eq "Unix" then
-			cmd := "cd \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
-		else
-			cmd := "cd /d \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
-		end if;
-		//print cmd;
-		res := SystemCall(cmd);
-
-		if GetOSType() eq "Unix" then
-			cmd := "cd \""*GetBaseDir()*"\" && git rm -rf "*dir;
-		else
-			cmd := "cd /d \""*GetBaseDir()*"\" && git rm -rf "*dir;
-		end if;
-		//print cmd;
-		res := SystemCall(cmd);
-
-		dir := MakePath([GetBaseDir(), ".git", "modules", "Packages", pkgname]);
-		//print dir;
 		DeleteFile(dir);
 	catch e
-		error e;
+		error "Error deleting directory";
 	end try;
 
 	//Now, remove from Config.txt. I'll rewrite the file.

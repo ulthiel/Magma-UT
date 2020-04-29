@@ -172,19 +172,12 @@ intrinsic AddDB(url::MonStgElt)
 		error "Database with this name exists already";
 	end if;
 
-	//Add DB
-	try
-		MakeDirectory(dir);
-		if GetOSType() eq "Unix" then
-			cmd := "cd \""*dir*"\" && GIT_LFS_SKIP_SMUDGE=1 git submodule add "*url*" \""*dbname*"\"";
-		else
-			cmd := "cd /d \""*dir*"\" && set \"GIT_LFS_SKIP_SMUDGE=1\" & git submodule add "*url*" \""*dbname*"\"";
-		end if;
-		//print cmd;
-		res := SystemCall(cmd);
-	catch e
-		error "Error adding database";
-	end try;
+	//Clone repo into dir
+	GitCloneRemote(url, dir : SkipLFS:=true);
+
+	//Ignore this directory (alternative to .gitignore, and better for this
+	//purpose as local only)
+	Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Databases/"*dbname);
 
 	//Now, add to Config.txt. I'll rewrite the file.
 	config := "";
@@ -233,33 +226,15 @@ intrinsic DeleteDB(dbname::MonStgElt)
 {Deletes a Git LFS database which was cloned as a submodule. Use with caution.}
 
 	if not DirectoryExists(MakePath([GetBaseDir(), "Databases", dbname])) then
-		error "No database with this name registered as submodule in Databases directory";
+		error "No database with this name found in Databases directory";
 	end if;
 
 	dir := MakePath(["Databases", dbname]);
 
 	try
-		if GetOSType() eq "Unix" then
-			cmd := "cd \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
-		else
-			cmd := "cd /d \""*GetBaseDir()*"\" && git submodule deinit -f "*dir;
-		end if;
-		//print cmd;
-		res := SystemCall(cmd);
-
-		if GetOSType() eq "Unix" then
-			cmd := "cd \""*GetBaseDir()*"\" && git rm -rf "*dir;
-		else
-			cmd := "cd /d \""*GetBaseDir()*"\" && git rm -rf "*dir;
-		end if;
-		//print cmd;
-		res := SystemCall(cmd);
-
-		dir := MakePath([GetBaseDir(), ".git", "modules", "Databases", dbname]);
-		//print dir;
 		DeleteFile(dir);
 	catch e
-		error e;
+		error "Error deleting directory";
 	end try;
 
 	//Now, remove from Config.txt. I'll rewrite the file.
@@ -311,7 +286,5 @@ intrinsic DeleteDB(dbname::MonStgElt)
 		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
 		res := SystemCall(cmd);
 	end if;
-
-	print "Success. Please restart Magma-UT now.";
 
 end intrinsic;
