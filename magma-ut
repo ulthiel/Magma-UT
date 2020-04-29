@@ -52,16 +52,6 @@ else
 fi
 cd "$curdir"
 
-# Check if curl or wget is available. I prefer curl and will use it if it's
-# available. Otherwise, fallback to wget.
-if command -v "curl" >/dev/null 2>&1; then
-    export MAGMA_UT_DWN_TOOL="curl"
-else
-    if command -v "wget" >/dev/null 2>&1; then
-        export MAGMA_UT_DWN_TOOL="wget"
-    fi
-fi
-
 # Get the OS version (more detailed than MAGMA_UT_OS)
 if [ "$MAGMA_UT_OS" == "Darwin" ]; then
     #Mac OS
@@ -110,12 +100,36 @@ if [ -z ${MAGMA_UT_HTML_VIEWER+x} ]; then
 		fi
 fi
 
+
+# Editor
+if [ -z ${MAGMA_UT_EDITOR+x} ]; then
+	if [ "$MAGMA_UT_OS" == "Darwin" ]; then
+		export MAGMA_UT_EDITOR="open"
+	elif [[ "$OS" == *"Ubuntu"* ]]; then
+		export MAGMA_UT_EDITOR="gedit"
+	fi
+fi
+
+# Download tool
+if [ -z ${MAGMA_UT_DWN_TOOL+x} ]; then
+	# Check if curl or wget is available. I prefer curl and will use it if it's
+	# available. Otherwise, fallback to wget.
+	if command -v "curl" >/dev/null 2>&1; then
+	    export MAGMA_UT_DWN_TOOL="curl"
+	else
+	    if command -v "wget" >/dev/null 2>&1; then
+	        export MAGMA_UT_DWN_TOOL="wget"
+	    fi
+	fi
+fi
+
 # Get memory
 if [ "$MAGMA_UT_OS" == "Darwin" ]; then
     export MAGMA_UT_TOTAL_MEM=`sysctl -n hw.memsize`
 else
     export MAGMA_UT_TOTAL_MEM=`grep MemTotal /proc/meminfo | awk '{print $2}'`
 fi
+
 
 ################################################################################
 # Find Magma (first user defined path, then environment path, then trying

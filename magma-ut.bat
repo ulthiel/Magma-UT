@@ -7,7 +7,7 @@
 ::
 ::  Start Magma-UT (and automatically set the necessary environment variables)
 ::
-::  Please be amazed by my Windows batch skills, just acquired for this file!
+::  Please be amazed by my Windows batch skills, just acquired for this project!
 ::  I thought the bash is absurd sometimes, but now I know better.
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

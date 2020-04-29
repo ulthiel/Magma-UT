@@ -5,6 +5,7 @@ Databases/Databases.i.m
 Output/Messages.i.m
 Output/Pushover.i.m
 Output/PrintCentered.i.m
+Output/View.i.m
 
 Packages/Packages.i.m
 
