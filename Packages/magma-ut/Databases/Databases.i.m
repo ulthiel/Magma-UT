@@ -248,26 +248,22 @@ intrinsic DeleteDB(dbname::MonStgElt)
 			break;
 		end if;
 		if Position(line, "MAGMA_UT_DB_NAMES=") ne 0 then
+			spl := Split(Replace(line, "MAGMA_UT_DB_NAMES=", ""), ",");
+			splnew := [x : x in spl | Position(x, dbname) eq 0 ];
 			line := "MAGMA_UT_DB_NAMES=";
-			dbs := GetDBNames();
-			for i:=1 to #dbs do
-				if dbs[i] eq dbname then
-					continue;
-				end if;
-				line *:= dbs[i];
-				if i lt #dbs then
+			for i:=1 to #splnew do
+				line *:= splnew[i];
+				if i lt #splnew then
 					line *:= ",";
 				end if;
 			end for;
 		elif Position(line, "MAGMA_UT_DB_DIRS=") ne 0 then
+			spl := Split(Replace(line, "MAGMA_UT_DB_DIRS=", ""), ",");
+			splnew := [x : x in spl | Position(x, dbname) eq 0 ];
 			line := "MAGMA_UT_DB_DIRS=";
-			dbs := GetDBNames();
-			for i:=1 to #dbs do
-				if dbs[i] eq dbname then
-					continue;
-				end if;
-				line *:= GetDBDir(dbs[i]);
-				if i lt #dbs then
+			for i:=1 to #splnew do
+				line *:= splnew[i];
+				if i lt #splnew then
 					line *:= ",";
 				end if;
 			end for;

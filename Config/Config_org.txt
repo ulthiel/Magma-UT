@@ -12,9 +12,9 @@
 # This works both under Unix and Windows (the # comments are also ignored
 # under Windows).
 #
-# You can use an already defined variable VAR via $VAR under Unix or %VAR%
-# under Windows. The variable MAGMA_UT_DIR will be set to the MAGMA_UT base
-# directory by the startup script, so you can use this one for example.
+# You can use an already defined variable VAR via $VAR (even under Windows).
+# The variable MAGMA_UT_DIR will be set to the MAGMA_UT base directory by the
+# startup script.
 #
 ################################################################################
 

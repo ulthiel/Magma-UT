@@ -137,14 +137,12 @@ intrinsic DeletePackage(pkgname::MonStgElt)
 			break;
 		end if;
 		if Position(line, "MAGMA_UT_PACKAGES=") ne 0 then
+			spl := Split(Replace(line, "MAGMA_UT_PACKAGES=", ""), ",");
+			splnew := [x : x in spl | Position(x, pkgname*".s.m") eq 0 ];
 			line := "MAGMA_UT_PACKAGES=";
-			pkgs := GetPackages();
-			for i:=1 to #pkgs do
-				if FileName(pkgs[i]) eq pkgname*".s.m" then
-					continue;
-				end if;
-				line *:= pkgs[i];
-				if i lt #pkgs then
+			for i:=1 to #splnew do
+				line *:= splnew[i];
+				if i lt #splnew then
 					line *:= ",";
 				end if;
 			end for;
