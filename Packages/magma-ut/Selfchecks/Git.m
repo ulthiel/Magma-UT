@@ -4,4 +4,4 @@ dir := MakePath([dir, "magma-ut-test-pkg"]);
 V := GitRepositoryVersion(dir);
 DeleteFile(dir);
 IsGitInstalled();
-IsGitLSFInstalled();
+IsGitLFSInstalled();

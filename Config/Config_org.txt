@@ -13,8 +13,8 @@
 # under Windows).
 #
 # You can use an already defined variable VAR via $VAR (even under Windows).
-# The variable MAGMA_UT_DIR will be set to the MAGMA_UT base directory by the
-# startup script.
+# The variable $MAGMA_UT_DIR will be set to the MAGMA_UT base directory by the
+# startup script, so you can use this here.
 #
 ################################################################################
 
@@ -34,6 +34,7 @@
 
 ################################################################################
 # Spec files of packages to be attached. This is a COMMA separated list.
+# Again, PATH should be absolute.
 ################################################################################
 #MAGMA_UT_PACKAGES=
 
