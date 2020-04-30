@@ -5,12 +5,12 @@
 <body>
 <h2>magma-ut Intrinsics</h2>
 <h3>Statistics</h3>
-Lines: 2076<br>
-Commands: 1365<br>
-Intrinsics: 124<br>
-Source files: 23<br>
+Lines: 2137<br>
+Commands: 1414<br>
+Intrinsics: 131<br>
+Source files: 25<br>
 <h3>Intrinsics</h3>
-<h4>AddDB(url::MonStgElt)</h4>
+<h4>AddDatabase(url::MonStgElt)</h4>
 Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the local Databases directory. The database is then added to the Config.txt file. A restart is necessary to register the database.
 <h4>AddPackage(url::MonStgElt)</h4>
 Clones a Git Package into the Packages directory.
@@ -24,13 +24,13 @@ The sum of the elements in X. If X is empty, returns EmptySum; this is the zero 
 Clears the message buffer of M.
 <h4>CodesToString(code::SeqEnum[RngIntElt]) -> MonStgElt</h4>
 The string defined by the (ASCII) code sequenc code.
-<h4>CreateDB(dir::MonStgElt, dbname::MonStgElt)</h4>
+<h4>CreateDatabase(dir::MonStgElt, dbname::MonStgElt)</h4>
 Creates an empty database in the specified directory.
 <h4>CreatePackage(dir::MonStgElt, pkgname::MonStgElt)</h4>
 Creates an empty package in the specified directory.
 <h4>Date(: Format:="", UTC:=false) -> MonStgElt</h4>
 The current date and time. Format can be a format specifier or "ISO".
-<h4>DeleteDB(dbname::MonStgElt)</h4>
+<h4>DeleteDatabase(dbname::MonStgElt)</h4>
 Deletes a Git LFS database which was cloned as a submodule. Use with caution.
 <h4>DeleteFile(file::MonStgElt)</h4>
 Deletes file.
@@ -46,7 +46,7 @@ Either / under Unix or \ under Windows.
 Downloads file from url and save it to file.
 <h4>Download(url::MonStgElt) -> MonStgElt</h4>
 Downloads url and returns contents as string.
-<h4>ExistsInDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> BoolElt</h4>
+<h4>ExistsInDatabase(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> BoolElt</h4>
 Check if object exists in database.
 <h4>FileExists(file::MonStgElt) -> BoolElt</h4>
 Returns true if file exists, false otherwise.
@@ -58,11 +58,11 @@ Flushes printing. Use this before destruction of M.
 The Magma-UT base directory.
 <h4>GetCPU() -> MonStgElt</h4>
 The brand name of the CPU Magma is running on.
-<h4>GetDBDir(dbname::MonStgElt) -> MonStgElt</h4>
+<h4>GetDatabaseDir(dbname::MonStgElt) -> MonStgElt</h4>
 The database directory for a given database name as defined in Config.txt.
-<h4>GetDBDirs() -> MonStgElt</h4>
+<h4>GetDatabaseDirs() -> MonStgElt</h4>
 Sequence of database directories defined in Config.txt.
-<h4>GetDBNames() -> MonStgElt</h4>
+<h4>GetDatabaseNames() -> MonStgElt</h4>
 Sequence of database names defined in Config.txt.
 <h4>GetDownloadTool() -> MonStgElt</h4>
 The download tool defined in Config.txt (or the one set automatically by the startup script).
@@ -70,7 +70,7 @@ The download tool defined in Config.txt (or the one set automatically by the sta
 The editor defined in Config.txt.
 <h4>GetFileSize(F::MonStgElt) -> RngIntElt</h4>
 Returns the size of a file
-<h4>GetFromDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .</h4>
+<h4>GetFromDatabase(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .</h4>
 Retrieve object from database. If the database is a Git LFS database and the file is not there yet, it will be downloaded.
 <h4>GetHTMLViewer() -> MonStgElt</h4>
 The HTML viewer defined in Config.txt.
@@ -96,6 +96,11 @@ The SQLite command defined in Config.txt.
 Returns correct path to Unix tool for Windows (this is in Tools/UnixTools of the Magma-UT base directory).
 <h4>GetVersionString() -> MonStgElt</h4>
 Magma version as a string.
+<h4>GitCloneRemote(url::MonStgElt, dir::MonStgElt : SkipLFS:=false)</h4>
+Clone a remote Git repository at url into directory dir.
+<h4>GitDeleteSubmodule(basedir::MonStgElt, submoduledir::MonStgElt)</h4>
+In repository located in basedir delete the submodule lying (relatively) in submoduledir.
+<h4>GitRepositoryVersion(dir::MonStgElt) -> MonStgElt</h4>
 <h4>HumanReadableTime(t::FldReElt) -> MonStgElt</h4>
 Prints a time in seconds in human readable format.
 <h4>HumanReadableTime(t::RngIntElt) -> MonStgElt</h4>
@@ -156,7 +161,7 @@ Replaces all occurences of the regular expression reg by rep in the string str u
 Replaces the characters in chr1 by the characters in chr2 in the string str. This uses the tr tool and also supports character classes. Both chr1 and chr2 will be surrounded by quotation marks "" for the tr call, so they have to be escaped respectively. As an example, to replace a backslash \ you need to enter \\\\\\\\, yes 8 backslashes: this becomes four backslashes \\\\ when sent to tr and this is interpreted as an escaped backslash. But the behavior under Unix and Windows is the same. See https://en.wikipedia.org/wiki/Tr_(Unix) and http://pubs.opengroup.org/onlinepubs/9699919799/utilities/tr.html. 
 <h4>SQLiteQuery(file::MonStgElt, query::MonStgElt) -> BoolElt, MonStgElt</h4>
 Executes query on the sqlite database specified by file.
-<h4>SaveToDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")</h4>
+<h4>SaveToDatabase(dbname::MonStgElt, dir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")</h4>
 Save object (given as evaluateable string) to database.
 <h4>SetBackCursor(n::RngIntElt)</h4>
 Sets back the curser by n characters.
@@ -174,6 +179,10 @@ Returns true iff url exists (request returns 200 OK).
 Replaces Windows \ by Unix /.
 <h4>UnixTimeStamp() -> RngIntElt</h4>
 The current unix timestamp (returned as an integer).
+<h4>View(x::.)</h4>
+View Sprint(x) in an external text editor.
+<h4>View(x::., L::MonStgElt)</h4>
+View Sprint(x,L) in an external text editor.
 <h4>WindowsFilename(f::MonStgElt) -> MonStgElt</h4>
 Replaces Unix / by Windows \.
 <h4>WriteCompressed(F::MonStgElt, X::. : Level:=4)</h4>

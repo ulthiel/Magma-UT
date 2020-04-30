@@ -15,3 +15,4 @@ GetUnixTool("wget");
 GetVersionString();
 IsGitInstalled();
 IsGitLFSInstalled();
+GetPackages();
