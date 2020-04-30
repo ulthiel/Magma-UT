@@ -7,7 +7,7 @@ freeze;
 //  https://github.com/ulthiel/magma-ut
 //  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//  SQLite database handling
+//  SQLite database handling. Not much here yet.
 //
 //##############################################################################
 
