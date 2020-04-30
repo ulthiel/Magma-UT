@@ -38,7 +38,7 @@ assert ListFiles(tmpdir) eq ["temp file"];
 assert ListDirectories(tmpdir) eq ["another dir to test"];
 MoveFile(tmpdir, tmpdir*"-1");
 MoveFile(tmpdir*"-1", tmpdir);
-DeleteFile(tmpdir);
+DeleteDirectory(tmpdir);
 assert DirectoryExists(tmpdir) eq false;
 
 //FileNames;

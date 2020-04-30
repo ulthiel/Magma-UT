@@ -118,7 +118,12 @@ intrinsic DeleteFile(file::MonStgElt)
 {Deletes file.}
 
   cmd := GetUnixTool("rm")*" -rf \""*file*"\"";
-  ret := System(cmd);
+
+  try
+    ret := System(cmd);
+  catch e
+    error "Error deleting file.";
+  end try;
 
   if ret ne 0 then
     error "Error deleting file.";
@@ -126,7 +131,28 @@ intrinsic DeleteFile(file::MonStgElt)
 
 end intrinsic;
 
+//In Windows I noticed that I can't delete the .git directory with the unix
+//tool due to permission denied stuff. I'm using rmdir instead, that works.
+intrinsic DeleteDirectory(dir::MonStgElt)
+{Deletes file.}
 
+  if GetOSType() eq "Unix" then
+    cmd := GetUnixTool("rm")*" -rf \""*dir*"\"";
+  else
+    cmd := "rmdir /s /q \""*dir*"\"";
+  end if;
+
+  try
+    ret := System(cmd);
+  catch e
+    error "Error deleting file";
+  end try;
+
+  if ret ne 0 then
+    error "Error deleting file.";
+  end if;
+
+end intrinsic;
 
 //##############################################################################
 //  Move file or directory

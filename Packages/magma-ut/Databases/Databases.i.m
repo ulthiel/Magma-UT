@@ -232,7 +232,7 @@ intrinsic DeleteDatabase(dbname::MonStgElt)
 	dir := MakePath([GetBaseDir(), "Databases", dbname]);
 
 	try
-		DeleteFile(dir);
+		DeleteDirectory(dir);
 	catch e
 		error "Error deleting directory";
 	end try;

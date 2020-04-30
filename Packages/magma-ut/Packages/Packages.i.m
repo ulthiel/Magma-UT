@@ -121,7 +121,7 @@ intrinsic DeletePackage(pkgname::MonStgElt)
 	DetachSpec(MakePath([GetBaseDir(), dir, pkgname*".s.m"]));
 
 	try
-		DeleteFile(dir);
+		DeleteDirectory(dir);
 	catch e
 		error "Error deleting directory";
 	end try;
