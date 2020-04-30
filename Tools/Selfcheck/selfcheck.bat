@@ -124,10 +124,10 @@ for /L %%i in (1,1,%selfcheckCount%) do (
 SetQuitOnError(true^); ^
 AttachSpec("..\\..\\Packages\\%PACKAGE%\\%PACKAGE%.s.m"^); ^
 printf "MAGMA_UT_SELFCHECK_MAGMA=%%o\n", GetVersionString(^); ^
-MAGMA_UT_SELFCHECK_TIME := Cputime(^); ^
+MAGMA_UT_SELFCHECK_TIME := Realtime(^); ^
 assert FileExists("..\\..\\Packages\\%PACKAGE%\\Selfchecks\\!NAME!.m"^); ^
 load "..\\..\\Packages\\%PACKAGE%\\Selfchecks\\!NAME!.m"; ^
-printf "MAGMA_UT_SELFCHECK_TIME=%%o\n", Cputime(MAGMA_UT_SELFCHECK_TIME^); ^
+printf "MAGMA_UT_SELFCHECK_TIME=%%o\n", Realtime(MAGMA_UT_SELFCHECK_TIME^); ^
 printf "MAGMA_UT_SELFCHECK_MEM=%%o\n", Round(GetMemoryUsage(^)/1000000^); ^
 try; printf "MAGMA_UT_SELFCHECK_PKG_VER=%%o\n", GitRepositoryVersion("..\\..\\Packages\\%PACKAGE%"^); catch e; end try; ^
 DeleteFile("Log\\%PACKAGE%\\!NAME!.lck"^); ^
