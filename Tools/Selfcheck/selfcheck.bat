@@ -81,7 +81,7 @@ if "%REPORT%"=="1" (
     set CPU=%%f
   )
 
-  :: CHAMP version
+  :: Package version
   git --git-dir ..\..\Packages\%PACKAGE% describe >NUL 2>NUL
   if !ERRORLEVEL! equ 0 (
     FOR /F "tokens=* USEBACKQ" %%F IN (`git --git-dir ..\..\Packages\%PACKAGE% describe`) DO (
@@ -91,7 +91,7 @@ if "%REPORT%"=="1" (
 )
 
 :: Create Log directory
-..\UnixTools\mkdir.exe -p Log/%PACKAGE%
+..\UnixTools\mkdir.exe -p Log\%PACKAGE%
 
 :: Tab character for printing
 SET "TAB=	"

@@ -56,30 +56,22 @@ del "%MAGMA_UT_BASE_DIR%\Config\Config_win.txt"
 
 :: Replace forward slash by backward slash in DB directories
 if defined MAGMA_UT_DB_DIRS (
-    for /F "tokens=1 USEBACKQ" %%F in (`echo %MAGMA_UT_DB_DIRS% ^| "%MAGMA_UT_BASE_DIR%\Tools\UnixTools\sed.exe" -e "s/\//\\/g"`) DO (
-        set MAGMA_UT_DB_DIRS=%%F
-    )
+	set MAGMA_UT_DB_DIRS=%MAGMA_UT_DB_DIRS:/=\%
 )
 
 :: Replace forward slash by backward slash in Magma directory
 if defined MAGMA_UT_MAGMA_DIR (
-    for /F "tokens=1 USEBACKQ" %%F in (`echo %MAGMA_UT_MAGMA_DIR% ^| "%MAGMA_UT_BASE_DIR%\Tools\UnixTools\sed.exe" -e "s/\//\\/g"`) do (
-        set MAGMA_UT_MAGMA_DIR=%%F
-    )
+    set MAGMA_UT_MAGMA_DIR=%MAGMA_UT_MAGMA_DIR:/=\%
 )
 
 :: Replace forward slash by backward slash in package list
 if defined MAGMA_UT_PACKAGES (
-    for /F "tokens=1 USEBACKQ" %%F in (`echo %MAGMA_UT_PACKAGES% ^| "%MAGMA_UT_BASE_DIR%\Tools\UnixTools\sed.exe" -e "s/\//\\/g"`) do (
-        set MAGMA_UT_PACKAGES=%%F
-    )
+    set MAGMA_UT_PACKAGES=%MAGMA_UT_PACKAGES:/=\%
 )
 
 :: Replace comma by semicolon in package list (Windows...)
 if defined MAGMA_UT_PACKAGES (
-    for /F "tokens=1 USEBACKQ" %%F in (`echo %MAGMA_UT_PACKAGES% ^| "%MAGMA_UT_BASE_DIR%\Tools\UnixTools\sed.exe" -e "s/,/;/g"`) do (
-        set MAGMA_UT_PACKAGES_CONV=%%F
-    )
+    set MAGMA_UT_PACKAGES_CONV=%MAGMA_UT_PACKAGES:,=;%
 )
 
 :: download tool will always be curl because I provide it with the package.
