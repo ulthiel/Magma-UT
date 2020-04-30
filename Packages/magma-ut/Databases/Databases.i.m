@@ -168,6 +168,8 @@ intrinsic AddDatabase(url::MonStgElt)
 
 	//Check if directory exists already
 	dir := MakePath([GetBaseDir(), "Databases"]);
+	MakeDirectory(dir);
+	
 	if DirectoryExists(MakePath([dir, dbname])) then
 		error "Database with this name exists already";
 	end if;
