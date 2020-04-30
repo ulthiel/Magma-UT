@@ -78,9 +78,9 @@ intrinsic AddPackage(url::MonStgElt)
 		if IsEof(line) then
 			break;
 		end if;
-		if Position(line, "#MAGMA_UT_PACKAGES=") ne 0 then
-			newconfig *:= "MAGMA_UT_PACKAGES=$MAGMA_UT_BASE_DIR/Packages/"*pkgname*"/"*pkgname*".s.m";
-		elif Position(line, "MAGMA_UT_PACKAGES=") ne 0 then
+		if Position(line, "#MAGMA_UT_PKGS=") ne 0 then
+			newconfig *:= "MAGMA_UT_PKGS=$MAGMA_UT_BASE_DIR/Packages/"*pkgname*"/"*pkgname*".s.m";
+		elif Position(line, "MAGMA_UT_PKGS=") ne 0 then
 			newconfig *:= line*",$MAGMA_UT_BASE_DIR/Packages/"*pkgname*"/"*pkgname*".s.m";
 		else
 			newconfig *:= line;
@@ -136,10 +136,10 @@ intrinsic DeletePackage(pkgname::MonStgElt)
 		if IsEof(line) then
 			break;
 		end if;
-		if Position(line, "MAGMA_UT_PACKAGES=") ne 0 then
-			spl := Split(Replace(line, "MAGMA_UT_PACKAGES=", ""), ",");
+		if Position(line, "MAGMA_UT_PKGS=") ne 0 then
+			spl := Split(Replace(line, "MAGMA_UT_PKGS=", ""), ",");
 			splnew := [x : x in spl | Position(x, pkgname*".s.m") eq 0 ];
-			line := "MAGMA_UT_PACKAGES=";
+			line := "MAGMA_UT_PKGS=";
 			for i:=1 to #splnew do
 				line *:= splnew[i];
 				if i lt #splnew then

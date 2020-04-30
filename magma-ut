@@ -33,8 +33,8 @@ set -a
 set +a
 
 # Replace comma by colon in package list
-if [ ! -z ${MAGMA_UT_PACKAGES+x} ]; then
-  export MAGMA_UT_PACKAGES_CONV=`echo "$MAGMA_UT_PACKAGES" | sed -e 's/,/:/g'`
+if [ ! -z ${MAGMA_UT_PKGS+x} ]; then
+  export MAGMA_UT_PKGS_CONV=`echo "$MAGMA_UT_PKGS" | sed -e 's/,/:/g'`
 fi
 
 # Get the OS version (more detailed than MAGMA_UT_OS)
@@ -168,7 +168,7 @@ fi
 ################################################################################
 
 # Add the Magma-UT spec file to the Magma startup spec variable
-export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Packages/magma-ut/magma-ut.s.m:$MAGMA_UT_PACKAGES_CONV:$MAGMA_USER_SPEC
+export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Packages/magma-ut/magma-ut.s.m:$MAGMA_UT_PKGS_CONV:$MAGMA_USER_SPEC
 
 # Set the Magma-UT startup file as Magma startup file
 export MAGMA_STARTUP_FILE="$MAGMA_UT_BASE_DIR/Packages/magma-ut/Startup/Startup.m"

@@ -29,9 +29,9 @@ intrinsic GetBaseDir() -> MonStgElt
 end intrinsic;
 
 //##############################################################################
-//  Magma-UT DB directory
+//  Magma-UT DB directories and names
 //##############################################################################
-intrinsic GetDBDirs() -> MonStgElt
+intrinsic GetDatabaseDirs() -> MonStgElt
 {Sequence of database directories defined in Config.txt.}
 
   basedir := GetBaseDir();
@@ -39,21 +39,21 @@ intrinsic GetDBDirs() -> MonStgElt
 
 end intrinsic;
 
-intrinsic GetDBNames() -> MonStgElt
+intrinsic GetDatabaseNames() -> MonStgElt
 {Sequence of database names defined in Config.txt.}
 
   return Split(GetEnv("MAGMA_UT_DB_NAMES"), ",");
 
 end intrinsic;
 
-intrinsic GetDBDir(dbname::MonStgElt) -> MonStgElt
+intrinsic GetDatabaseDir(dbname::MonStgElt) -> MonStgElt
 {The database directory for a given database name as defined in Config.txt.}
 
-  pos := Position(GetDBNames(), dbname);
+  pos := Position(GetDatabaseNames(), dbname);
   if pos eq 0 then
     error "No database with that name";
   end if;
-  return GetDBDirs()[pos];
+  return GetDatabaseDirs()[pos];
 
 end intrinsic;
 

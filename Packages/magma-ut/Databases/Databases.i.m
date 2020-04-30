@@ -14,10 +14,10 @@
 //##############################################################################
 //	Check if an object exists in the database
 //##############################################################################
-intrinsic ExistsInDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> BoolElt
+intrinsic ExistsInDatabase(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> BoolElt
 {Check if object exists in database.}
 
-	return FileExists(MakePath([GetDBDir(dbname), dbdir, object*".o.m.gz"]));
+	return FileExists(MakePath([GetDatabaseDir(dbname), dbdir, object*".o.m.gz"]));
 
 end intrinsic;
 
@@ -25,10 +25,10 @@ end intrinsic;
 //	Gets an object from the database. If the file is not there yet, it will
 //	be downloaded from LFS.
 //##############################################################################
-intrinsic GetFromDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .
+intrinsic GetFromDatabase(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .
 {Retrieve object from database. If the database is a Git LFS database and the file is not there yet, it will be downloaded.}
 
-	file := MakePath([GetDBDir(dbname), dbdir, object*".o.m.gz"]);
+	file := MakePath([GetDatabaseDir(dbname), dbdir, object*".o.m.gz"]);
 
 	//First, check if file exists
 	if not FileExists(file) then
@@ -48,7 +48,7 @@ intrinsic GetFromDB(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .
 	if not assigned res then
 		try
 			//directory of file
-			filedir := MakePath([GetDBDir(dbname), dbdir]);
+			filedir := MakePath([GetDatabaseDir(dbname), dbdir]);
 
 			//directory of file relative to repo (needed for pull)
 			if GetOSType() eq "Unix" then
@@ -85,17 +85,17 @@ end intrinsic;
 //##############################################################################
 //	Save object to database
 //##############################################################################
-intrinsic SaveToDB(dbname::MonStgElt, dir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")
+intrinsic SaveToDatabase(dbname::MonStgElt, dir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")
 {Save object (given as evaluateable string) to database.}
 
-	filedir := MakePath([GetDBDir(dbname), dir]);
+	filedir := MakePath([GetDatabaseDir(dbname), dir]);
 	MakeDirectory(filedir);
 	file := MakePath([filedir, object*".o.m.gz"]);
 	WriteCompressed(file, X);
 
 	try
 		//directory of file
-		filedir := MakePath([GetDBDir(dbname), dir]);
+		filedir := MakePath([GetDatabaseDir(dbname), dir]);
 
 		//directory of file relative to repo (needed for pull)
 		if GetOSType() eq "Unix" then
@@ -120,7 +120,7 @@ end intrinsic;
 //##############################################################################
 //	Creates an empty database
 //##############################################################################
-intrinsic CreateDB(dir::MonStgElt, dbname::MonStgElt)
+intrinsic CreateDatabase(dir::MonStgElt, dbname::MonStgElt)
 {Creates an empty database in the specified directory.}
 
 	dir := MakePath([dir, dbname]);
@@ -145,7 +145,7 @@ end intrinsic;
 //##############################################################################
 //	Adds a Git LFS database
 //##############################################################################
-intrinsic AddDB(url::MonStgElt)
+intrinsic AddDatabase(url::MonStgElt)
 {Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the local Databases directory. The database is then added to the Config.txt file. A restart is necessary to register the database.}
 
 	//Determine repo name
@@ -222,7 +222,7 @@ end intrinsic;
 //##############################################################################
 //	Deletes a local Git LFS database
 //##############################################################################
-intrinsic DeleteDB(dbname::MonStgElt)
+intrinsic DeleteDatabase(dbname::MonStgElt)
 {Deletes a Git LFS database which was cloned as a submodule. Use with caution.}
 
 	if not DirectoryExists(MakePath([GetBaseDir(), "Databases", dbname])) then
