@@ -8,37 +8,27 @@
 # thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 #
 # Run automatic selfcheck on a package. This is quite a nice and generic script
-# actually.
+# actually. I assume in package called PACKAGE_NAME placed in directory
+# Packages there's a Selfcheck directory with .m program files doing tests
+# (e.g. assert X=Y; etc). If someting goes wring, it will be reported.
+#
+# Usage
 #
 # ./selfcheck -p PACKAGE_NAME (SELFCHECK1 SELFCHECK2 ...)
 #
 # e.g.
 #
-# ./selfcheck -p Magma-UT Files MD5 Strings
+# ./selfcheck -p magma-ut Files MD5 Strings
 #
 # Running
 #
-# ./selfcheck -p Magma-UT
+# ./selfcheck -p magma-ut
 #
 # runs all selfchecks.
 #
-# If -r option is given, reporting is activated.
+# If -r option is given, reporting to server is activated (see php directory).
 #
 # This script needs to be started from this folder to not mess up paths.
-# It will then load the files given as arguments into Magma and
-# report any errors, also things like when a command didn't exist.
-#
-# The Magma session is initialized with logging enabled and the logfile
-# will be parsed afterwards. Also SetQuitOnError is activated. When the
-# keyword "error" is found in the log, this will be reported.
-#
-# You should write your selfchecks in a way that it throws errors when
-# something is not correct. You can e.g. use
-#
-# assert X eq Y;
-#
-# If X is not equal to X, this throws an error. You should look at the
-# examples in Packages/Magma-UT/Selfchecks.
 #
 ################################################################################
 

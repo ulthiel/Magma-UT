@@ -6,6 +6,28 @@
 :: https://github.com/ulthiel/magma-ut
 :: thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 ::
+:: Run automatic selfcheck on a package. This is quite a nice and generic script
+:: actually. I assume in package called PACKAGE_NAME placed in directory
+:: Packages there's a Selfcheck directory with .m program files doing tests
+:: (e.g. assert X=Y; etc). If someting goes wring, it will be reported.
+::
+:: Usage
+::
+:: ./selfcheck -p PACKAGE_NAME (SELFCHECK1 SELFCHECK2 ...)
+::
+:: e.g.
+::
+:: ./selfcheck -p magma-ut Files MD5 Strings
+::
+:: Running
+::
+:: ./selfcheck -p magma-ut
+::
+:: runs all selfchecks.
+::
+:: If -r option is given, reporting to server is activated (see php directory).
+::
+:: This script needs to be started from this folder to not mess up paths.
 ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
