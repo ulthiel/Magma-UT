@@ -194,7 +194,7 @@ assert FileExists("../../Packages/$PACKAGE/Selfchecks/$NAME.m");
 load "../../Packages/$PACKAGE/Selfchecks/$NAME.m";
 printf "MAGMA_UT_SELFCHECK_TIME=%o\n", Cputime(MAGMA_UT_SELFCHECK_TIME);
 printf "MAGMA_UT_SELFCHECK_MEM=%o\n", Round(GetMemoryUsage()/1000^2);
-try; printf "MAGMA_UT_SELFCHECK_PKG_VER=%o\n", GetRepositoryVersion("../../Packages/$PACKAGE"); catch e; end try;
+try; printf "MAGMA_UT_SELFCHECK_PKG_VER=%o\n", GitRepositoryVersion("../../Packages/$PACKAGE"); catch e; end try;
 DeleteFile("Log/$PACKAGE/$NAME.lck");
 quit;
 END

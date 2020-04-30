@@ -42,7 +42,7 @@ end intrinsic;
 //##############################################################################
 //  Retrieve version or commit id from Git repo
 //##############################################################################
-intrinsic GetRepositoryVersion(dir::MonStgElt) -> MonStgElt
+intrinsic GitRepositoryVersion(dir::MonStgElt) -> MonStgElt
 {}
 	try
 		if GetOSType() eq "Unix" then
