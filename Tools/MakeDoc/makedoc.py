@@ -48,6 +48,10 @@ sourcecount = 0
 descriptionline=False
 
 for dirpath, dirnames, filenames in os.walk("."):
+  if 'Selfchecks' in dirnames:
+    dirnames.remove('Selfchecks')
+  if 'Doc' in dirnames:
+    dirnames.remove('Doc')
   for filename in [f for f in filenames if f.endswith(".i.m")]:
     sourcecount += 1
     sourcefile = os.path.join(dirpath, filename)
