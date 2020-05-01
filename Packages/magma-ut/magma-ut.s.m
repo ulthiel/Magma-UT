@@ -1,5 +1,3 @@
-Checksum/Adler32.i.m
-
 Databases/Databases.i.m
 
 Output/Messages.i.m
@@ -8,8 +6,6 @@ Output/PrintCentered.i.m
 Output/View.i.m
 
 Packages/Packages.i.m
-
-SetsSequences/SetsSequences.i.m
 
 Startup/Welcome.i.m
 
