@@ -215,3 +215,13 @@ intrinsic GetPackages() -> MonStgElt
   return Split(GetEnv("MAGMA_UT_PACKAGES"), ",");
 
 end intrinsic;
+
+//##############################################################################
+//  Total memory
+//##############################################################################
+intrinsic GetTotalMemory() -> RngIntElt
+{The Magma-UT base directory.}
+
+  return StringToInteger(GetEnv("MAGMA_UT_TOTAL_MEM"));
+
+end intrinsic;
