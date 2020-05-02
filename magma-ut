@@ -112,7 +112,7 @@ fi
 if [ "$MAGMA_UT_OS" == "Darwin" ]; then
     export MAGMA_UT_TOTAL_MEM=`sysctl -n hw.memsize`
 else
-    export MAGMA_UT_TOTAL_MEM=`grep MemTotal /proc/meminfo | awk '{print $2}'`
+    export MAGMA_UT_TOTAL_MEM=`grep MemTotal /proc/meminfo | awk '{printf "%.0f", $2*1024}'`
 fi
 
 
