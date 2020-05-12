@@ -148,22 +148,64 @@ end intrinsic;
 //##############################################################################
 //	Save object to database
 //##############################################################################
-intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::MonStgElt : Overwrite:=false, Description:="")
+intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::. : Overwrite:=false, Description:="", Compress:=true)
 {Save object (given as evaluateable string) to database.}
 
 	dbrec := CreateDatabaseRecord(key);
-	if FileExists(dbrec`ObjectPath) and not Overwrite then
+
+	if Description ne "" then
+		dbrec`Description := Description;
+	end if;
+
+	if Type(X) eq MonStgElt then
+		if not Compress then
+			SetObjectFileExtension(~dbrec, "o.m");
+		else
+			SetObjectFileExtension(~dbrec, "o.m.gz");
+		end if;
+	else
+		SetObjectFileExtension(~dbrec, "smo");
+	end if;
+
+	if Overwrite eq false and FileExists(dbrec`ObjectPath) then
 		error "Object exists already in database";
 	end if;
-	MakeDirectory(dbrec`ObjectDirectory);
-	WriteCompressed(dbrec`ObjectPath, X);
 
+	for ext in { "o.m", "o.m.gz", "smo" } diff {dbrec`ObjectFileExtension} do
+		if FileExists(MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*"."*ext])) then
+			error "An object with this name but different file type exists in database";
+		end if;
+	end for;
+
+	MakeDirectory(dbrec`ObjectDirectory);
+
+	//Write description file
+	if Description ne "" then
+		Write(MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*".txt"]), Description : Overwrite:=true);
+	end if;
+
+	//Write object
+	if dbrec`ObjectFileExtension eq "o.m" then
+		Write(dbrec`ObjectPath, X : Overwrite:=true);
+
+	elif dbrec`ObjectFileExtension eq "o.m.gz" then
+		WriteCompressed(dbrec`ObjectPath, X);
+
+	elif dbrec`ObjectFileExtension eq "smo" then
+		fp := Open(dbrec`ObjectPath, "w");
+		WriteObject(fp, X);
+		Flush(fp);
+		delete fp;
+	end if;
+
+	//Add files to git repo
 	try
-		//add file to repo
 		if GetOSType() eq "Unix" then
 			stat := SystemCall("cd \""*dbrec`ObjectDirectory*"\" && git add \""*dbrec`ObjectFileName*"\"");
+			stat := SystemCall("cd \""*dbrec`ObjectDirectory*"\" && git add \""*dbrec`ObjectName*".txt\"");
 		else
 			stat := SystemCall("cd /d \""*dbrec`ObjectDirectory*"\" && git add \""*dbrec`ObjectFileName*"\"");
+			stat := SystemCall("cd /d \""*dbrec`ObjectDirectory*"\" && git add \""*dbrec`ObjectName*".txt\"");
 		end if;
 	catch e
 		;
