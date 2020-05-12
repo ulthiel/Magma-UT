@@ -63,11 +63,10 @@ intrinsic ExistsInDatabase(key::SeqEnum[MonStgElt]) -> BoolElt, Rec
 {Check if object exists in database.}
 
 	dbrec := CreateDatabaseRecord(key);
-	for ext in [ "o.m.gz", "so.m" ] do
+	for ext in [ "o.m", "o.m.gz", "smo" ] do
 		if FileExists(MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*"."*ext])) then
 			SetObjectFileExtension(~dbrec, ext);
 			descfile := MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*".txt"]);
-			print descfile;
 			if FileExists(descfile) then
 				dbrec`Description := Read(descfile);
 			end if;
@@ -92,38 +91,55 @@ intrinsic GetFromDatabase(key::SeqEnum[MonStgElt]) -> ., Rec
 		error "Object does not exist in database";
 	end if;
 
-	//Now, the file is either a gzipped object file or it is an LFS pointer.
-	//To decide, simply try to decompress the file. If this doesn't work,
-	//try to download the file using git lfs.
-	try
-		res := ReadCompressed(dbrec`ObjectPath);
-	catch e
-		;
-	end try;
-
-	//Download file using git lfs
-	if not assigned res then
-		try
-
-			//pull file
-			if GetOSType() eq "Unix" then
-				stat := SystemCall("cd \""*dbrec`ObjectDirectory*"\" && git lfs pull --include \""*dbrec`ObjectFileName*"\"");
-			else
-				stat := SystemCall("cd /d \""*dbrec`ObjectDirectory*"\" && git lfs pull --include \""*dbrec`ObjectFileName*"\"");
-			end if;
-
-			//decompress file
-			res := ReadCompressed(dbrec`ObjectPath);
-		catch e;
-			error "Cannot obtain file from LFS";
-		end try;
+	//See if file is an LSF pointer and download in case it is.
+	//Acording to LSF spec
+	//https://github.com/git-lfs/git-lfs/blob/master/docs/spec.md
+	//the first line has to be "version URL". This is what I'll look for.
+	//I'll just read the first 12 bytes and check this to avoid reading the
+	//whole line which may be large for a data file.
+	if GetFileType(dbrec`ObjectPath) eq "ASCII text" then
+		fp := Open(dbrec`ObjectPath, "r");
+		str := Read(fp, 12);
+		if str eq "version http" then
+			//It's an LSF pointer. Try to pull the file.
+			try
+				if GetOSType() eq "Unix" then
+					stat := SystemCall("cd \""*dbrec`ObjectDirectory*"\" && git lfs pull --include \""*dbrec`ObjectFileName*"\"");
+				else
+					stat := SystemCall("cd /d \""*dbrec`ObjectDirectory*"\" && git lfs pull --include \""*dbrec`ObjectFileName*"\"");
+				end if;
+			catch e
+				error "Cannot obtain file from LFS";
+			end try;
+		end if;
 	end if;
 
-	try
-		X := eval res;
-	catch e;
-		error "Error creating object from database";
-	end try;
+	//Retrieve object depending on file type (extension)
+	if dbrec`ObjectFileExtension eq "o.m" then
+		res := Read(dbrec`ObjectPath);
+		try
+			X := eval res;
+		catch e;
+			error "Error creating object from database";
+		end try;
+
+	elif dbrec`ObjectFileExtension eq "o.m.gz" then
+		res := ReadCompressed(dbrec`ObjectPath);
+		try
+			X := eval res;
+		catch e;
+			error "Error creating object from database";
+		end try;
+
+	elif dbrec`ObjectFileExtension eq "smo" then
+		fp := Open(dbrec`ObjectPath, "r");
+		try
+			X := ReadObject(fp);
+		catch e;
+			error "Error creating object from database";
+		end try;
+		delete fp;
+	end if;
 
 	return X, dbrec;
 
@@ -132,7 +148,7 @@ end intrinsic;
 //##############################################################################
 //	Save object to database
 //##############################################################################
-intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::MonStgElt : Overwrite:=false)
+intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::MonStgElt : Overwrite:=false, Description:="")
 {Save object (given as evaluateable string) to database.}
 
 	dbrec := CreateDatabaseRecord(key);
@@ -169,9 +185,9 @@ intrinsic CreateDatabase(dir::MonStgElt, dbname::MonStgElt)
 	MakeDirectory(dir);
 	try
 		if GetOSType() eq "Unix" then
-			cmd := "cd \""*dir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
+			cmd := "cd \""*dir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git lfs track '*.o.m' && git lfs track '*.smo' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
 		else
-			cmd := "cd /d \""*dir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
+			cmd := "cd /d \""*dir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git lfs track '*.o.m' && git lfs track '*.smo' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
 		end if;
 		res := SystemCall(cmd);
 	catch e

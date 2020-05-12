@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -355,5 +355,21 @@ intrinsic ListFiles(dir::MonStgElt) -> SeqEnum
   end if;
 
   return Split(ret, "\n");
+
+end intrinsic;
+
+//##############################################################################
+//  File type
+//##############################################################################
+intrinsic GetFileType(file::MonStgElt) -> MonStgElt
+{}
+
+  if GetOSType() eq "Unix" then
+    res := SystemCall("file -b \""*file*"\"");
+  else
+    res := SystemCall(GetUnixTool("file")*" -b \""*file*"\"");
+  end if;
+
+  return res[1..#res-1];
 
 end intrinsic;
