@@ -69,6 +69,10 @@ intrinsic ExistsInDatabase(key::SeqEnum[MonStgElt]) -> BoolElt, Rec
 			descfile := MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*".txt"]);
 			if FileExists(descfile) then
 				dbrec`Description := Read(descfile);
+				//remove newline at end
+				if dbrec`Description[#dbrec`Description] eq "\n" then
+					dbrec`Description := dbrec`Description[1..#dbrec`Description-1];
+				end if;
 			end if;
 			return true, dbrec;
 		end if;
