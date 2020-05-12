@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -11,13 +11,70 @@ freeze;
 //
 //##############################################################################
 
+
+//##############################################################################
+//	Construct a record for a path
+//##############################################################################
+DatabaseRecord := recformat<
+	Key:SeqEnum, //the key
+	DatabaseName:MonStgElt, //name of the database
+	DatabaseDirectory:MonStgElt, //root directory of the database (full path)
+	ObjectName:MonStgElt, //object name
+	ObjectDirectory:MonStgElt, //directory of object file (full path)
+	ObjectRelativeDirectory:MonStgElt, //directory of object file relative to root
+	ObjectFileExtension:MonStgElt, //extension of object file
+	ObjectFileName:MonStgElt,
+	ObjectPath:MonStgElt, //full path of object
+	ObjectRelativePath:MonStgElt,
+	Description:MonStgElt
+	>;
+
+intrinsic CreateDatabaseRecord(key::SeqEnum[MonStgElt]) -> Rec
+{}
+
+	dbrec := rec<DatabaseRecord|Key:=key>;
+	dbname := key[1];
+	dbrec`DatabaseName := dbname;
+	dbrec`DatabaseDirectory := GetDatabaseDir(dbname);
+	dbrec`ObjectName := key[#key];
+	key := Remove(key, 1);
+	key := Remove(key, #key);
+	dbrec`ObjectRelativeDirectory := MakePath(key);
+	dbrec`ObjectDirectory := MakePath([dbrec`DatabaseDirectory, dbrec`ObjectRelativeDirectory]);
+
+	return dbrec;
+
+end intrinsic;
+
+intrinsic SetObjectFileExtension(~dbrec::Rec, ext::MonStgElt)
+{}
+
+	dbrec`ObjectFileExtension := ext;
+	dbrec`ObjectFileName := dbrec`ObjectName*"."*ext;
+	dbrec`ObjectRelativePath := MakePath([dbrec`ObjectRelativeDirectory, dbrec`ObjectFileName]);
+	dbrec`ObjectPath := MakePath([dbrec`ObjectDirectory, dbrec`ObjectFileName]);
+
+end intrinsic;
+
 //##############################################################################
 //	Check if an object exists in the database
 //##############################################################################
-intrinsic ExistsInDatabase(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> BoolElt
+intrinsic ExistsInDatabase(key::SeqEnum[MonStgElt]) -> BoolElt, Rec
 {Check if object exists in database.}
 
-	return FileExists(MakePath([GetDatabaseDir(dbname), dbdir, object*".o.m.gz"]));
+	dbrec := CreateDatabaseRecord(key);
+	for ext in [ "o.m.gz", "so.m" ] do
+		if FileExists(MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*"."*ext])) then
+			SetObjectFileExtension(~dbrec, ext);
+			descfile := MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*".txt"]);
+			print descfile;
+			if FileExists(descfile) then
+				dbrec`Description := Read(descfile);
+			end if;
+			return true, dbrec;
+		end if;
+	end for;
+	return false,_;
 
 end intrinsic;
 
@@ -25,13 +82,13 @@ end intrinsic;
 //	Gets an object from the database. If the file is not there yet, it will
 //	be downloaded from LFS.
 //##############################################################################
-intrinsic GetFromDatabase(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt) -> .
+intrinsic GetFromDatabase(key::SeqEnum[MonStgElt]) -> ., Rec
 {Retrieve object from database. If the database is a Git LFS database and the file is not there yet, it will be downloaded.}
 
-	file := MakePath([GetDatabaseDir(dbname), dbdir, object*".o.m.gz"]);
+	b,dbrec := ExistsInDatabase(key);
 
 	//First, check if file exists
-	if not FileExists(file) then
+	if not b then
 		error "Object does not exist in database";
 	end if;
 
@@ -39,7 +96,7 @@ intrinsic GetFromDatabase(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt
 	//To decide, simply try to decompress the file. If this doesn't work,
 	//try to download the file using git lfs.
 	try
-		res := ReadCompressed(file);
+		res := ReadCompressed(dbrec`ObjectPath);
 	catch e
 		;
 	end try;
@@ -47,26 +104,16 @@ intrinsic GetFromDatabase(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt
 	//Download file using git lfs
 	if not assigned res then
 		try
-			//directory of file
-			filedir := MakePath([GetDatabaseDir(dbname), dbdir]);
-
-			//directory of file relative to repo (needed for pull)
-			if GetOSType() eq "Unix" then
-				filereldir := SystemCall("cd \""*filedir*"\" && git rev-parse --show-prefix");
-			else
-				filereldir := SystemCall("cd /d \""*filedir*"\" && git rev-parse --show-prefix");
-			end if;
-			filereldir := filereldir[1..#filereldir-1]; //remove newline
 
 			//pull file
 			if GetOSType() eq "Unix" then
-				stat := SystemCall("cd \""*filedir*"\" && git lfs pull --include \""*MakePath([filereldir, object*".o.m.gz"])*"\"");
+				stat := SystemCall("cd \""*dbrec`ObjectDirectory*"\" && git lfs pull --include \""*dbrec`ObjectFileName*"\"");
 			else
-				stat := SystemCall("cd /d \""*filedir*"\" && git lfs pull --include \""*MakePath([filereldir, object*".o.m.gz"])*"\"");
+				stat := SystemCall("cd /d \""*dbrec`ObjectDirectory*"\" && git lfs pull --include \""*dbrec`ObjectFileName*"\"");
 			end if;
 
 			//decompress file
-			res := ReadCompressed(file);
+			res := ReadCompressed(dbrec`ObjectPath);
 		catch e;
 			error "Cannot obtain file from LFS";
 		end try;
@@ -78,38 +125,29 @@ intrinsic GetFromDatabase(dbname::MonStgElt, dbdir::MonStgElt, object::MonStgElt
 		error "Error creating object from database";
 	end try;
 
-	return X;
+	return X, dbrec;
 
 end intrinsic;
 
 //##############################################################################
 //	Save object to database
 //##############################################################################
-intrinsic SaveToDatabase(dbname::MonStgElt, dir::MonStgElt, object::MonStgElt, X::MonStgElt : Comment:="")
+intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::MonStgElt : Overwrite:=false)
 {Save object (given as evaluateable string) to database.}
 
-	filedir := MakePath([GetDatabaseDir(dbname), dir]);
-	MakeDirectory(filedir);
-	file := MakePath([filedir, object*".o.m.gz"]);
-	WriteCompressed(file, X);
+	dbrec := CreateDatabaseRecord(key);
+	if FileExists(dbrec`ObjectPath) and not Overwrite then
+		error "Object exists already in database";
+	end if;
+	MakeDirectory(dbrec`ObjectDirectory);
+	WriteCompressed(dbrec`ObjectPath, X);
 
 	try
-		//directory of file
-		filedir := MakePath([GetDatabaseDir(dbname), dir]);
-
-		//directory of file relative to repo (needed for pull)
-		if GetOSType() eq "Unix" then
-			filereldir := SystemCall("cd \""*filedir*"\" && git rev-parse --show-prefix");
-		else
-			filereldir := SystemCall("cd /d \""*filedir*"\" && git rev-parse --show-prefix");
-		end if;
-		filereldir := filereldir[1..#filereldir-1]; //remove newline
-
 		//add file to repo
 		if GetOSType() eq "Unix" then
-			stat := SystemCall("cd \""*filedir*"\" && git add \""*object*".o.m.gz\"");
+			stat := SystemCall("cd \""*dbrec`ObjectDirectory*"\" && git add \""*dbrec`ObjectFileName*"\"");
 		else
-			stat := SystemCall("cd /d \""*filedir*"\" && git add \""*object*".o.m.gz\"");
+			stat := SystemCall("cd /d \""*dbrec`ObjectDirectory*"\" && git add \""*dbrec`ObjectFileName*"\"");
 		end if;
 	catch e
 		;
@@ -169,7 +207,7 @@ intrinsic AddDatabase(url::MonStgElt)
 	//Check if directory exists already
 	dir := MakePath([GetBaseDir(), "Databases"]);
 	MakeDirectory(dir);
-	
+
 	if DirectoryExists(MakePath([dir, dbname])) then
 		error "Database with this name exists already";
 	end if;

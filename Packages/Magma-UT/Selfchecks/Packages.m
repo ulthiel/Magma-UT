@@ -1,5 +1,5 @@
-AddPackage("https://github.com/ulthiel/magma-ut-test-pkg");
+AddPackage("https://github.com/ulthiel/Magma-UT-Test-Pkg");
 assert MAGMA_UT_TEST_INTRINSIC() eq "WORKS";
-DeletePackage("magma-ut-test-pkg");
-CreatePackage(GetTempDir(), "magma-ut-test-pkg");
-DeleteFile(MakePath([GetTempDir(), "magma-ut-test-pkg"]));
+DeletePackage("Magma-UT-Test-Pkg");
+CreatePackage(GetTempDir(), "Magma-UT-Test-Pkg");
+DeleteFile(MakePath([GetTempDir(), "Magma-UT-Test-Pkg"]));

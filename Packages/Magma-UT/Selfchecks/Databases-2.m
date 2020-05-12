@@ -1,22 +1,22 @@
 //We assume Databases-1 has been called before so that test-db exists
-assert "magma-ut-test-db" in GetDatabaseNames();
-GetDatabaseDir("magma-ut-test-db");
+assert "Magma-UT-Test-DB" in GetDatabaseNames();
+GetDatabaseDir("Magma-UT-Test-DB");
 GetDatabaseDirs();
 
-assert ExistsInDatabase("magma-ut-test-db", "F4", "GrpMat");
+assert ExistsInDatabase(["Magma-UT-Test-DB", "F4", "GrpMat"]);
 
-G := GetFromDatabase("magma-ut-test-db", "F4", "GrpMat");
+G := GetFromDatabase(["Magma-UT-Test-DB", "F4", "GrpMat"]);
 assert Type(G) eq GrpMat;
 
-G := GetFromDatabase("magma-ut-test-db", "F4", "GrpMat");
+G := GetFromDatabase(["Magma-UT-Test-DB", "F4", "GrpMat"]);
 assert Type(G) eq GrpMat;
 
-SaveToDatabase("magma-ut-test-db", "test", "GrpMat", Sprint(G, "Magma"));
+SaveToDatabase(["Magma-UT-Test-DB", "test", "GrpMat"], Sprint(G, "Magma"));
 
-H := GetFromDatabase("magma-ut-test-db", "test", "GrpMat");
+H := GetFromDatabase(["Magma-UT-Test-DB", "test", "GrpMat"]);
 assert G eq H;
 
-DeleteDatabase("magma-ut-test-db");
+DeleteDatabase("Magma-UT-Test-DB");
 
-CreateDatabase(GetTempDir(), "magma-ut-test-db");
-DeleteFile(MakePath([GetTempDir(), "magma-ut-test-db"]));
+CreateDatabase(GetTempDir(), "Magma-UT-Test-DB");
+DeleteFile(MakePath([GetTempDir(), "Magma-UT-Test-DB"]));
