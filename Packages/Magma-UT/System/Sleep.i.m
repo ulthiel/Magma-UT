@@ -20,7 +20,7 @@ freeze;
 //  fractional seconds
 //
 //##############################################################################
-intrinsic Sleep(n::RngElt)
+intrinsic Sleep(n::RngIntElt)
 {Sleep n seconds.}
 
   if GetOSType() eq "Windows" then
