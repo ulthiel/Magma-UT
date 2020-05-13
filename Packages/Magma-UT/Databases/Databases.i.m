@@ -145,6 +145,14 @@ intrinsic GetFromDatabase(key::SeqEnum[MonStgElt]) -> ., Rec
 		delete fp;
 	end if;
 
+	//Try to set dbrec as DatabaseRecord attribute (may not exist for
+	//the category of X)
+	try
+		X`DatabaseRecord := dbrec;
+	catch e
+		;
+	end try;
+
 	return X, dbrec;
 
 end intrinsic;
