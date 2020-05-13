@@ -152,7 +152,7 @@ end intrinsic;
 //##############################################################################
 //	Save object to database
 //##############################################################################
-intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::. : Overwrite:=false, Description:="", Compress:=true)
+intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::., ext::MonStgElt : Overwrite:=false, Description:="")
 {Save object (given as evaluateable string) to database.}
 
 	dbrec := CreateDatabaseRecord(key);
@@ -161,22 +161,14 @@ intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::. : Overwrite:=false, Descr
 		dbrec`Description := Description;
 	end if;
 
-	if Type(X) eq MonStgElt then
-		if not Compress then
-			SetObjectFileExtension(~dbrec, "o.m");
-		else
-			SetObjectFileExtension(~dbrec, "o.m.gz");
-		end if;
-	else
-		SetObjectFileExtension(~dbrec, "smo");
-	end if;
+	SetObjectFileExtension(~dbrec, ext);
 
 	if Overwrite eq false and FileExists(dbrec`ObjectPath) then
 		error "Object exists already in database";
 	end if;
 
-	for ext in { "o.m", "o.m.gz", "smo" } diff {dbrec`ObjectFileExtension} do
-		if FileExists(MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*"."*ext])) then
+	for e in { "o.m", "o.m.gz", "smo" } diff {ext} do
+		if FileExists(MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*"."*e])) then
 			error "An object with this name but different file type exists in database";
 		end if;
 	end for;
@@ -306,16 +298,16 @@ intrinsic AddDatabase(url::MonStgElt)
 	end while;
 
 	delete config; //close configfile
-	Write(configfile, newconfig : Overwrite:=true);
+	WriteBinary(configfile, newconfig : Overwrite:=true);
 
 	//The newline \n under Windows becomes \r\n, and then it doesn't work
 	//under Unix anymore on the same system. Hence, rewrite config file to Unix
 	//line endings.
-	if GetOSType() eq "Windows" then
-		configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
-		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
-		res := SystemCall(cmd);
-	end if;
+	// if GetOSType() eq "Windows" then
+	// 	configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
+	// 	cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
+	// 	res := SystemCall(cmd);
+	// end if;
 
 	print "Success. Please restart Magma-UT now.";
 
@@ -374,15 +366,15 @@ intrinsic DeleteDatabase(dbname::MonStgElt)
 	end while;
 
 	delete config; //close configfile
-	Write(configfile, newconfig : Overwrite:=true);
+	WriteBinary(configfile, newconfig : Overwrite:=true);
 
 	//The newline \n under Windows becomes \r\n, and then it doesn't work
 	//under Unix anymore on the same system. Hence, rewrite config file to Unix
 	//line endings.
-	if GetOSType() eq "Windows" then
-		configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
-		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
-		res := SystemCall(cmd);
-	end if;
+	// if GetOSType() eq "Windows" then
+	// 	configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
+	// 	cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
+	// 	res := SystemCall(cmd);
+	// end if;
 
 end intrinsic;

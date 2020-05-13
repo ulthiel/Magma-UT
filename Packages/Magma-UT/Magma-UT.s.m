@@ -22,3 +22,4 @@ System/MD5.i.m
 System/Sleep.i.m
 System/SQLite.i.m
 System/SystemCall.i.m
+System/WriteBinary.i.m

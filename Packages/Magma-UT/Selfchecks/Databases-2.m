@@ -17,17 +17,17 @@ assert Order(G4) eq 24;
 f,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "Objects", "f"]);
 assert Type(f) eq RngMPolElt;
 
-SaveToDatabase(["Magma-UT-Test-DB", "test", "F4"], Sprint(F4, "Magma") : Compress:=false, Description:="F4 copy");
+SaveToDatabase(["Magma-UT-Test-DB", "test", "F4"], Sprint(F4, "Magma"), "o.m" : Description:="F4 copy");
 H,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "test", "F4"]);
 assert F4 eq H;
 assert dbrec`Description eq "F4 copy";
 
-SaveToDatabase(["Magma-UT-Test-DB", "test", "G4"], Sprint(G4, "Magma") : Compress:=true, Description:="G4 copy");
+SaveToDatabase(["Magma-UT-Test-DB", "test", "G4"], Sprint(G4, "Magma"), "o.m.gz" : Description:="G4 copy");
 H,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "test", "G4"]);
 assert G4 eq H;
 assert dbrec`Description eq "G4 copy";
 
-SaveToDatabase(["Magma-UT-Test-DB", "test", "f2"], f^2 : Description:="f^2");
+SaveToDatabase(["Magma-UT-Test-DB", "test", "f2"], f^2, "smo" : Description:="f^2");
 g,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "test", "f2"]);
 assert g eq Parent(g)!(f^2);
 assert dbrec`Description eq "f^2";

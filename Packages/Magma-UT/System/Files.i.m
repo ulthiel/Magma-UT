@@ -14,10 +14,9 @@
 //  * get file size
 //  * checking existence of files and directories
 //  * listing files and directories in a directory
+//  * determine file type
 //
 //##############################################################################
-
-
 
 
 //##############################################################################
