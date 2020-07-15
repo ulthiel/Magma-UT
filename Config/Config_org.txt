@@ -24,6 +24,12 @@
 #MAGMA_UT_MAGMA_DIR=
 
 ################################################################################
+# Spec files of packages to be attached. This is a COMMA separated list.
+# Again, PATH should be absolute.
+################################################################################
+#MAGMA_UT_PACKAGES=
+
+################################################################################
 # Names and directories of databases.
 # This is a COMMA separated list (no space between commas).
 # Path should be ABSOLUTE. You can use the variable $MAGMA_UT_BASE_DIR.
@@ -31,12 +37,6 @@
 #MAGMA_UT_DB_NAMES=
 
 #MAGMA_UT_DB_DIRS=
-
-################################################################################
-# Spec files of packages to be attached. This is a COMMA separated list.
-# Again, PATH should be absolute.
-################################################################################
-#MAGMA_UT_PACKAGES=
 
 ################################################################################
 # HTML viewer

@@ -34,12 +34,77 @@ intrinsic CreatePackage(dir::MonStgElt, pkgname::MonStgElt)
 		error "Error creating package";
 	end try;
 
+	AddPackage(dir, pkgname);
+
+end intrinsic;
+
+intrinsic CreatePackage(pkgname::MonStgElt)
+{Creates an empty package in local package directory.}
+
+	dir := MakePath([GetBaseDir(), "Packages"]);
+	CreatePackage(dir, pkgname);
+
+	//Ignore this directory (alternative to .gitignore, and better for this
+	//purpose as local only)
+	Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Packages/"*pkgname);
+
+	AddPackge(pkgname);
+
+end intrinsic;
+
+//##############################################################################
+//	Adds package to config so that it is loaded on startup
+//##############################################################################
+intrinsic AddPackage(dir::MonStgElt, pkgname::MonStgElt)
+{}
+
+	//Now, add to Config.txt. I'll rewrite the file.
+	config := "";
+	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
+	config :=  Open(configfile, "r");
+	newconfig := "";
+	specfile := dir*"/"*pkgname*".s.m";
+	while true do
+		line := Gets(config);
+		if IsEof(line) then
+			break;
+		end if;
+		if Position(line, "#MAGMA_UT_PKGS=") ne 0 then
+			newconfig *:= "MAGMA_UT_PKGS="*specfile;
+		elif Position(line, "MAGMA_UT_PKGS=") ne 0 then
+			newconfig *:= line*","*specfile;
+		else
+			newconfig *:= line;
+		end if;
+		newconfig *:= "\n";
+	end while;
+
+	delete config; //close configfile
+	Write(configfile, newconfig : Overwrite:=true);
+
+	//The newline \n under Windows becomes \r\n, and then it doesn't work
+	//under Unix anymore on the same system. Hence, rewrite config file to Unix
+	//line endings.
+	if GetOSType() eq "Windows" then
+		configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
+		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
+		res := SystemCall(cmd);
+	end if;
+
+end intrinsic;
+
+intrinsic AddPackage(pkgname::MonStgElt)
+{}
+
+	dir := "$MAGMA_UT_BASE_DIR/Packages/"*pkgname;
+	AddPackage(dir, pkgname);
+
 end intrinsic;
 
 //##############################################################################
 //	Adds a Git package
 //##############################################################################
-intrinsic AddPackage(url::MonStgElt)
+intrinsic AddGitPackage(url::MonStgElt)
 {Clones a Git Package into the Packages directory.}
 
 	//Determine repo name
@@ -68,39 +133,7 @@ intrinsic AddPackage(url::MonStgElt)
 	//purpose as local only)
 	Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Packages/"*pkgname);
 
-	//Now, add to Config.txt. I'll rewrite the file.
-	config := "";
-	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
-	config :=  Open(configfile, "r");
-	newconfig := "";
-	while true do
-		line := Gets(config);
-		if IsEof(line) then
-			break;
-		end if;
-		if Position(line, "#MAGMA_UT_PKGS=") ne 0 then
-			newconfig *:= "MAGMA_UT_PKGS=$MAGMA_UT_BASE_DIR/Packages/"*pkgname*"/"*pkgname*".s.m";
-		elif Position(line, "MAGMA_UT_PKGS=") ne 0 then
-			newconfig *:= line*",$MAGMA_UT_BASE_DIR/Packages/"*pkgname*"/"*pkgname*".s.m";
-		else
-			newconfig *:= line;
-		end if;
-		newconfig *:= "\n";
-	end while;
-
-	delete config; //close configfile
-	Write(configfile, newconfig : Overwrite:=true);
-
-	//The newline \n under Windows becomes \r\n, and then it doesn't work
-	//under Unix anymore on the same system. Hence, rewrite config file to Unix
-	//line endings.
-	if GetOSType() eq "Windows" then
-		configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
-		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
-		res := SystemCall(cmd);
-	end if;
-
-	//print "Success. Please restart Magma-UT now.";
+	AddPackage(pkgname);
 	AttachSpec(MakePath([dir, pkgname, pkgname*".s.m"]));
 
 end intrinsic;
@@ -161,5 +194,24 @@ intrinsic DeletePackage(pkgname::MonStgElt)
 		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
 		res := SystemCall(cmd);
 	end if;
+
+end intrinsic;
+
+//##############################################################################
+//	Attach and detach a local package
+//##############################################################################
+intrinsic AttachPackage(pkgname::MonStgElt)
+{}
+
+	specfile := MakePath([GetBaseDir(), "Packages", pkgname*".s.m"]);
+	AttachSpec(specfile);
+
+end intrinsic;
+
+intrinsic DetachPackage(pkgname::MonStgElt)
+{}
+
+	specfile := MakePath([GetBaseDir(), "Packages", pkgname*".s.m"]);
+	DetachSpec(specfile);
 
 end intrinsic;

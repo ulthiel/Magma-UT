@@ -1,5 +1,6 @@
 Databases/Databases.i.m
 
+Output/MediaWiki.i.m
 Output/Messages.i.m
 Output/Pushover.i.m
 Output/PrintCentered.i.m
