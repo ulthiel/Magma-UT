@@ -27,7 +27,7 @@
 # Spec files of packages to be attached. This is a COMMA separated list.
 # Again, PATH should be absolute.
 ################################################################################
-#MAGMA_UT_PACKAGES=
+#MAGMA_UT_PKGS=
 
 ################################################################################
 # Names and directories of databases.
