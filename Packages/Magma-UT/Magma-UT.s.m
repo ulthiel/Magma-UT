@@ -1,5 +1,7 @@
 Databases/Databases.i.m
 
+Dictionaries/Dictionaries.i.m
+
 Output/MediaWiki.i.m
 Output/Messages.i.m
 Output/Pushover.i.m

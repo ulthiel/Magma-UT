@@ -48,7 +48,7 @@ intrinsic CreatePackage(pkgname::MonStgElt)
 	//purpose as local only)
 	Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Packages/"*pkgname);
 
-	AddPackge(pkgname);
+	AddPackage(pkgname);
 
 end intrinsic;
 
@@ -203,7 +203,7 @@ end intrinsic;
 intrinsic AttachPackage(pkgname::MonStgElt)
 {}
 
-	specfile := MakePath([GetBaseDir(), "Packages", pkgname*".s.m"]);
+	specfile := MakePath([GetBaseDir(), "Packages", pkgname, pkgname*".s.m"]);
 	AttachSpec(specfile);
 
 end intrinsic;
@@ -211,7 +211,15 @@ end intrinsic;
 intrinsic DetachPackage(pkgname::MonStgElt)
 {}
 
-	specfile := MakePath([GetBaseDir(), "Packages", pkgname*".s.m"]);
+	specfile := MakePath([GetBaseDir(), "Packages", pkgname, pkgname*".s.m"]);
 	DetachSpec(specfile);
+
+end intrinsic;
+
+intrinsic ReattachPackage(pkgname::MonStgElt)
+{}
+
+	DetachPackage(pkgname);
+	AttachPackage(pkgname);
 
 end intrinsic;
