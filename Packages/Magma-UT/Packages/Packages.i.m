@@ -251,7 +251,7 @@ end intrinsic;
 //##############################################################################
 //	Adds package to config so that it is attaching at startup
 //##############################################################################
-intrinsic AddPackageStartup(pkgname::MonStgElt)
+intrinsic AddStartupPackage(pkgname::MonStgElt)
 {Adds a packge name to the list of packages attached at startup.}
 
 	//Just to check that package exists
@@ -294,7 +294,7 @@ end intrinsic;
 //##############################################################################
 //	Removes package from attaching at startup
 //##############################################################################
-intrinsic RemovePackageStartup(pkgname::MonStgElt)
+intrinsic RemoveStartupPackage(pkgname::MonStgElt)
 {Removes a package from the startup list.}
 
 	//Now, remove from Config.txt. I'll rewrite the file.
