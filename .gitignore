@@ -3,5 +3,5 @@
 /Config/Config.txt
 /Tools/Selfcheck/Log
 /Databases
-/Packages
-!/Packages/Magma-UT/*
+/Packages/*
+!/Packages/Magma-UT
