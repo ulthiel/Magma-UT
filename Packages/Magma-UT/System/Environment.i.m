@@ -28,6 +28,7 @@ intrinsic GetBaseDir() -> MonStgElt
 
 end intrinsic;
 
+
 //##############################################################################
 //  Magma-UT DB directories and names
 //##############################################################################
@@ -204,16 +205,6 @@ intrinsic GetVersionString() -> MonStgElt
 
 	a,b,c := GetVersion();
 	return Sprint(a)*"."*Sprint(b)*"-"*Sprint(c);
-end intrinsic;
-
-//##############################################################################
-//  Packages
-//##############################################################################
-intrinsic GetPackages() -> MonStgElt
-{List of spec files attached at startup.}
-
-  return Split(GetEnv("MAGMA_UT_PACKAGES"), ",");
-
 end intrinsic;
 
 //##############################################################################

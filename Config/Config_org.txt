@@ -13,30 +13,42 @@
 # under Windows).
 #
 # You can use an already defined variable VAR via $VAR (even under Windows).
-# The variable $MAGMA_UT_DIR will be set to the MAGMA_UT base directory by the
-# startup script, so you can use this here.
+# The variable $MAGMA_UT_BASE_DIR will be set to the MAGMA_UT base directory by
+# the startup script, so you can use this here.
 #
 ################################################################################
 
 ################################################################################
-# You may manually define the directory of the Magma executable here
+# You may manually define the directory of the Magma executable here.
 ################################################################################
 #MAGMA_UT_MAGMA_DIR=
 
 ################################################################################
-# Spec files of packages to be attached. This is a COMMA separated list.
-# Again, PATH should be absolute.
+# Packages are refered to by name, which is the name of the directory containing
+# the package. We always assume that the package directory contains a spec file
+# named "package name".s.m .
+# Packages are usually placed inside the standard Packages directory.
+# You can add packages from other locations using the variable below.
+# This is a COMMA separated list (no space between commas) of ABSOLUTE paths.
+# The package name has to be unique among all packages known to Magma-UT, i.e.
+# those in the Packages directory and those registered here.
 ################################################################################
 #MAGMA_UT_PKGS=
 
 ################################################################################
-# Names and directories of databases.
-# This is a COMMA separated list (no space between commas).
-# Path should be ABSOLUTE. You can use the variable $MAGMA_UT_BASE_DIR.
+# Packages that are attached at startup.
+# This is a COMMA separated list (no space between commas) of package names.
 ################################################################################
-#MAGMA_UT_DB_NAMES=
+#MAGMA_UT_STARTUP_PKGS=
 
-#MAGMA_UT_DB_DIRS=
+################################################################################
+# Databases which are not located inside the Databases directory of Magma-UT.
+# This is a COMMA separated list (no space between commas) of ABSOLUTE paths
+# to database directories. You can use the variable $MAGMA_UT_BASE_DIR.
+# The database name will be the leaf directory name.
+# The database name can then be used in keys.
+################################################################################
+#MAGMA_UT_DBS=
 
 ################################################################################
 # HTML viewer
@@ -47,6 +59,11 @@
 # Text editor
 ################################################################################
 #MAGMA_UT_EDITOR=
+
+################################################################################
+# GAP3 command
+################################################################################
+#MAGMA_UT_GAP3_COMMAND=
 
 ################################################################################
 # Pushover user and token to send notifications to your phone.

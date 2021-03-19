@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 //  Magma-UT
@@ -95,7 +95,7 @@ intrinsic FileName(f::MonStgElt) -> MonStgElt
 end intrinsic;
 
 intrinsic DirectoryName(f::MonStgElt) -> MonStgElt
-{Returns the directory of a full file name}
+{Returns the directory of a full file name.}
 
   pos := Position(Reverse_internal(f), DirectorySeparator()); //matches last slash in f
 
@@ -130,7 +130,7 @@ intrinsic DeleteFile(file::MonStgElt)
 
 end intrinsic;
 
-//In Windows I noticed that I can't delete the .git directory with the unix
+//In Windows I noticed that I can't delete the .git directory with the Unix
 //tool due to permission denied stuff. I'm using rmdir instead, that works.
 intrinsic DeleteDirectory(dir::MonStgElt)
 {Deletes file.}
@@ -154,12 +154,28 @@ intrinsic DeleteDirectory(dir::MonStgElt)
 end intrinsic;
 
 //##############################################################################
-//  Move file or directory
+//  Copy file or directory
 //##############################################################################
-intrinsic MoveFile(target::MonStgElt, dest::MonStgElt)
+intrinsic CopyFile(source::MonStgElt, dest::MonStgElt)
 {Moves file.}
 
-  cmd := GetUnixTool("mv")*" \""*target*"\" \""*dest*"\"";
+  cmd := GetUnixTool("cp")*" -r \""*source*"\" \""*dest*"\"";
+  ret := System(cmd);
+
+  if ret ne 0 then
+    error "Error copying file.";
+  end if;
+
+end intrinsic;
+
+
+//##############################################################################
+//  Move file or directory
+//##############################################################################
+intrinsic MoveFile(source::MonStgElt, dest::MonStgElt)
+{Moves file.}
+
+  cmd := GetUnixTool("mv")*" \""*source*"\" \""*dest*"\"";
   ret := System(cmd);
 
   if ret ne 0 then

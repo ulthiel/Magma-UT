@@ -6,12 +6,13 @@
 # https://github.com/ulthiel/magma-ut
 # thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 #
-# Start Magma-UT (and automatically set the necessary environment variables)
+# Start Magma-UT (and automatically set the necessary environment variables).
 #
 ################################################################################
 
 ################################################################################
-# Set up all the environment variables for Magma-UT
+# Set up all the environment variables for Magma-UT. This also parses the
+# config file.
 ################################################################################
 
 # Magma-UT base directory (neat trick)
@@ -34,57 +35,58 @@ set +a
 
 # Replace comma by colon in package list
 if [ ! -z ${MAGMA_UT_PKGS+x} ]; then
-  export MAGMA_UT_PKGS_CONV=`echo "$MAGMA_UT_PKGS" | sed -e 's/,/:/g'`
+	export MAGMA_UT_PKGS_CONV=`echo "$MAGMA_UT_PKGS" | sed -e 's/,/:/g'`
 fi
 
 # Get the OS version (more detailed than MAGMA_UT_OS)
 if [ "$MAGMA_UT_OS" == "Darwin" ]; then
-    #Mac OS
-    OS=`sw_vers -productName`
-    VER=`sw_vers -productVersion`
+	#Mac OS
+	OS=`sw_vers -productName`
+	VER=`sw_vers -productVersion`
 elif [ -f /etc/os-release ]; then
-    # freedesktop.org and systemd
-    . /etc/os-release
-    OS=$NAME
-    VER=$VERSION_ID
+	# freedesktop.org and systemd
+	. /etc/os-release
+	OS=$NAME
+	VER=$VERSION_ID
 elif type lsb_release >/dev/null 2>&1; then
-    # linuxbase.org
-    OS=$(lsb_release -si)
-    VER=$(lsb_release -sr)
+	# linuxbase.org
+	OS=$(lsb_release -si)
+	VER=$(lsb_release -sr)
 elif [ -f /etc/lsb-release ]; then
-    # For some versions of Debian/Ubuntu without lsb_release command
-    . /etc/lsb-release
-    OS=$DISTRIB_ID
-    VER=$DISTRIB_RELEASE
+	# For some versions of Debian/Ubuntu without lsb_release command
+	. /etc/lsb-release
+	OS=$DISTRIB_ID
+	VER=$DISTRIB_RELEASE
 elif [ -f /etc/debian_version ]; then
-    # Older Debian/Ubuntu/etc.
-    OS=Debian
-    VER=$(cat /etc/debian_version)
+	# Older Debian/Ubuntu/etc.
+	OS=Debian
+	VER=$(cat /etc/debian_version)
 else
-    # Fall back to uname
-    OS=$(uname -s)
-    VER=$(uname -r)
+	# Fall back to uname
+	OS=$(uname -s)
+	VER=$(uname -r)
 fi
 
 export MAGMA_UT_OS_VER="$OS $VER"
 
+# Host name
 export MAGMA_UT_HOSTNAME=`hostname`
 
 if [ "$MAGMA_UT_OS" == "Darwin" ]; then
-    export MAGMA_UT_CPU=`sysctl -n machdep.cpu.brand_string`
+	export MAGMA_UT_CPU=`sysctl -n machdep.cpu.brand_string`
 else
-    export MAGMA_UT_CPU=`cat /proc/cpuinfo | grep 'model name' | tail -n 1 | awk -v FS=': ' '{print $2}'`
+	export MAGMA_UT_CPU=`cat /proc/cpuinfo | grep 'model name' | tail -n 1 | awk -v FS=': ' '{print $2}'`
 fi
 
+# OS architechture
 export MAGMA_UT_OS_ARCH=`uname -m`
 
-# Set HTML viewer
+# HTML viewer
 if [ -z ${MAGMA_UT_HTML_VIEWER+x} ]; then
 		if [ "$MAGMA_UT_OS" == "Darwin" ]; then
 				export MAGMA_UT_HTML_VIEWER="open"
 		fi
 fi
-
 
 # Editor
 if [ -z ${MAGMA_UT_EDITOR+x} ]; then
@@ -100,19 +102,19 @@ if [ -z ${MAGMA_UT_DWN_TOOL+x} ]; then
 	# Check if curl or wget is available. I prefer curl and will use it if it's
 	# available. Otherwise, fallback to wget.
 	if command -v "curl" >/dev/null 2>&1; then
-	    export MAGMA_UT_DWN_TOOL="curl"
+		export MAGMA_UT_DWN_TOOL="curl"
 	else
-	    if command -v "wget" >/dev/null 2>&1; then
-	        export MAGMA_UT_DWN_TOOL="wget"
-	    fi
+		if command -v "wget" >/dev/null 2>&1; then
+			export MAGMA_UT_DWN_TOOL="wget"
+		fi
 	fi
 fi
 
-# Get memory
+# Get total system memory
 if [ "$MAGMA_UT_OS" == "Darwin" ]; then
-    export MAGMA_UT_TOTAL_MEM=`sysctl -n hw.memsize`
+	export MAGMA_UT_TOTAL_MEM=`sysctl -n hw.memsize`
 else
-    export MAGMA_UT_TOTAL_MEM=`grep MemTotal /proc/meminfo | awk '{printf "%.0f", $2*1024}'`
+	export MAGMA_UT_TOTAL_MEM=`grep MemTotal /proc/meminfo | awk '{printf "%.0f", $2*1024}'`
 fi
 
 
@@ -123,8 +125,8 @@ fi
 MAGMA_EXEC=""
 
 if [ ! -z ${MAGMA_UT_MAGMA_DIR+x} ]; then
-  export MAGMA_DIR="$MAGMA_UT_MAGMA_DIR"
-  export MAGMA_EXEC="$MAGMA_DIR/magma"
+	export MAGMA_DIR="$MAGMA_UT_MAGMA_DIR"
+	export MAGMA_EXEC="$MAGMA_DIR/magma"
 fi
 
 if [ "$MAGMA_EXEC" == "" ]; then
@@ -158,9 +160,9 @@ if [ "$MAGMA_EXEC" == "" ]; then
 fi
 
 if [ "$MAGMA_EXEC" == "" ]; then
-    echo -e "\033[0;31mError: cannot find Magma."
-    echo -e "Either add Magma installation directory in the Config.txt file or in the PATH environment variable.\033[0m"
-    exit 1
+	echo -e "\033[0;31mError: cannot find Magma."
+	echo -e "Either add Magma installation directory in the Config.txt file or in the PATH environment variable.\033[0m"
+	exit 1
 fi
 
 ################################################################################
@@ -168,7 +170,7 @@ fi
 ################################################################################
 
 # Add the Magma-UT spec file to the Magma startup spec variable
-export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Magma-UT.s.m:$MAGMA_UT_PKGS_CONV:$MAGMA_USER_SPEC
+export MAGMA_USER_SPEC=$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Magma-UT.s.m:$MAGMA_USER_SPEC
 
 # Set the Magma-UT startup file as Magma startup file
 export MAGMA_STARTUP_FILE="$MAGMA_UT_BASE_DIR/Packages/Magma-UT/Startup/Startup.m"

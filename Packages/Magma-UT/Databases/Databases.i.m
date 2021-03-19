@@ -161,7 +161,7 @@ end intrinsic;
 //	Save object to database
 //##############################################################################
 intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::., ext::MonStgElt : Overwrite:=false, Description:="")
-{Save object (given as evaluateable string) to database.}
+{Save object (given as evaluateable string) to database. The location is described by the key array, which is basically the folder hierarchy inside the database, ending in the object name. The extension ext is one of o.m, o.m.gz, smo and describes how the object X is written (as a string, as a compressed string, as a serialized Magma object).}
 
 	dbrec := CreateDatabaseRecord(key);
 
@@ -183,11 +183,6 @@ intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::., ext::MonStgElt : Overwri
 
 	MakeDirectory(dbrec`ObjectDirectory);
 
-	//Write description file
-	if Description ne "" then
-		Write(MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*".txt"]), Description : Overwrite:=true);
-	end if;
-
 	//Write object
 	if dbrec`ObjectFileExtension eq "o.m" then
 		Write(dbrec`ObjectPath, X : Overwrite:=true);
@@ -200,6 +195,13 @@ intrinsic SaveToDatabase(key::SeqEnum[MonStgElt], X::., ext::MonStgElt : Overwri
 		WriteObject(fp, X);
 		Flush(fp);
 		delete fp;
+	else
+		error "Extension unknown";
+	end if;
+
+	//Write description file
+	if Description ne "" then
+		Write(MakePath([dbrec`ObjectDirectory, dbrec`ObjectName*".txt"]), Description : Overwrite:=true);
 	end if;
 
 	//Add files to git repo
@@ -242,10 +244,62 @@ intrinsic CreateDatabase(dir::MonStgElt, dbname::MonStgElt)
 
 end intrinsic;
 
+intrinsic CreateDatabase(dbname::MonStgElt)
+{Creates an empty database in the Databases directory.}
+
+	dir := MakePath([GetBaseDir(), "Databases"]);
+	CreateDatabase(dir, dbname);
+
+end intrinsic;
+
+//##############################################################################
+//	Adds a database to the list of available databases in the config file.
+//##############################################################################
+intrinsic AddDatabase(dir::MonStgElt, dbname::MonStgElt)
+{Adds a database to the list of available databases in the config file.}
+
+	//Now, add to Config.txt. I'll rewrite the file.
+	config := "";
+	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
+	config :=  Open(configfile, "r");
+	newconfig := "";
+	while true do
+		line := Gets(config);
+		if IsEof(line) then
+			break;
+		end if;
+		if Position(line, "#MAGMA_UT_DB_NAMES=") ne 0 then
+			newconfig *:= "MAGMA_UT_DB_NAMES="*dbname;
+		elif Position(line, "MAGMA_UT_DB_NAMES=") ne 0 then
+			newconfig *:= line*","*dbname;
+		elif Position(line, "#MAGMA_UT_DB_DIRS=") ne 0 then
+			newconfig *:= "MAGMA_UT_DB_DIRS="*dir;
+		elif Position(line, "MAGMA_UT_DB_DIRS=") ne 0 then
+			newconfig *:= line*","*dir;
+		else
+			newconfig *:= line;
+		end if;
+		newconfig *:= "\n";
+	end while;
+
+	delete config; //close configfile
+	WriteBinary(configfile, newconfig : Overwrite:=true);
+
+end intrinsic;
+
+intrinsic AddDatabase(dbname::MonStgElt)
+{Adds a database to the list of available databases in the config file.}
+
+	dir := "$MAGMA_UT_BASE_DIR/Databases/"*dbname;
+	AddDatabase(dir, dbname);
+
+end intrinsic;
+
+
 //##############################################################################
 //	Adds a Git LFS database
 //##############################################################################
-intrinsic AddDatabase(url::MonStgElt)
+intrinsic AddGitDatabase(url::MonStgElt)
 {Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the local Databases directory. The database is then added to the Config.txt file. A restart is necessary to register the database.}
 
 	//Determine repo name

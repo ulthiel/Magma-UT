@@ -14,31 +14,26 @@ freeze;
 intrinsic MagmaUTWelcome()
 {Prints the Magma-UT welcome message.}
 
-  printf "\b"; //this is a little trick to get correct printing when
-              //starting with the -b option.
+	printf "\b"; //this is a little trick to get correct printing when
+	            //starting with the -b option.
 
-  msg := "  __  __                                         _   _  _____
- |  \\/  |  __ _   __ _  _ __ ___    __ _        | | | ||_   _|
- | |\\/| | / _` | / _` || '_ ` _ \\  / _` | _____ | | | |  | |
- | |  | || (_| || (_| || | | | | || (_| ||_____|| |_| |  | |
- |_|  |_| \\__,_| \\__, ||_| |_| |_| \\__,_|        \\___/   |_|
-                 |___/
+	msg := "  __  __                                         _   _  _____
+|  \\/  |  __ _   __ _  _ __ ___    __ _        | | | ||_   _|
+| |\\/| | / _` | / _` || '_ ` _ \\  / _` | _____ | | | |  | |
+| |  | || (_| || (_| || | | | | || (_| ||_____|| |_| |  | |
+|_|  |_| \\__,_| \\__, ||_| |_| |_| \\__,_|        \\___/   |_|
+                |___/
  ";
-  printf "%o", msg;
+	printf "%o", msg;
 
-  msg := [];
-  Append(~msg, "Magma base system extension");
-  Append(~msg, "(aka: Magma -- the way I want it)");
-//  ver := GetMagmaUTVersion();
-//  if not ver eq "" then
-//    Append(~msg, "Version "*GetMagmaUTVersion());
-//  end if;
-  Append(~msg, "Copyright (C) 2020 Ulrich Thiel");
-  Append(~msg, "https://github/com/ulthiel/magma-ut");
-  Append(~msg, "thiel@mathematik.uni-kl.de");
-  Append(~msg, "Magma: "*GetVersionString());
+	msg := [];
+	Append(~msg, "Magma base system extension");
+	Append(~msg, "(aka: Magma -- the way I want it)");
+	Append(~msg, "Copyright (C) 2020-2021 Ulrich Thiel");
+	Append(~msg, "https://github/com/ulthiel/magma-ut");
+	Append(~msg, "thiel@mathematik.uni-kl.de");
+	Append(~msg, "Magma: "*GetVersionString());
 
-//
-  PrintCentered(msg : MaxWidth:=62);
+	PrintCentered(msg : MaxWidth:=62);
 
 end intrinsic;

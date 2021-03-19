@@ -69,11 +69,6 @@ if defined MAGMA_UT_PKGS (
     set MAGMA_UT_PKGS=%MAGMA_UT_PKGS:/=\%
 )
 
-:: Replace comma by semicolon in package list (Windows...)
-if defined MAGMA_UT_PKGS (
-    set MAGMA_UT_PKGS_CONV=%MAGMA_UT_PKGS:,=;%
-)
-
 :: download tool will always be curl because I provide it with the package.
 set MAGMA_UT_DWN_TOOL=curl
 
@@ -161,7 +156,7 @@ exit /b
 :startmagma
 
 :: add the MAGMA_UT spec file to the Magma startup spec variable
-set MAGMA_USER_SPEC=%MAGMA_UT_BASE_DIR%\Packages\Magma-UT\Magma-UT.s.m;%MAGMA_UT_PKGS_CONV%;%MAGMA_USER_SPEC%
+set MAGMA_USER_SPEC=%MAGMA_UT_BASE_DIR%\Packages\Magma-UT\Magma-UT.s.m;%MAGMA_USER_SPEC%
 
 ::Set the MAGMA_UT startup file as Magma startup file
 set MAGMA_STARTUP_FILE=%MAGMA_UT_BASE_DIR%\Packages\Magma-UT\Startup\Startup.m
