@@ -9,8 +9,13 @@
 #
 # This file is sourced by the startup script magma-ut or magma-ut.bat and the
 # variables below are defined as environment variables before starting Magma.
-# This works both under Unix and Windows (the # comments are also ignored
-# under Windows).
+# They can then be accessed in Magma using GetEnv; this allows us to get
+# information about the environment from within Magma. This works both under
+# Unix and Windows (the # comments are also ignored under Windows).
+#
+# The startup script tries to determine several things automatically but this
+# can be overwritten here. Usually, it shouldn't be necessary to do manual
+# modifications.
 #
 # You can use an already defined variable VAR via $VAR (even under Windows).
 # The variable $MAGMA_UT_BASE_DIR will be set to the MAGMA_UT base directory by
@@ -19,44 +24,18 @@
 ################################################################################
 
 ################################################################################
-# You may manually define the directory of the Magma executable here.
+# You may manually define the directory of the Magma executable here if it
+# cannot be found automatically by the startup script.
 ################################################################################
 #MAGMA_UT_MAGMA_DIR=
 
 ################################################################################
-# Packages are refered to by name, which is the name of the directory containing
-# the package. We always assume that the package directory contains a spec file
-# named "package name".s.m .
-# Packages are usually placed inside the standard Packages directory.
-# You can add packages from other locations using the variable below.
-# This is a COMMA separated list (no space between commas) of ABSOLUTE paths.
-# The package name has to be unique among all packages known to Magma-UT, i.e.
-# those in the Packages directory and those registered here.
-################################################################################
-#MAGMA_UT_PKGS=
-
-################################################################################
-# Packages that are attached at startup.
-# This is a COMMA separated list (no space between commas) of package names.
-################################################################################
-#MAGMA_UT_STARTUP_PKGS=
-
-################################################################################
-# Databases which are not located inside the Databases directory of Magma-UT.
-# This is a COMMA separated list (no space between commas) of ABSOLUTE paths
-# to database directories. You can use the variable $MAGMA_UT_BASE_DIR.
-# The database name will be the leaf directory name.
-# The database name can then be used in keys.
-################################################################################
-#MAGMA_UT_DBS=
-
-################################################################################
-# HTML viewer
+# HTML viewer command
 ################################################################################
 #MAGMA_UT_HTML_VIEWER=
 
 ################################################################################
-# Text editor
+# Text editor command
 ################################################################################
 #MAGMA_UT_EDITOR=
 
@@ -66,11 +45,21 @@
 #MAGMA_UT_GAP3_COMMAND=
 
 ################################################################################
+# SQLite command
+################################################################################
+#MAGMA_UT_SQLITE_COMMAND=
+
+################################################################################
 # Pushover user and token to send notifications to your phone.
 # You need to set up an account at https://pushover.net.
 ################################################################################
 #MAGMA_UT_PUSHOVER_USER=
 #MAGMA_UT_PUSHOVER_TOKEN=
+
+################################################################################
+# Selfcheck commit token
+################################################################################
+#MAGMA_UT_SELFCHECK_TOKEN=
 
 ################################################################################
 # We set Magma memory limit to system total memory minus MAGMA_UT_SAVE_MEMORY.
@@ -79,16 +68,37 @@
 MAGMA_UT_SAVE_MEM=2147483648
 
 ################################################################################
+# Further packages outside the Packages directory.
+# This is a COMMA separated list (no space between commas) of ABSOLUTE paths.
+# The point of this variable is that we want to refer to a package by its
+# "name". As "name" we always take the leaf directory of the path (the last
+# part before a slash). With this variable we can retrieve the directory of an
+# outside package from its name. The package names of all packages known to
+# Magma-UT (i.e. those in the Packages directory and those given here) thus
+# have to be unique.
+# This variable is handled by the Magma-UT function AddPackage and it shouldn't
+# be necessary to do manual modifications.
+################################################################################
+#MAGMA_UT_PKGS=
+
+################################################################################
+# Packages that will be attached at startup.
+# This is a COMMA separated list (no space between commas) of package names.
+# This varialbe is handled automatically by the Magma-UT function
+# AddStartupPackage and it shouldn't be necessary to do manual modifications.
+################################################################################
+#MAGMA_UT_STARTUP_PKGS=
+
+################################################################################
+# Databases outside the Databases directory. The idea is similar to the variable
+# MAGMA_UT_PKGS above.
+# This variable is handled by the Magma-UT function AddDatabase and it shouldn't
+# be necessary to do manual modifications.
+################################################################################
+#MAGMA_UT_DBS=
+
+################################################################################
 # Chunk size in bytes for POpen reading in SystemCall. 128kiB seems best.
+# There should be no need to modify this.
 ################################################################################
 MAGMA_UT_POPEN_CHUNK_SIZE=131072
-
-################################################################################
-# SQLite command
-################################################################################
-MAGMA_UT_SQLITE_COMMAND=sqlite3
-
-################################################################################
-# Selfcheck commit token
-################################################################################
-#MAGMA_UT_SELFCHECK_TOKEN=

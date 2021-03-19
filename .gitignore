@@ -1,4 +1,7 @@
 *.DS_Store
 *.sig
-Config/Config.txt
-Tools/Selfcheck/Log
+/Config/Config.txt
+/Tools/Selfcheck/Log
+/Databases
+/Packages
+!/Packages/Magma-UT/*
