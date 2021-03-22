@@ -54,11 +54,6 @@ for /f "eol=# delims=" %%i in ('type "%MAGMA_UT_BASE_DIR%\Config\Config_win.txt"
 
 del "%MAGMA_UT_BASE_DIR%\Config\Config_win.txt"
 
-:: Replace forward slash by backward slash in DB directories
-if defined MAGMA_UT_DB_DIRS (
-	set MAGMA_UT_DB_DIRS=%MAGMA_UT_DB_DIRS:/=\%
-)
-
 :: Replace forward slash by backward slash in Magma directory
 if defined MAGMA_UT_MAGMA_DIR (
     set MAGMA_UT_MAGMA_DIR=%MAGMA_UT_MAGMA_DIR:/=\%
@@ -69,8 +64,16 @@ if defined MAGMA_UT_PKGS (
     set MAGMA_UT_PKGS=%MAGMA_UT_PKGS:/=\%
 )
 
+:: Replace forward slash by backward slash in DB directories
+if defined MAGMA_UT_DBS (
+	set MAGMA_UT_DBS=%MAGMA_UT_DBS:/=\%
+)
+
 :: download tool will always be curl because I provide it with the package.
 set MAGMA_UT_DWN_TOOL=curl
+
+:: Editor is notepad
+set MAGMA_UT_EDITOR=notepad
 
 :: Get the OS version (more detailed than MAGMA_UT_OS)
 for /f "delims== tokens=2-3" %%f in ('wmic os get Version /value ^| find "="') do (

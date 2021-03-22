@@ -244,7 +244,7 @@ When you have [GAP3](https://webusers.imj-prg.fr/~jean.michel/gap3/) installed a
   [ [ 1, 0, 0, 0 ], [ 0, 1, 0, 0 ], [ 0, 0, 1, 1 ], [ 0, 0, 0, -1 ] ] ]
 ```
 
-You can use Magma's ```eval``` (combined with additional code and string manipulation) to create a Magma object from the output. I could add similar wrappers for any other system as it's all just based on strings and reading/writing temporary files with program code/output.
+You can then use Magma's ```eval``` (likely combined with prior string and code manipulation) to create a Magma object from the output. I could add similar wrappers for any other system as it's all just based on strings and reading/writing temporary files with program code/output.
 
 ### Messages
 
