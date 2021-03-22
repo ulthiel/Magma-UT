@@ -14,30 +14,30 @@ freeze;
 
 //##############################################################################
 //
-//  Sleeping
+//	Sleeping
 //
-//  Note: I think not all implementations of the sleep function support
-//  fractional seconds
+//	Note: I think not all implementations of the sleep function support
+//	fractional seconds
 //
 //##############################################################################
 intrinsic Sleep(n::RngIntElt)
 {Sleep n seconds.}
 
-  if GetOSType() eq "Windows" then
-    ret:=System(GetUnixTool("sleep")*" "*Sprint(n));
-  else
-    ret:=System("sleep "*Sprint(n));
-  end if;
+	if GetOSType() eq "Windows" then
+		ret:=System(GetUnixTool("sleep")*" "*Sprint(n));
+	else
+		ret:=System("sleep "*Sprint(n));
+	end if;
 
 end intrinsic;
 
 intrinsic Sleep(n::FldReElt)
 {Sleep n seconds.}
 
-  if GetOSType() eq "Windows" then
-    ret:=System(GetUnixTool("sleep")*" "*Sprint(n));
-  else
-    ret:=System("sleep "*Sprint(n));
-  end if;
+	if GetOSType() eq "Windows" then
+		ret:=System(GetUnixTool("sleep")*" "*Sprint(n));
+	else
+		ret:=System("sleep "*Sprint(n));
+	end if;
 
 end intrinsic;

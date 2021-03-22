@@ -15,23 +15,23 @@ freeze;
 intrinsic PrintCentered(msg::SeqEnum[MonStgElt] : MaxWidth:=0)
 {Print the array of strings aligned centrally.}
 
-  if MaxWidth eq 0 then
-    for l in msg do
-      n := #l;
-      if n gt MaxWidth then
-        MaxWidth := n;
-      end if;
-    end for;
-  end if;
+	if MaxWidth eq 0 then
+		for l in msg do
+			n := #l;
+			if n gt MaxWidth then
+				MaxWidth := n;
+			end if;
+		end for;
+	end if;
 
-  for l in msg do
-    n := #l;
-    str := "";
-    for i:=1 to Floor( (MaxWidth-n)/2 ) do
-      str *:= " ";
-    end for;
-    str *:= l;
-    printf "%o\n", str;
-  end for;
+	for l in msg do
+		n := #l;
+		str := "";
+		for i:=1 to Floor( (MaxWidth-n)/2 ) do
+			str *:= " ";
+		end for;
+		str *:= l;
+		printf "%o\n", str;
+	end for;
 
 end intrinsic;

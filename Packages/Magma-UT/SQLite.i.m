@@ -18,7 +18,7 @@ freeze;
 intrinsic GetSQLiteCommand() -> MonStgElt
 {The SQLite command defined in Config.txt.}
 
-  return GetEnv("MAGMA_UT_SQLITE_COMMAND");
+	return GetEnv("MAGMA_UT_SQLITE_COMMAND");
 
 end intrinsic;
 
@@ -28,8 +28,8 @@ end intrinsic;
 intrinsic SQLiteQuery(file::MonStgElt, query::MonStgElt) -> BoolElt, MonStgElt
 {Executes query on the sqlite database specified by file.}
 
-  res := SystemCall(GetSQLiteCommand()*" \""*file*"\" \""*query*"\"");
+	res := SystemCall(GetSQLiteCommand()*" \""*file*"\" \""*query*"\"");
 
-  return res;
+	return res;
 
 end intrinsic;

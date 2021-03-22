@@ -19,30 +19,30 @@ freeze;
 intrinsic WriteBinary(F::MonStgElt, x::., L::MonStgElt : Overwrite:=false)
 {}
 
-  if Overwrite then
-    fp := Open(F, "wb");
-  else
-    fp := Open(F, "ab");
-  end if;
-  Write(fp, Sprint(x,L));
-  Flush(fp);
-  delete fp;
+	if Overwrite then
+		fp := Open(F, "wb");
+	else
+		fp := Open(F, "ab");
+	end if;
+	Write(fp, Sprint(x,L));
+	Flush(fp);
+	delete fp;
 
 end intrinsic;
 
 intrinsic WriteBinary(F::MonStgElt, x::. : Overwrite:=false)
 {}
 
-  WriteBinary(F, x, GetPrintLevel() : Overwrite:=Overwrite);
+	WriteBinary(F, x, GetPrintLevel() : Overwrite:=Overwrite);
 
 end intrinsic;
 
 intrinsic ReadBinary(F::MonStgElt) -> MonStgElt
 {}
 
-  fp := Open(F, "rb");
-  s := Read(fp);
-  delete fp;
-  return s;
+	fp := Open(F, "rb");
+	s := Read(fp);
+	delete fp;
+	return s;
 
 end intrinsic;

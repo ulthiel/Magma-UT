@@ -16,55 +16,55 @@ freeze;
 
 
 //##############################################################################
-//  Pushover token
+//	Pushover token
 //##############################################################################
 intrinsic IsPushoverTokenDefined() -> BoolElt
 {True iff a Pushover token is set in Config.txt.}
 
-  user := GetEnv("MAGMA_UT_PUSHOVER_USER");
-  token := GetEnv("MAGMA_UT_PUSHOVER_TOKEN");
-  if user eq "" or token eq "" then
-    return false;
-  else
-    return true;
-  end if;
+	user := GetEnv("MAGMA_UT_PUSHOVER_USER");
+	token := GetEnv("MAGMA_UT_PUSHOVER_TOKEN");
+	if user eq "" or token eq "" then
+		return false;
+	else
+		return true;
+	end if;
 
 end intrinsic;
 
 intrinsic GetPushoverToken() -> MonStgElt, MonStgElt
 {Returns the pushover token defined in Config.txt}
 
-  user := GetEnv("MAGMA_UT_PUSHOVER_USER");
-  token := GetEnv("MAGMA_UT_PUSHOVER_TOKEN");
-  if user eq "" or token eq "" then
-    error "No Pushover token defined in Config/Variables.";
-  end if;
-  return user, token;
+	user := GetEnv("MAGMA_UT_PUSHOVER_USER");
+	token := GetEnv("MAGMA_UT_PUSHOVER_TOKEN");
+	if user eq "" or token eq "" then
+		error "No Pushover token defined in Config/Variables.";
+	end if;
+	return user, token;
 
 end intrinsic;
 
 
 //##############################################################################
-//  Pushover
+//	Pushover
 //##############################################################################
 intrinsic Pushover(msg::MonStgElt)
 {Sends a notification via Pushover.}
 
-    user, token := GetPushoverToken();
+		user, token := GetPushoverToken();
 
-    if GetOSType() eq "Unix" then
-      if GetDownloadTool() eq "curl" then
-    	  cmd := Sprintf("curl -s --form-string \"token=%o\" --form-string \"user=%o\" --form-string \"message=%o\" https://api.pushover.net/1/messages.json > /dev/null 2>&1", token, user, msg);
-    	  res := System(cmd);
-      elif GetDownloadTool() eq "wget" then
-    	  cmd := Sprintf("wget https://api.pushover.net/1/messages.json --post-data=\"token=%o&user=%o&message=%o\" -qO- > /dev/null 2>&1", token, user, msg);
-        res := System(cmd);
-      else
-        error "No download tool specified.";
-      end if;
-    else
-    	cmd := Sprintf("%o -s --form-string \"token=%o\" --form-string \"user=%o\" --form-string \"message=%o\" https://api.pushover.net/1/messages.json >NUL 2>NUL", GetUnixTool("curl"), token, user, msg);
-    	res := System(cmd);
-    end if;
+		if GetOSType() eq "Unix" then
+			if GetDownloadTool() eq "curl" then
+				cmd := Sprintf("curl -s --form-string \"token=%o\" --form-string \"user=%o\" --form-string \"message=%o\" https://api.pushover.net/1/messages.json > /dev/null 2>&1", token, user, msg);
+				res := System(cmd);
+			elif GetDownloadTool() eq "wget" then
+				cmd := Sprintf("wget https://api.pushover.net/1/messages.json --post-data=\"token=%o&user=%o&message=%o\" -qO- > /dev/null 2>&1", token, user, msg);
+				res := System(cmd);
+			else
+				error "No download tool specified.";
+			end if;
+		else
+			cmd := Sprintf("%o -s --form-string \"token=%o\" --form-string \"user=%o\" --form-string \"message=%o\" https://api.pushover.net/1/messages.json >NUL 2>NUL", GetUnixTool("curl"), token, user, msg);
+			res := System(cmd);
+		end if;
 
 end intrinsic;

@@ -18,31 +18,31 @@ freeze;
 //##############################################################################
 
 //##############################################################################
-//  Set back cursor
+//	Set back cursor
 //##############################################################################
 intrinsic SetBackCursor(n::RngIntElt)
 {Sets back the curser by n characters.}
 
-  if n le 0 then
-    return;
-  end if;
+	if n le 0 then
+		return;
+	end if;
 
-  str := "";
-  for i:=1 to n do
-    str *:= "\b";
-  end for;
-  printf str;
+	str := "";
+	for i:=1 to n do
+		str *:= "\b";
+	end for;
+	printf str;
 
 end intrinsic;
 
 //##############################################################################
-//  New type for Message printing to keep track of width.
+//	New type for Message printing to keep track of width.
 //##############################################################################
 declare type Message_t;
 
 declare attributes Message_t:
-  Message,
-  Width;
+	Message,
+	Width;
 
 //##############################################################################
 //Constructors
@@ -50,79 +50,79 @@ declare attributes Message_t:
 intrinsic Message() -> Message_t
 {Create new message object.}
 
-  M := New(Message_t);
-  M`Width := 0;
-  return M;
+	M := New(Message_t);
+	M`Width := 0;
+	return M;
 
 end intrinsic;
 
 //##############################################################################
-//  Print message
-//  Unfortunately, I can't use the Print function (which would be the most
-//  straightforward name) since this always adds a newline, and this is
-//  exactly what I don't want!
+//	Print message
+//	Unfortunately, I can't use the Print function (which would be the most
+//	straightforward name) since this always adds a newline, and this is
+//	exactly what I don't want!
 //##############################################################################
 intrinsic PrintMessage(M::Message_t : Debug:=0)
 {Prints the message set in M.}
 
-  SetBackCursor(M`Width);
-  printf M`Message;
-  d := M`Width-#M`Message;
-  str := "";
-  for i:=1 to d do
-    str *:= " ";
-  end for;
-  printf str;
-  SetBackCursor(d);
-  M`Width := #Sprintf(M`Message); //yes, there may be percentage characters
-                                  //interpreted by printf.
-  //For debugging
-  //Sleep(2);
+	SetBackCursor(M`Width);
+	printf M`Message;
+	d := M`Width-#M`Message;
+	str := "";
+	for i:=1 to d do
+		str *:= " ";
+	end for;
+	printf str;
+	SetBackCursor(d);
+	M`Width := #Sprintf(M`Message); //yes, there may be percentage characters
+																	//interpreted by printf.
+	//For debugging
+	//Sleep(2);
 
 end intrinsic;
 
 intrinsic PrintMessage(M::Message_t, msg::MonStgElt)
 {Sets msg to message of M and prints it.}
 
-  M`Message := msg;
-  PrintMessage(M);
+	M`Message := msg;
+	PrintMessage(M);
 
 end intrinsic;
 
 intrinsic PrintPercentage(M::Message_t, msg::MonStgElt, value::RngIntElt, final::RngIntElt : Precision:=2)
 {Sets message of M to percentage value/final*100 and prints it.}
 
-  //format string (more escaping of % since this is given to printf later)
-  fmt := Sprintf("%o%%%o.%oo%%%%%%%%", msg, 3+1+Precision, Precision);
+	//format string (more escaping of % since this is given to printf later)
+	fmt := Sprintf("%o%%%o.%oo%%%%%%%%", msg, 3+1+Precision, Precision);
 
-  //fill in variables
-  msg := Sprintf(fmt, value/final*100.0);
+	//fill in variables
+	msg := Sprintf(fmt, value/final*100.0);
 
-  PrintMessage(M, msg);
+	PrintMessage(M, msg);
 
 end intrinsic;
 
 //##############################################################################
-//  Clear message
+//	Clear message
 //##############################################################################
 intrinsic Clear(M::Message_t)
 {Clears the message buffer of M.}
 
-  SetBackCursor(M`Width);
-  str := "";
-  for i:=1 to M`Width do
-    str *:= " ";
-  end for;
-  printf str;
-  SetBackCursor(M`Width);
-  M`Width := 0;
+	SetBackCursor(M`Width);
+	str := "";
+	for i:=1 to M`Width do
+		str *:= " ";
+	end for;
+	printf str;
+	SetBackCursor(M`Width);
+	M`Width := 0;
 
 end intrinsic;
 
 intrinsic Flush(M::Message_t)
 {Flushes printing. Use this before destruction of M.}
 
-  print "";
-  M`Width := 0;
+	print "";
+	M`Width := 0;
 
 end intrinsic;

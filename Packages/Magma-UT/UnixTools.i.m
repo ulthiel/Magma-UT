@@ -13,15 +13,15 @@ freeze;
 
 
 //##############################################################################
-//  Path for the UnixTools
+//	Path for the UnixTools
 //##############################################################################
 intrinsic GetUnixTool(name::MonStgElt) -> MonStgElt
 {Returns correct path to Unix tool for Windows (this is in Tools/UnixTools of the Magma-UT base directory).}
 
-  if GetOSType() eq "Unix" then
-    return name;
-  else
-    return MakePath([GetBaseDir(), "Tools", "UnixTools", name*".exe"]);
-  end if;
+	if GetOSType() eq "Unix" then
+		return name;
+	else
+		return MakePath([GetBaseDir(), "Tools", "UnixTools", name*".exe"]);
+	end if;
 
 end intrinsic;

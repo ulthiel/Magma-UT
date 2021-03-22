@@ -17,7 +17,7 @@ freeze;
 intrinsic GetEditor() -> MonStgElt
 {The editor defined in Config.txt.}
 
-  return GetEnv("MAGMA_UT_EDITOR");
+	return GetEnv("MAGMA_UT_EDITOR");
 
 end intrinsic;
 

@@ -18,7 +18,7 @@ freeze;
 intrinsic GetBaseDir() -> MonStgElt
 {The Magma-UT base directory.}
 
-  return GetEnv("MAGMA_UT_BASE_DIR");
+	return GetEnv("MAGMA_UT_BASE_DIR");
 
 end intrinsic;
 
@@ -28,7 +28,7 @@ end intrinsic;
 intrinsic GetHTMLViewer() -> MonStgElt
 {The HTML viewer defined in Config.txt.}
 
-  return GetEnv("MAGMA_UT_HTML_VIEWER");
+	return GetEnv("MAGMA_UT_HTML_VIEWER");
 
 end intrinsic;
 
