@@ -41,7 +41,7 @@ intrinsic MagmaUTWelcome()
 	printf "\b"; //this is a little trick to get correct printing when
 	            //starting with the -b option.
 
-	msg := "  __  __                                         _   _  _____
+msg := " __  __                                         _   _  _____
 |  \\/  |  __ _   __ _  _ __ ___    __ _        | | | ||_   _|
 | |\\/| | / _` | / _` || '_ ` _ \\  / _` | _____ | | | |  | |
 | |  | || (_| || (_| || | | | | || (_| ||_____|| |_| |  | |
