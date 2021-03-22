@@ -6,8 +6,8 @@
 // https://github.com/ulthiel/magma-ut
 // thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-// This file will only be attached if the Magma version is < 2.25 to avoid
-// errors.
+// This file will only be attached (by Startup.m) if the Magma version is
+// < 2.25 to avoid errors.
 //
 //##############################################################################
 

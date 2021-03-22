@@ -19,7 +19,7 @@ intrinsic GAP3(code::MonStgElt) -> MonStgElt
 	code *:= "\nPrintTo(\""*out_file_name*"\", last);";
 	Write(in_file_name, code : Overwrite:=true);
 	gap_cmd := GetEnv("MAGMA_UT_GAP3");
-	ret := System(gap_cmd*" -q < "*in_file_name*" > /dev/null");
+	ret := System(gap_cmd*" -q < \""*in_file_name*"\" > /dev/null");
 	res := Read(out_file_name);
 	return res;
 

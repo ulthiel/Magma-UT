@@ -158,7 +158,7 @@ if defined MAGMA_UT_MAGMA_DIR (
 
 :nomagma
 echo Error: cannot find Magma.
-echo Either add Magma installation directory to Config.txt or to PATH environment variable.
+echo Either add Magma installation directory to Config\Config.txt or to PATH environment variable.
 pause
 exit /b
 

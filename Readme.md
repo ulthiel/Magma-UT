@@ -27,16 +27,15 @@ Magma-UT is supposed to work on all operating systems supported by Magma, i.e. L
 
 ### Running Magma-UT
 
-I assume you have [Magma](http://magma.maths.usyd.edu.au/magma/) installed and working (I recommend version at least 2.25). To get Magma-UT you can either:
+1. I assume you have [Magma](http://magma.maths.usyd.edu.au/magma/) installed and working. To get Magma-UT you can either:
+   * Download the most recent release (simplest);
+   * Clone the Git repository using ```git clone https://github.com/ulthiel/Magma-UT.git``` (recommended).
 
-* Download the most recent release (simplest);
-* Clone the Git repository using ```git clone https://github.com/ulthiel/Magma-UT.git``` (recommended).
+2. You can start Magma-UT simply via the command ```./magma-ut``` (Linux and macOS) or ```magma.bat``` (Windows). This starts a Magma session with all the extensions from Magma-UT attached. Basically, you can use the command ```magma-ut``` as a replacement for ```magma```, so e.g. ```magma-ut myprogram.m``` will work.
+3. The Magma-UT startup script automatically determines some environment information and sets environment variables. These are all listed in the file "Config/Config.txt" and if something isn't set properly (e.g. if Magma cannot be found) you can set the variable here manually. Usually, this should not be necessary.
+4. For the remote package and database functionality I assume you have [Git](https://git-scm.com/downloads) and the [Git LFS extension](https://git-lfs.github.com) installed. This is both very easy to set up on all operating systems, see [here](https://stackoverflow.com/questions/48734119/git-lfs-is-not-a-git-command-unclear).
 
-Now, you can start Magma-UT simply via the command ```./magma-ut``` (Linux and macOS) or ```magma.bat``` (Windows). This starts a Magma session with all the extensions from Magma-UT attached. Basically, you can use the command ```magma-ut``` as a replacement for ```magma```.
-
-The Magma-UT startup script automatically determines some environment information and sets environment variables. These are all listed in the file "Config/Config.txt" and if something isn't set properly you can set the variable here manually. Usually, this should not be necessary.
-
-For the remote package and database functionality I assume you have [Git](https://git-scm.com/downloads) and the [Git LFS extension](https://git-lfs.github.com) installed. This is both very easy to set up on all operating systems, see [here](https://stackoverflow.com/questions/48734119/git-lfs-is-not-a-git-command-unclear).
+## Overview of the functionality
 
 ### Package manager
 
@@ -237,7 +236,7 @@ You can then use Magma's ```eval``` (likely combined with prior string and code 
 
 ### Notifications
 
-If you ever had computations running for several weeks, you'd appreciate if someone would tell you when they're finished. Magma-UT can do this for you. [Pushover](https://pushover.net) is a free notification service provided cell phone and desktop apps to receive notifications. Once you've set up an account you can add an application token (you can call it e.g. "Magma-UT"). You have to add your user and token to the variables "MAGMA_UT_PUSHOVER_USER" and "MAGMA_UT_PUSHOVER_TOKEN" in the config file "Config/Config.txt" (or as environment variables). Then you can send notifications via
+If you ever had computations running for several weeks, you'd appreciate if someone would tell you when they're finished. Magma-UT can do this for you. [Pushover](https://pushover.net) is a free notification service provided cell phone and desktop apps to receive notifications. Once you've set up an account you can see your "user key" on the main page. You then need to "[Create an Application/API Token](https://pushover.net/apps/build)"; you can call it for example "Magma-UT". You then also get a "token" for this application. Both the user key and token have to be set in the variables "MAGMA_UT_PUSHOVER_USER" and "MAGMA_UT_PUSHOVER_TOKEN" in the config file "Config/Config.txt" (or as environment variables). Then you're all set and can send notifications from within Magma via
 
 ```
 Pushover("This is a test message");

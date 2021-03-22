@@ -71,8 +71,9 @@
 #MAGMA_UT_SQLITE=
 
 ################################################################################
-# Pushover user and token to send notifications to your phone.
-# You need to set up an account at https://pushover.net.
+# Pushover user key and token to send notifications to your phone.
+# You need to set up an account at https://pushover.net and then you need to
+# add an application token for Magma-UT.
 ################################################################################
 #MAGMA_UT_PUSHOVER_USER=
 #MAGMA_UT_PUSHOVER_TOKEN=

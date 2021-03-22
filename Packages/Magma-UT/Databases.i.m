@@ -318,7 +318,7 @@ intrinsic AddDatabase(url::MonStgElt)
 		end if;
 
 		if not IsGitLFSInstalled() then
-			error "Git LFS extension is needed but is not installed.";
+			error "Git LFS extension is needed but is not installed. See https://git-lfs.github.com.";
 		end if;
 
 		//Check if directory exists already
