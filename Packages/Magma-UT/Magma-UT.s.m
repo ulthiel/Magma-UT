@@ -5,6 +5,7 @@ Date.i.m
 Dictionaries.i.m
 Download.i.m
 Files.i.m
+GAP3.i.m
 Git.i.m
 HostInfo.i.m
 HTML.i.m

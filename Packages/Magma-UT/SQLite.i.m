@@ -18,7 +18,7 @@ freeze;
 intrinsic GetSQLiteCommand() -> MonStgElt
 {The SQLite command defined in Config.txt.}
 
-	return GetEnv("MAGMA_UT_SQLITE_COMMAND");
+	return GetEnv("MAGMA_UT_SQLITE");
 
 end intrinsic;
 

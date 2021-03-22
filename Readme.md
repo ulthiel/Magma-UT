@@ -16,12 +16,12 @@
 
 This is a package for the computer algebra system [Magma](http://magma.maths.usyd.edu.au/magma/) that adds some generic functionality that I was missing, most importantly:
 
-* A package manager which allows to add local or remote packages (the latter using Git).
-* A database manager which allows to add local or remote databases (the latter using Git) and functions to access objects in this database.
-* An automatic package documenter.
-* An automatic self check system.
-* Notifications (e.g. on cell phone) via [Pushover](https://pushover.net).
-* And more...see below.
+* A package manager which allows to add remote packages (using [Git](https://git-scm.com/downloads))
+* A database manager which allows to work with remote databases (using [Git LFS](https://git-lfs.github.com))
+* An automatic package documenter (see documentation of this package)
+* An automatic self check system
+* Notifications (e.g. on cell phone) via [Pushover](https://pushover.net)
+* And more: reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing objects (as strings) in an external editor, printing Markdown tables, ...
 
 ### Running Magma-UT
 
