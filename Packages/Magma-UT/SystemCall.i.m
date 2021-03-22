@@ -1,17 +1,29 @@
 freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//  Call system command and get output. Works under Unix AND Windows.
+// Call system command and get output. Works under Unix AND Windows.
 //
 //##############################################################################
 
+//##############################################################################
+//  ChunkSize for POpen rading in SystemCall in System.i.m
+//##############################################################################
+intrinsic GetPOpenChunkSize() -> RngIntElt
+{The operating system architecture.}
 
+  return StringToInteger(GetEnv("MAGMA_UT_POPEN_CHUNK_SIZE"));
+
+end intrinsic;
+
+//##############################################################################
+// System call
+//##############################################################################
 intrinsic SystemCall(Command::MonStgElt : ChunkSize:=0) -> MonStgElt
 {Call system command "Command" and return output.}
 

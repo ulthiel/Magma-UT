@@ -1,25 +1,23 @@
 freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
+// Random strings.
+// For testing purposes I wanted to generate large random strings, e.g. 100MB.
+// This would take too long in Magma. Here's a quick method using openssl.
 //
-//  Random strings
+// Create a 100MB random string on my Mac laptop:
 //
-//  For testing purposes I wanted to generate large random strings, e.g. 100MB.
-//  This would take too long in Magma. Here's a quick method using openssl.
+// > time X:=RandomString(100000000);
+// Time: 16.880
 //
-//  Create a 100MB random string on my Mac laptop:
-//
-//  > time X:=RandomString(100000000);
-//  Time: 16.880
-//
-//  This was much quicker under Windows but maybe Mac uses a better random
-//  source!? Whatever, it works.
+// This was much quicker under Windows but maybe Mac uses a better random
+// source!? Whatever, it works.
 //
 //##############################################################################
 intrinsic RandomString(n::RngIntElt : Unit:="B", Method:="OpenSSL") -> MonStgElt

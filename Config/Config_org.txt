@@ -13,9 +13,9 @@
 # information about the environment from within Magma. This works both under
 # Unix and Windows (the # comments are also ignored under Windows).
 #
-# The startup script tries to determine several things automatically but this
-# can be overwritten here. Usually, it shouldn't be necessary to do manual
-# modifications.
+# Usually, it shouldn't be necessary to do manual modifications here because
+# most things are determined automatically by the startup script and by Magma-UT
+# functions.
 #
 # You can use an already defined variable VAR via $VAR (even under Windows).
 # The variable $MAGMA_UT_BASE_DIR will be set to the MAGMA_UT base directory by
@@ -28,6 +28,27 @@
 # cannot be found automatically by the startup script.
 ################################################################################
 #MAGMA_UT_MAGMA_DIR=
+
+################################################################################
+# Further packages outside the Packages directory.
+# This is a COMMA separated list (no space between commas) of ABSOLUTE paths.
+# Handled automatically by AddPackage.
+################################################################################
+#MAGMA_UT_PKGS=
+
+################################################################################
+# Further databases outside the Databases directory.
+# This is a COMMA separated list (no space between commas) of package names.
+# Handled automaticall by AddStartupPackage.
+################################################################################
+#MAGMA_UT_STARTUP_PKGS=
+
+################################################################################
+# Further databases outside the Databases directory.
+# This is a COMMA separated list (no space between commas) of ABSOLUTE paths.
+# Handled automatically by AddDatabase.
+################################################################################
+#MAGMA_UT_DBS=
 
 ################################################################################
 # HTML viewer command
@@ -66,36 +87,6 @@
 # It's best to leave at least 2 GB for the system; this prevents swapping.
 ################################################################################
 MAGMA_UT_SAVE_MEM=2147483648
-
-################################################################################
-# Further packages outside the Packages directory.
-# This is a COMMA separated list (no space between commas) of ABSOLUTE paths.
-# The point of this variable is that we want to refer to a package by its
-# "name". As "name" we always take the leaf directory of the path (the last
-# part before a slash). With this variable we can retrieve the directory of an
-# outside package from its name. The package names of all packages known to
-# Magma-UT (i.e. those in the Packages directory and those given here) thus
-# have to be unique.
-# This variable is handled by the Magma-UT function AddPackage and it shouldn't
-# be necessary to do manual modifications.
-################################################################################
-#MAGMA_UT_PKGS=
-
-################################################################################
-# Packages that will be attached at startup.
-# This is a COMMA separated list (no space between commas) of package names.
-# This varialbe is handled automatically by the Magma-UT function
-# AddStartupPackage and it shouldn't be necessary to do manual modifications.
-################################################################################
-#MAGMA_UT_STARTUP_PKGS=
-
-################################################################################
-# Databases outside the Databases directory. The idea is similar to the variable
-# MAGMA_UT_PKGS above.
-# This variable is handled by the Magma-UT function AddDatabase and it shouldn't
-# be necessary to do manual modifications.
-################################################################################
-#MAGMA_UT_DBS=
 
 ################################################################################
 # Chunk size in bytes for POpen reading in SystemCall. 128kiB seems best.

@@ -1,16 +1,30 @@
 freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//  Downloading files
+// Downloading files
 //
 //##############################################################################
 
+
+//##############################################################################
+//  The download tool to be used (curl/wget with preference on wget)
+//##############################################################################
+intrinsic GetDownloadTool() -> MonStgElt
+{The download tool defined in Config.txt (or the one set automatically by the startup script).}
+
+  return GetEnv("MAGMA_UT_DWN_TOOL");
+
+end intrinsic;
+
+//##############################################################################
+// Download
+//##############################################################################
 intrinsic Download(file::MonStgElt, url::MonStgElt) -> RngIntElt
 {Downloads file from url and save it to file.}
 
@@ -47,6 +61,9 @@ intrinsic Download(url::MonStgElt) -> MonStgElt
 
 end intrinsic;
 
+//##############################################################################
+// Check if URL exists
+//##############################################################################
 intrinsic URLExists(url::MonStgElt) -> BoolElt
 {Returns true iff url exists (request returns 200 OK).}
 
@@ -73,6 +90,9 @@ intrinsic URLExists(url::MonStgElt) -> BoolElt
 
 end intrinsic;
 
+//##############################################################################
+// Creating a URL from components.
+//##############################################################################
 intrinsic MakeURL(X::SeqEnum[MonStgElt]) -> MonStgElt
 {Concatenates the components of X with the Unix separator /.}
 

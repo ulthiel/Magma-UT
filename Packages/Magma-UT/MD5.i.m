@@ -1,17 +1,17 @@
 freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//  MD5 checksum of a file.
-//  I cannot implement this in Magma obviously, so I'm using user space tool.
-//  This is very efficient for large files and strings. But it's not great if
-//  you need to compute checksum for many short strings. Here, Adler32 is much
-//  better (but less secure, clearly.)
+// MD5 checksum of a file.
+// I cannot implement this in Magma obviously, so I'm using user space tool.
+// This is very efficient for large files and strings. But it's not great if
+// you need to compute checksum for many short strings. Here, Adler32 is much
+// better (but less secure, clearly.)
 //
 //##############################################################################
 

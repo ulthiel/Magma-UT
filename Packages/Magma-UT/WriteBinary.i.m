@@ -1,18 +1,18 @@
 freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//  Write data (strings) as binary files, similar as Write.
-//  This avoids line ending issues between different OS, it is written as is.
-//  There's only one minor clash: there's a WriteBinary for BStgElt already;
-//  for the SAME binary string, this yields different files on Windows and
-//  Unix. I think this is not good. Anyways, it's a minor clash, I don't care
-//  right now.
+// Write data (strings) as binary files, similar as Write.
+// This avoids line ending issues between different OS, it is written as is.
+// There's only one minor clash: there's a WriteBinary for BStgElt already;
+// for the SAME binary string, this yields different files on Windows and
+// Unix. I think this is not good. Anyways, it's a minor clash, I don't care
+// right now.
 //
 //##############################################################################
 

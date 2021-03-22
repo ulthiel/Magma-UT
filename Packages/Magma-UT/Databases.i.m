@@ -1,36 +1,69 @@
-freeze;
+//freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//  Magma-UT database handling
+// Magma-UT database handling.
 //
 //##############################################################################
 
+//##############################################################################
+// Get database directory.
+//##############################################################################
+intrinsic GetDatabaseDir() -> MonStgElt
+{Returns the default directory for databases.}
+
+	return MakePath([GetBaseDir(), "Databases"]);
+
+end intrinsic;
+
+intrinsic GetDatabaseDir(dbname::MonStgElt) -> SeqEnum
+{Returns the full path of the directory of a database known to Magma-UT.}
+
+	//First, check if there is a database with name pkgname in the Databases
+	//directory.
+	dir := MakePath([GetDatabaseDir(), dbname]);
+	if DirectoryExists(dir) then
+		return dir;
+	end if;
+
+	//Next, check if pkgname is a registerd in the config file.
+	dbs := Split(GetEnv("MAGMA_UT_DBS"), ",");
+	for db in dbs do
+		if FileName(db) eq dbname then
+			if FileExists(db) then
+				return db;
+			end if;
+		end if;
+	end for;
+
+	error "Cannot find this database";
+
+end intrinsic;
 
 //##############################################################################
-//	Construct a record for a path
+// Database records
 //##############################################################################
-DatabaseRecord := recformat<
-	Key:SeqEnum, //the key
-	DatabaseName:MonStgElt, //name of the database
-	DatabaseDirectory:MonStgElt, //root directory of the database (full path)
-	ObjectName:MonStgElt, //object name
-	ObjectDirectory:MonStgElt, //directory of object file (full path)
-	ObjectRelativeDirectory:MonStgElt, //directory of object file relative to root
-	ObjectFileExtension:MonStgElt, //extension of object file
-	ObjectFileName:MonStgElt,
-	ObjectPath:MonStgElt, //full path of object
-	ObjectRelativePath:MonStgElt,
-	Description:MonStgElt
-	>;
-
 intrinsic CreateDatabaseRecord(key::SeqEnum[MonStgElt]) -> Rec
-{}
+{Creates a database record for a key.}
+
+	DatabaseRecord := recformat<
+		Key:SeqEnum, //the key
+		DatabaseName:MonStgElt, //name of the database
+		DatabaseDirectory:MonStgElt, //root directory of the database (full path)
+		ObjectName:MonStgElt, //object name
+		ObjectDirectory:MonStgElt, //directory of object file (full path)
+		ObjectRelativeDirectory:MonStgElt, //directory of object file relative to root
+		ObjectFileExtension:MonStgElt, //extension of object file
+		ObjectFileName:MonStgElt,
+		ObjectPath:MonStgElt, //full path of object
+		ObjectRelativePath:MonStgElt,
+		Description:MonStgElt
+		>;
 
 	dbrec := rec<DatabaseRecord|Key:=key>;
 	dbname := key[1];
@@ -46,15 +79,14 @@ intrinsic CreateDatabaseRecord(key::SeqEnum[MonStgElt]) -> Rec
 
 end intrinsic;
 
-intrinsic SetObjectFileExtension(~dbrec::Rec, ext::MonStgElt)
-{}
+procedure SetObjectFileExtension(~dbrec, ext)
 
 	dbrec`ObjectFileExtension := ext;
 	dbrec`ObjectFileName := dbrec`ObjectName*"."*ext;
 	dbrec`ObjectRelativePath := MakePath([dbrec`ObjectRelativeDirectory, dbrec`ObjectFileName]);
 	dbrec`ObjectPath := MakePath([dbrec`ObjectDirectory, dbrec`ObjectFileName]);
 
-end intrinsic;
+end procedure;
 
 //##############################################################################
 //	Check if an object exists in the database
@@ -222,15 +254,24 @@ end intrinsic;
 //##############################################################################
 //	Creates an empty database
 //##############################################################################
-intrinsic CreateDatabase(dir::MonStgElt, dbname::MonStgElt)
-{Creates an empty database in the specified directory.}
+intrinsic CreateDatabase(dbname::MonStgElt)
+{Creates an empty database in the Databases directory.}
 
-	dir := MakePath([dir, dbname]);
+	if not IsGitInstalled() then
+		error "You need to have Git installed";
+	end if;
+
+	if not IsGitLFSInstalled() then
+		error "You need to have the Git LFS extension installed";
+	end if;
+
+	dir := MakePath([GetDatabaseDir(), dbname]);
 	if DirectoryExists(dir) then
 		error "Directory exists";
 	end if;
 
 	MakeDirectory(dir);
+
 	try
 		if GetOSType() eq "Unix" then
 			cmd := "cd \""*dir*"\" && git init && touch Readme.md && git add Readme.md && git commit -a -m \"Initial\" && git lfs track '*.o.m.gz' && git lfs track '*.o.m' && git lfs track '*.smo' && git add .gitattributes && git commit -a -m \"Added gitattributes\"";
@@ -244,199 +285,72 @@ intrinsic CreateDatabase(dir::MonStgElt, dbname::MonStgElt)
 
 end intrinsic;
 
-intrinsic CreateDatabase(dbname::MonStgElt)
-{Creates an empty database in the Databases directory.}
-
-	dir := MakePath([GetBaseDir(), "Databases"]);
-	CreateDatabase(dir, dbname);
-
-end intrinsic;
-
 //##############################################################################
 //	Adds a database to the list of available databases in the config file.
 //##############################################################################
-intrinsic AddDatabase(dir::MonStgElt, dbname::MonStgElt)
-{Adds a database to the list of available databases in the config file.}
+intrinsic AddDatabase(url::MonStgElt)
+{Adds a database to the list of available databases in the config file. If url is a remote url to a Git LFS repository, the repository will be cloned into the local Databases directory.}
 
-	//Now, add to Config.txt. I'll rewrite the file.
-	config := "";
-	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
-	config :=  Open(configfile, "r");
-	newconfig := "";
-	while true do
-		line := Gets(config);
-		if IsEof(line) then
-			break;
-		end if;
-		if Position(line, "#MAGMA_UT_DB_NAMES=") ne 0 then
-			newconfig *:= "MAGMA_UT_DB_NAMES="*dbname;
-		elif Position(line, "MAGMA_UT_DB_NAMES=") ne 0 then
-			newconfig *:= line*","*dbname;
-		elif Position(line, "#MAGMA_UT_DB_DIRS=") ne 0 then
-			newconfig *:= "MAGMA_UT_DB_DIRS="*dir;
-		elif Position(line, "MAGMA_UT_DB_DIRS=") ne 0 then
-			newconfig *:= line*","*dir;
-		else
-			newconfig *:= line;
-		end if;
-		newconfig *:= "\n";
-	end while;
+	dbname := FileName(url);
 
-	delete config; //close configfile
-	WriteBinary(configfile, newconfig : Overwrite:=true);
-
-end intrinsic;
-
-intrinsic AddDatabase(dbname::MonStgElt)
-{Adds a database to the list of available databases in the config file.}
-
-	dir := "$MAGMA_UT_BASE_DIR/Databases/"*dbname;
-	AddDatabase(dir, dbname);
-
-end intrinsic;
-
-
-//##############################################################################
-//	Adds a Git LFS database
-//##############################################################################
-intrinsic AddGitDatabase(url::MonStgElt)
-{Adds a remote Git LFS database. It is cloned (without downloading binaries) as a submodule into the local Databases directory. The database is then added to the Config.txt file. A restart is necessary to register the database.}
-
-	//Determine repo name
-	dbname := url;
-	pos := Position(dbname, "/");
-	while pos gt 0 do
-		dbname := dbname[pos+1..#dbname];
-		pos := Position(dbname, "/");
-	end while;
-
-	//Check Git
-	if not IsGitInstalled() then
-		error "Git needed but not installed. See https://git-scm.com.";
+	// If the exact same location is already in the list, we can ignore it
+	if url in GetEnv("MAGMA_UT_DBS") then
+		return;
 	end if;
 
-	//Check Git LFS extension
-	if not IsGitLFSInstalled() then
-		error "Git LFS extension needed but not installed. See https://git-lfs.github.com.";
-	end if;
-
-	//Check if directory exists already
-	dir := MakePath([GetBaseDir(), "Databases"]);
-	MakeDirectory(dir);
-
-	if DirectoryExists(MakePath([dir, dbname])) then
+	// Check if package with this name exists already
+	dbexists := false;
+	try
+		dir := GetDatabaseDir(dbname);
+		dbexists := true;
+	catch e
+		;
+	end try;
+	if dbexists then
 		error "Database with this name exists already";
 	end if;
 
-	//Clone repo into dir
-	GitCloneRemote(url, dir : SkipLFS:=true);
+	// First check if url is a URL. If so, we assume it's a Git repo and clone
+	// this into the local Packages directory.
+	if Position(url, "http://") gt 0 or Position(url, "https://") gt 0 then
 
-	//Ignore this directory (alternative to .gitignore, and better for this
-	//purpose as local only)
-	Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Databases/"*dbname);
-
-	//Now, add to Config.txt. I'll rewrite the file.
-	config := "";
-	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
-	config :=  Open(configfile, "r");
-	newconfig := "";
-	while true do
-		line := Gets(config);
-		if IsEof(line) then
-			break;
+		//Check if Git works
+		if not IsGitInstalled() then
+			error "Git is needed but is not installed. See https://git-scm.com.";
 		end if;
-		if Position(line, "#MAGMA_UT_DB_NAMES=") ne 0 then
-			newconfig *:= "MAGMA_UT_DB_NAMES="*dbname;
-		elif Position(line, "MAGMA_UT_DB_NAMES=") ne 0 then
-			newconfig *:= line*","*dbname;
-		elif Position(line, "#MAGMA_UT_DB_DIRS=") ne 0 then
-			newconfig *:= "MAGMA_UT_DB_DIRS=$MAGMA_UT_BASE_DIR/Databases/"*dbname;
-		elif Position(line, "MAGMA_UT_DB_DIRS=") ne 0 then
-			newconfig *:= line*",$MAGMA_UT_BASE_DIR/Databases/"*dbname;
-		else
-			newconfig *:= line;
+
+		if not IsGitLFSInstalled() then
+			error "Git LFS extension is needed but is not installed.";
 		end if;
-		newconfig *:= "\n";
-	end while;
 
-	delete config; //close configfile
-	WriteBinary(configfile, newconfig : Overwrite:=true);
+		//Check if directory exists already
+		if DirectoryExists(MakePath([GetDatabaseDir(), dbname])) then
+			error "Database with this name exists already";
+		end if;
 
-	//The newline \n under Windows becomes \r\n, and then it doesn't work
-	//under Unix anymore on the same system. Hence, rewrite config file to Unix
-	//line endings.
-	// if GetOSType() eq "Windows" then
-	// 	configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
-	// 	cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
-	// 	res := SystemCall(cmd);
-	// end if;
+		if not DirectoryExists(GetDatabaseDir()) then
+			MakeDirectory(GetDatabaseDir());
+		end if;
 
-	print "Success. Please restart Magma-UT now.";
+		//Clone repo
+		GitCloneRemote(url, GetDatabaseDir() : SkipLFS:=true);
 
-end intrinsic;
+		//Ignore this directory (alternative to .gitignore, and better for this
+		//purpose as local only)
+		Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Databases/"*dbname);
 
-//##############################################################################
-//	Deletes a local Git LFS database
-//##############################################################################
-intrinsic DeleteDatabase(dbname::MonStgElt)
-{Deletes a Git LFS database which was cloned as a submodule. Use with caution.}
+		return;
 
-	if not DirectoryExists(MakePath([GetBaseDir(), "Databases", dbname])) then
-		error "No database with this name found in Databases directory";
+	else
+		//Otherwise, it's a local package. Add url to config file.
+
+		if not DirectoryExists(url) then
+			error "Directory does not exist";
+		end if;
+
+		//Add database to config file
+		AddToConfig("MAGMA_UT_DBS", url);
+
 	end if;
-
-	dir := MakePath([GetBaseDir(), "Databases", dbname]);
-
-	try
-		DeleteDirectory(dir);
-	catch e
-		error "Error deleting directory";
-	end try;
-
-	//Now, remove from Config.txt. I'll rewrite the file.
-	config := "";
-	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
-	config :=  Open(configfile, "r");
-	newconfig := "";
-	while true do
-		line := Gets(config);
-		if IsEof(line) then
-			break;
-		end if;
-		if Position(line, "MAGMA_UT_DB_NAMES=") ne 0 then
-			spl := Split(Replace(line, "MAGMA_UT_DB_NAMES=", ""), ",");
-			splnew := [x : x in spl | Position(x, dbname) eq 0 ];
-			line := "MAGMA_UT_DB_NAMES=";
-			for i:=1 to #splnew do
-				line *:= splnew[i];
-				if i lt #splnew then
-					line *:= ",";
-				end if;
-			end for;
-		elif Position(line, "MAGMA_UT_DB_DIRS=") ne 0 then
-			spl := Split(Replace(line, "MAGMA_UT_DB_DIRS=", ""), ",");
-			splnew := [x : x in spl | Position(x, dbname) eq 0 ];
-			line := "MAGMA_UT_DB_DIRS=";
-			for i:=1 to #splnew do
-				line *:= splnew[i];
-				if i lt #splnew then
-					line *:= ",";
-				end if;
-			end for;
-		end if;
-		newconfig *:= line*"\n";
-	end while;
-
-	delete config; //close configfile
-	WriteBinary(configfile, newconfig : Overwrite:=true);
-
-	//The newline \n under Windows becomes \r\n, and then it doesn't work
-	//under Unix anymore on the same system. Hence, rewrite config file to Unix
-	//line endings.
-	// if GetOSType() eq "Windows" then
-	// 	configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
-	// 	cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
-	// 	res := SystemCall(cmd);
-	// end if;
 
 end intrinsic;

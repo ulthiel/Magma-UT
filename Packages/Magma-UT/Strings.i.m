@@ -1,36 +1,37 @@
 freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//  String manipulation (there's almost nothing in Magma!)
-//  This stuff cost me some time (and nerves).
+// String manipulation (there's almost nothing in Magma!)
+// This stuff cost me some time (and nerves).
 //
 //##############################################################################
 
 
 //##############################################################################
 //
-//  String replace using sed (quite annoying that no string replace is in Magma).
+// String replace using sed (quite annoying that no string replace is in
+// Magma).
 //
-//  Unfortunately, there is no string replacement functionality in Magma, which
-//  is insane. I've implemented one here using sed (I've provided the tool also
-//  for Windows in Tools\UnixTools). I could also have implement something
-//  straightforward in Magma itself since regular expression matching exists but
-//  replacing would be painfully slow compared to sed (I want it to work quickly
-//  for >200MB files).
+// Unfortunately, there is no string replacement functionality in Magma, which
+// is insane. I've implemented one here using sed (I've provided the tool also
+// for Windows in Tools\UnixTools). I could also have implement something
+// straightforward in Magma itself since regular expression matching exists but
+// replacing would be painfully slow compared to sed (I want it to work quickly
+// for >200MB files).
 //
-//  The only downside is that different sed implementations could in principle
-//  behave differently, so you need to know what you're doing, especially
-//  when you want portability. For example the GNU and BSD sed's behave a bit
-//  differently with respect to I don't even know what. But nonetheless I think
-//  in most cases there should be a consistent behavior of Replace among
-//  different OS. I'm testing a few things in the selfcheck but clearly can't
-//  cover everything.
+// The only downside is that different sed implementations could in principle
+// behave differently, so you need to know what you're doing, especially
+// when you want portability. For example the GNU and BSD sed's behave a bit
+// differently with respect to I don't even know what. But nonetheless I think
+// in most cases there should be a consistent behavior of Replace among
+// different OS. I'm testing a few things in the selfcheck but clearly can't
+// cover everything.
 //
 //##############################################################################
 intrinsic Replace(str::MonStgElt, reg::MonStgElt, rep::MonStgElt) -> MonStgElt

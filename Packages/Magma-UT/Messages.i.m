@@ -1,20 +1,19 @@
 freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//
-//  Printing messages that can be overwritten on the same line (good for
-//  percentage progress messages for the impatient). Key things here are setting
-//  back cursor with the special character \b. One problem is that if a the
-//  message that's being printed is short than the message on the same line
-//  before, the remaining characters are still there. You can clear them with
-//  blanks but to this end you need to know the length of the old message.
-//  That's why I've implemented a structure Message which keeps track of this.
+// Printing messages that can be overwritten on the same line (good for
+// percentage progress messages for the impatient). Key things here are setting
+// back cursor with the special character \b. One problem is that if a the
+// message that's being printed is short than the message on the same line
+// before, the remaining characters are still there. You can clear them with
+// blanks but to this end you need to know the length of the old message.
+// That's why I've implemented a structure Message which keeps track of this.
 //
 //##############################################################################
 

@@ -13,6 +13,3 @@ end if;
 GetSQLiteCommand();
 GetUnixTool("wget");
 GetVersionString();
-IsGitInstalled();
-IsGitLFSInstalled();
-GetPackages();

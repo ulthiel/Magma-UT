@@ -159,7 +159,7 @@ exit /b
 set MAGMA_USER_SPEC=%MAGMA_UT_BASE_DIR%\Packages\Magma-UT\Magma-UT.s.m;%MAGMA_USER_SPEC%
 
 ::Set the MAGMA_UT startup file as Magma startup file
-set MAGMA_STARTUP_FILE=%MAGMA_UT_BASE_DIR%\Packages\Magma-UT\Startup\Startup.m
+set MAGMA_STARTUP_FILE=%MAGMA_UT_BASE_DIR%\Packages\Magma-UT\Startup.m
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::Now, start Magma with the Startup script from the Config directory

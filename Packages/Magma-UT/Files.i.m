@@ -1,20 +1,20 @@
 //freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//  Intrinsics for dealing with files and directories:
-//  * files and directory names
-//  * deleting files and directories
-//  * creating directories
-//  * get file size
-//  * checking existence of files and directories
-//  * listing files and directories in a directory
-//  * determine file type
+// Intrinsics for dealing with files and directories:
+// * files and directory names
+// * deleting files and directories
+// * creating directories
+// * get file size
+// * checking existence of files and directories
+// * listing files and directories in a directory
+// * determine file type
 //
 //##############################################################################
 

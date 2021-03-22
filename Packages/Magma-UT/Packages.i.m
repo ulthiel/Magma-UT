@@ -1,25 +1,32 @@
 //freeze;
 //##############################################################################
 //
-//  Magma-UT
-//  Copyright (C) 2020 Ulrich Thiel
-//  Licensed under GNU GPLv3, see License.md
-//  https://github.com/ulthiel/magma-ut
-//  thiel@mathematik.uni-kl.de, https://ulthiel.com/math
+// Magma-UT
+// Copyright (C) 2020-2021 Ulrich Thiel
+// Licensed under GNU GPLv3, see License.md
+// https://github.com/ulthiel/magma-ut
+// thiel@mathematik.uni-kl.de, https://ulthiel.com/math
 //
-//  Package manager.
+// Package manager.
 //
 //##############################################################################
 
 //##############################################################################
 // Get package directory.
 //##############################################################################
-intrinsic GetPackageDirectory(pkgname::MonStgElt) -> SeqEnum
+intrinsic GetPackageDir() -> MonStgElt
+{Returns the default directory for packages.}
+
+	return MakePath([GetBaseDir(), "Packages"]);
+
+end intrinsic;
+
+intrinsic GetPackageDir(pkgname::MonStgElt) -> SeqEnum
 {Returns the full path of the directory of a package known to Magma-UT.}
 
 	//First, check if there is a package with name pkgname in the Packages
 	//directory.
-	dir := MakePath([GetBaseDir(), "Packages", pkgname]);
+	dir := MakePath([GetPackageDir(), pkgname]);
 	file := MakePath([dir, pkgname*".s.m"]);
 	if FileExists(file) then
 		return dir;
@@ -46,7 +53,7 @@ end intrinsic;
 intrinsic GetPackageSpecFile(pkg::MonStgElt) -> MonStgElt
 {Returns the full path of the spec file of a package.}
 
-	dir := GetPackageDirectory(pkg);
+	dir := GetPackageDir(pkg);
 	pkgname := FileName(pkg);
 	file := MakePath([dir, pkgname*".s.m"]);
 	if not FileExists(file) then
@@ -100,7 +107,7 @@ intrinsic AddPackage(url::MonStgElt)
 	// Check if package with this name exists already
 	pkgexists := false;
 	try
-		file := GetPackageSpecFile(pkgname);
+		dir := GetPackageDir(pkgname);
 		pkgexists := true;
 	catch e
 		;
@@ -118,8 +125,12 @@ intrinsic AddPackage(url::MonStgElt)
 			error "Git is needed but is not installed. See https://git-scm.com.";
 		end if;
 
+		if not DirectoryExists(GetPackageDir()) then
+			MakeDirectory(GetPackageDir());
+		end if;
+
 		//Clone repo into dir
-		GitCloneRemote(url, MakePath([GetBaseDir(), "Packages"]));
+		GitCloneRemote(url, GetPackageDir());
 
 		//Ignore this directory (alternative to .gitignore, and better for this
 		//purpose as local only)
@@ -128,7 +139,7 @@ intrinsic AddPackage(url::MonStgElt)
 		return;
 
 	else
-		//Otherwise, it's a local package
+		//Otherwise, it's a local package. Add url to config file.
 
 		//Check if package has a spec file
 		file := MakePath([url, pkgname*".s.m"]);
@@ -136,37 +147,8 @@ intrinsic AddPackage(url::MonStgElt)
 			error "Cannot locate spec file of package.";
 		end if;
 
-		//Now, add to Config.txt. I'll rewrite the file.
-		config := "";
-		configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
-		config :=  Open(configfile, "r");
-		newconfig := "";
-		while true do
-			line := Gets(config);
-			if IsEof(line) then
-				break;
-			end if;
-			if Position(line, "#MAGMA_UT_PKGS=") ne 0 then
-				newconfig *:= "MAGMA_UT_PKGS="*url;
-			elif Position(line, "MAGMA_UT_PKGS=") ne 0 then
-				newconfig *:= line*","*url;
-			else
-				newconfig *:= line;
-			end if;
-			newconfig *:= "\n";
-		end while;
-
-		delete config; //close configfile
-		Write(configfile, newconfig : Overwrite:=true);
-
-		//The newline \n under Windows becomes \r\n, and then it doesn't work
-		//under Unix anymore on the same system. Hence, rewrite config file to Unix
-		//line endings.
-		if GetOSType() eq "Windows" then
-			configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
-			cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
-			res := SystemCall(cmd);
-		end if;
+		//Add package to config file
+		AddToConfig("MAGMA_UT_PKGS", url);
 
 	end if;
 
@@ -178,43 +160,10 @@ end intrinsic;
 intrinsic RemovePackage(pkgname::MonStgElt)
 {Removes a package from the known packages list.}
 
-	pkgdir := GetPackageDirectory(pkgname);
+	pkgdir := GetPackageDir(pkgname);
 
-	//Now, remove from Config.txt. I'll rewrite the file.
-	config := "";
-	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
-	config :=  Open(configfile, "r");
-	newconfig := "";
-	while true do
-		line := Gets(config);
-		if IsEof(line) then
-			break;
-		end if;
-		if Position(line, "MAGMA_UT_PKGS=") ne 0 then
-			spl := Split(Replace(line, "MAGMA_UT_PKGS=", ""), ",");
-			splnew := [x : x in spl | x ne pkgdir ];
-			line := "MAGMA_UT_PKGS=";
-			for i:=1 to #splnew do
-				line *:= splnew[i];
-				if i lt #splnew then
-					line *:= ",";
-				end if;
-			end for;
-		end if;
-		newconfig *:= line*"\n";
-	end while;
-
-	delete config; //close configfile
-	Write(configfile, newconfig : Overwrite:=true);
-
-	//The newline \n under Windows becomes \r\n, and then it doesn't work
-	//under Unix anymore on the same system. Hence, rewrite config file to Unix
-	//line endings.
-	if GetOSType() eq "Windows" then
-		configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
-		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
-		res := SystemCall(cmd);
-	end if;
+	// Remove package from config file
+	RemoveFromConfig("MAGMA_UT_PKGS", pkgdir);
 
 end intrinsic;
 
@@ -257,37 +206,7 @@ intrinsic AddStartupPackage(pkgname::MonStgElt)
 	//Just to check that package exists
 	file := GetPackageSpecFile(pkgname);
 
-	//Now, add to Config.txt. I'll rewrite the file.
-	config := "";
-	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
-	config :=  Open(configfile, "r");
-	newconfig := "";
-	while true do
-		line := Gets(config);
-		if IsEof(line) then
-			break;
-		end if;
-		if Position(line, "#MAGMA_UT_STARTUP_PKGS=") ne 0 then
-			newconfig *:= "MAGMA_UT_STARTUP_PKGS="*pkgname;
-		elif Position(line, "MAGMA_UT_STARTUP_PKGS=") ne 0 then
-			newconfig *:= line*","*pkgname;
-		else
-			newconfig *:= line;
-		end if;
-		newconfig *:= "\n";
-	end while;
-
-	delete config; //close configfile
-	Write(configfile, newconfig : Overwrite:=true);
-
-	//The newline \n under Windows becomes \r\n, and then it doesn't work
-	//under Unix anymore on the same system. Hence, rewrite config file to Unix
-	//line endings.
-	if GetOSType() eq "Windows" then
-		configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
-		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
-		res := SystemCall(cmd);
-	end if;
+	AddToConfig("MAGMA_UT_STARTUP_PKGS", pkgname);
 
 end intrinsic;
 
@@ -297,41 +216,7 @@ end intrinsic;
 intrinsic RemoveStartupPackage(pkgname::MonStgElt)
 {Removes a package from the startup list.}
 
-	//Now, remove from Config.txt. I'll rewrite the file.
-	config := "";
-	configfile := MakePath([GetBaseDir(), "Config", "Config.txt"]);
-	config :=  Open(configfile, "r");
-	newconfig := "";
-	while true do
-		line := Gets(config);
-		if IsEof(line) then
-			break;
-		end if;
-		if Position(line, "MAGMA_UT_STARTUP_PKGS=") ne 0 then
-			spl := Split(Replace(line, "MAGMA_UT_STARTUP_PKGS=", ""), ",");
-			splnew := [x : x in spl | x ne pkgname ];
-			line := "MAGMA_UT_STARTUP_PKGS=";
-			for i:=1 to #splnew do
-				line *:= splnew[i];
-				if i lt #splnew then
-					line *:= ",";
-				end if;
-			end for;
-		end if;
-		newconfig *:= line*"\n";
-	end while;
-
-	delete config; //close configfile
-	Write(configfile, newconfig : Overwrite:=true);
-
-	//The newline \n under Windows becomes \r\n, and then it doesn't work
-	//under Unix anymore on the same system. Hence, rewrite config file to Unix
-	//line endings.
-	if GetOSType() eq "Windows" then
-		configfiletmp := MakePath([GetBaseDir(), "Config", "Config_tmp.txt"]);
-		cmd := GetUnixTool("dos2unix")*" -f \""*configfile*"\"";
-		res := SystemCall(cmd);
-	end if;
+	RemoveFromConfig("MAGMA_UT_STARTUP_PKGS", pkgname);
 
 end intrinsic;
 
@@ -341,11 +226,17 @@ end intrinsic;
 intrinsic CreatePackage(pkgname::MonStgElt)
 {Creates an empty package (located in the Packages directory).}
 
-	dir := MakePath([GetBaseDir(), "Packages", pkgname]);
+	if not IsGitInstalled() then
+		error "You need to have Git installed.";
+	end if;
+
+	dir := MakePath([GetPackageDir(), pkgname]);
 	if DirectoryExists(dir) then
 		error "Package with this name exists already.";
 	end if;
+
 	MakeDirectory(dir);
+
 	try
 		if GetOSType() eq "Unix" then
 			cmd := "cd \""*dir*"\" && git init && echo \"# "*pkgname*"\" > Readme.md && touch \""*pkgname*"\".s.m && git add Readme.md \""*pkgname*"\".s.m && git commit -a -m \"Initial\"";
@@ -356,9 +247,5 @@ intrinsic CreatePackage(pkgname::MonStgElt)
 	catch e
 		error "Error creating package";
 	end try;
-
-	//Ignore this directory (alternative to .gitignore, and better for this
-	//purpose as local only)
-	Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Packages/"*pkgname);
 
 end intrinsic;
