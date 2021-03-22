@@ -21,7 +21,7 @@ This is a package for the computer algebra system [Magma](http://magma.maths.usy
 * An automatic package documenter (see documentation of this package)
 * An automatic self check system
 * Notifications (e.g. on cell phone) via [Pushover](https://pushover.net)
-* And more: reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing objects (as strings) in an external editor, printing Markdown tables, ...
+* And more: executing GAP3 commands, reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing objects (as strings) in an external editor, printing Markdown tables, ...
 
 ### Running Magma-UT
 

@@ -12,7 +12,7 @@ freeze;
 //##############################################################################
 
 intrinsic HTML(f::RngUPolElt[RngInt]) -> MonStgElt
-{}
+{HTML code for a univariate polynomial over the integers.}
 
 	str := Sprint(f, "Latex");
 	for p in Exponents(f) do

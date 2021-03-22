@@ -243,7 +243,7 @@ intrinsic StringToCodes(str::MonStgElt) -> SeqEnum
 end intrinsic;
 
 intrinsic CodesToString(code::SeqEnum[RngIntElt]) -> MonStgElt
-{The string defined by the (ASCII) code sequenc code.}
+{The string defined by the (ASCII) code sequence code.}
 
 	if IsEmpty(code) then
 		return "";

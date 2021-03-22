@@ -18,7 +18,7 @@ declare attributes Dict:
 	Elements;
 
 intrinsic Dictionary() -> Dict
-{}
+{Creates an empty dictionary.}
 
 	D := New(Dict);
 	D`Keys := [**];
@@ -35,14 +35,14 @@ intrinsic Print(D::Dict)
 end intrinsic;
 
 intrinsic Keys(D::Dict) -> List
-{}
+{The keys of the dictionary.}
 
 	return D`Keys;
 
 end intrinsic;
 
 intrinsic IsDefined(D::Dict, key::.) -> BoolElt, .
-{}
+{True iff the key is defined. If true, also returnes the entry.}
 
 	pos := Position(D`Keys, key);
 	if IsZero(pos) then
@@ -54,7 +54,7 @@ intrinsic IsDefined(D::Dict, key::.) -> BoolElt, .
 end intrinsic;
 
 intrinsic Get(D::Dict, key::.) -> .
-{}
+{Retrieves the element given by key.}
 
 	t, elt := IsDefined(D,key);
 	if t then
@@ -66,7 +66,7 @@ intrinsic Get(D::Dict, key::.) -> .
 end intrinsic;
 
 intrinsic Set(~D::Dict, key::., x::.)
-{}
+{Sets the dictionary entry indexed by key to x.}
 
 	pos := Position(D`Keys, key);
 	if IsZero(pos) then

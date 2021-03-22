@@ -89,7 +89,7 @@ end intrinsic;
 //	Adds package to list of known packages
 //##############################################################################
 intrinsic AddPackage(url::MonStgElt)
-{Makes a package from another location than the standard Packages directory known to Magma-UT. Here, url can either be a full path to a local package or a url to a remote Git repository. In the latter case, the repository will be cloned into the Packages directory.}
+{Adds a package to the list of available packages in the config file. If url is a remote url to a Git repository, the repository will be cloned into the local Packages directory.}
 
 	pkgname := FileName(url);
 

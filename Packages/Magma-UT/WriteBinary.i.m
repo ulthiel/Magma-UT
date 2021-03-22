@@ -17,7 +17,7 @@ freeze;
 //##############################################################################
 
 intrinsic WriteBinary(F::MonStgElt, x::., L::MonStgElt : Overwrite:=false)
-{}
+{Writes x as a string (with print level L) in binary format.}
 
 	if Overwrite then
 		fp := Open(F, "wb");
@@ -31,14 +31,14 @@ intrinsic WriteBinary(F::MonStgElt, x::., L::MonStgElt : Overwrite:=false)
 end intrinsic;
 
 intrinsic WriteBinary(F::MonStgElt, x::. : Overwrite:=false)
-{}
+{Writes x as a string (with default print level L) in binary format.}
 
 	WriteBinary(F, x, GetPrintLevel() : Overwrite:=Overwrite);
 
 end intrinsic;
 
 intrinsic ReadBinary(F::MonStgElt) -> MonStgElt
-{}
+{Reads file F in binary format.}
 
 	fp := Open(F, "rb");
 	s := Read(fp);

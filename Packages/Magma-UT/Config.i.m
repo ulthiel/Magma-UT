@@ -65,7 +65,7 @@ end intrinsic;
 // Remove an entry from the config.
 //##############################################################################
 intrinsic RemoveFromConfig(var::MonStgElt, entry::MonStgElt)
-{}
+{Removes entry from config file varialbe var.}
 
 	//I'll rewrite the confg file.
 	config := "";

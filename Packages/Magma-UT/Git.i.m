@@ -42,7 +42,7 @@ end intrinsic;
 //  Retrieve version or commit id from Git repo
 //##############################################################################
 intrinsic GitRepositoryVersion(dir::MonStgElt) -> MonStgElt
-{}
+{Retrieves the version or commit id from a Git repository in directory dir.}
 	try
 		if GetOSType() eq "Unix" then
 			cmd := "cd \""*dir*"\" && git describe --long 2>/dev/null";

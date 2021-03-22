@@ -133,7 +133,7 @@ end intrinsic;
 //In Windows I noticed that I can't delete the .git directory with the Unix
 //tool due to permission denied stuff. I'm using rmdir instead, that works.
 intrinsic DeleteDirectory(dir::MonStgElt)
-{Deletes file.}
+{Deletes directory.}
 
 	if GetOSType() eq "Unix" then
 		cmd := GetUnixTool("rm")*" -rf \""*dir*"\"";
@@ -377,7 +377,7 @@ end intrinsic;
 //	File type
 //##############################################################################
 intrinsic GetFileType(file::MonStgElt) -> MonStgElt
-{}
+{Returns the file type.}
 
 	if GetOSType() eq "Unix" then
 		res := SystemCall("file -b \""*file*"\"");

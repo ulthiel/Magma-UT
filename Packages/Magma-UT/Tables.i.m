@@ -38,21 +38,21 @@ intrinsic Table(h::SeqEnum[MonStgElt]) -> Table_t
 end intrinsic;
 
 intrinsic AddRow(~T::Table_t, r::SeqEnum[MonStgElt])
-{}
+{Adds a row to the table.}
 
 	Append(~T`Rows, r);
 
 end intrinsic;
 
 intrinsic Nrows(T::Table_t) -> RngIntElt
-{}
+{The number of rows of the table.}
 
 	return #T`Rows;
 
 end intrinsic;
 
 intrinsic Ncols(T::Table_t) -> RngIntElt
-{}
+{The number of columns of the table.}
 
 	return #T`Header;
 
