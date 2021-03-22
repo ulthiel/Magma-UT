@@ -18,10 +18,12 @@ This is a package for the computer algebra system [Magma](http://magma.maths.usy
 
 * A package manager which allows to add remote packages (using [Git](https://git-scm.com/downloads))
 * A database manager which allows to work with remote databases (using [Git LFS](https://git-lfs.github.com))
-* An automatic package documenter (see documentation of this package)
-* An automatic self check system
+* An automatic package documenter (see automatic [documentation](https://github.com/ulthiel/Magma-UT/blob/master/Packages/Magma-UT/Autodoc.md) of this package)
+* An automatic package self check system
 * Notifications (e.g. on cell phone) via [Pushover](https://pushover.net)
-* And more: executing GAP3 commands, reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing objects (as strings) in an external editor, printing Markdown tables, ...
+* And more, e.g. executing GAP3 commands, reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing things in an external editor, printing Markdown tables, ...
+
+Magma-UT is supposed to work under all operating systems supported by Magma, i.e. Linux, macOS, and Windows.
 
 ### Running Magma-UT
 
@@ -31,48 +33,61 @@ I assume you have [Magma](http://magma.maths.usyd.edu.au/magma/) installed and w
 * Download the most recent release (most stable);
 * Clone the Git repository using ```git clone https://github.com/ulthiel/Magma-UT.git``` (recommended).
 
-Now, you should be able to start Magma-UT via the command ```./magma-ut``` (Linux and macOS) or ```magma.bat``` (Windows). This starts a Magma session with all the extensions from Magma-UT attached. After the first start there will be a file Config.txt in the directory Config. Here you can modify some settings—some are modified automatically by Magma-UT. For example, if the Magma-UT startup scripts can't locate Magma, you can set the Magma directory here. Usually, it shouldn't be necessary to do any modifications here.
+Now, you should be able to start Magma-UT via the command ```./magma-ut``` (Linux and macOS) or ```magma.bat``` (Windows). This starts a Magma session with all the extensions from Magma-UT attached. 
 
-For some advanced (but very convenient!) functionality I assume you have [Git](https://git-scm.com/downloads) and the [Git LFS extension](https://git-lfs.github.com) installed. This is both very easy to set up under all operating systems (the Git installer under Windows will install Git LFS actually by default).
+The startup script tries to find the Magma executable automatically. It's easiest if you have the Magma directory in your system PATH variable. If there are any issues, you can set the Magma directory (and other options) in the config file "Config/Config.txt". Usually, this should not be necessary.
 
-Magma-UT is supposed to work under all operating systems supported by Magma, i.e. Linux, macOS, and Windows.
+For the remote package and database functionality I assume you have [Git](https://git-scm.com/downloads) and the [Git LFS extension](https://git-lfs.github.com) installed. This is both very easy to set up under all operating systems, see [here](https://stackoverflow.com/questions/48734119/git-lfs-is-not-a-git-command-unclear).
 
 ### Package manager
 
-By *package* I mean a coherent set of Magma source files implementing [intrinsics](http://magma.maths.usyd.edu.au/magma/handbook/functions_procedures_and_packages). Magma-UT provides a convenient package manager which allows you to create, delete, load, unload not just local but also remote packages. You can create an empty package via
+By *package* I mean a coherent set of Magma source files implementing [intrinsics](http://magma.maths.usyd.edu.au/magma/handbook/functions_procedures_and_packages). Magma-UT provides a convenient package manager which allows you to add, create, and manage not just local but also remote packages. Here's an example:
+
+```
+> AddPackage("https://github.com/ulthiel/Magma-UT-Test-Pkg");
+> AttachPackage("Magma-UT-Test-Pkg");
+> MAGMA_UT_TEST_INTRINSIC();
+WORKS
+```
+
+In the above example, the test package from [https://github.com/ulthiel/Magma-UT-Test-Pkg](https://github.com/ulthiel/Magma-UT-Test-Pkg) is cloned automatically into the local "Packages" directory. You can then attach the package and have all functions available. You can make a package to be attached at startup via
+
+```
+> AddStartupPackage("Magma-UT-Test-Pkg");
+```
+
+You can create an empty package via
 
 ```
 > CreatePackage("Test-Package");
 ```
 
-This creates a subdirectory "Test-Package" in the directory "Packages". If you have Git installed, this is automatically put under version control. You can now add your package source files to this directory and then you have to add all the files to the [Spec file](http://magma.maths.usyd.edu.au/magma/handbook/text/24#181) "Test-Package.s.m". You can attach the package by via
-
-```
-> AttachPackage("Test-Package");
-```
-
-This makes all the functions of the package available in the Magma session. There are functions ```DeletePackage``` and ```DetachPackage``` that do the obvious things. You can automatically attach a package at Magma-UT startup via
-
-```
-AddPackage("Test-Package");
-```
-
-The package name is then added to the respective variable in the config file. If you want to remove the package from automatic attaching, you need to remove the name here.
-
-You can also add a remote package from a remote Git repository via
-
-```
-> AddGitPackage("https://github.com/ulthiel/Champ.git")
-> AttachPackage("Champ");
-```
+This creates a subdirectory "Test-Package" in the directory "Packages". If you have Git installed, this is automatically put under version control. You can now add your package source files to this directory and then you have to add all the files to the [Spec file](http://magma.maths.usyd.edu.au/magma/handbook/text/24#181) "Test-Package.s.m". 
 
 ### Database manager
 
-By *database* I mean a collection of text files containing a string that can be evaluated (using [```eval```](http://magma.maths.usyd.edu.au/magma/handbook/text/14#98) ) in Magma (thus producing an object). Here's an example. Suppose an incredibly complicated computation yields the sequence 1,1,2,3,5,8 as a result and you want to save this for later use. You can put the following into a text file fib.txt:
+By *database* I mean a collection of files from which one can obtain a Magma object (we'll go into this in a bit). Magma-UT provides a convenient database manager which allows you to add, create, and manage not just local but also remote databases. Here's an example:
 
 ```
-> X:=[1,1,2,3,5,8];
-> return X
+> AddDatabase("https://github.com/ulthiel/Magma-UT-Test-DB");
+> F4,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "Objects", "F4"]);
+> Order(F4);
+1152;
+> dbrec`Description;
+Weyl group of type F4.
+```
+
+In the above example, the test database from [https://github.com/ulthiel/Magma-UT-Test-DB](https://github.com/ulthiel/Magma-UT-Test-DB) is cloned automatically in the local "Databases" directory. We then retrieved a particular object (the Weyl group F4 in as a matrix group) from the database. Before I go into the details, I want to point out the main idea behind remote databases in Magma-UT. You may have noticed that the ```GetFromDatabase``` call took about 1 or 2 seconds. Call it again and it will return the object instantaneously! What happened? The database is managed via Git LFS. If you've never heard about Git LFS, here's a description:
+
+> Git Large File Storage (LFS) replaces large files such as audio samples, videos, datasets, and graphics with text pointers inside Git, while storing the file contents on a remote server like GitHub.com or GitHub Enterprise.
+
+So, the whole database is stored in a remote location. The ```AddDatabase``` function only retrieves the *pointers* to the data files. These are *small* text files giving the URL to the remote (and potentially *large*) file. When we first called  ```GetFromDatabase``` on the particular object F4 it was detected that the object itself was not yet downloaded, only its pointer. Hence, the remote file is downloaded to the local repository. And from now on any future retrieval of F4 will be immediate because the object exists locally. This *on demand* design allows to share huge databases without forcing users to download the whole databases. Moreover, databases can be updated conveniently.
+
+Let's now describe how objects are stored in the database. Suppose an incredibly complicated computation yields the sequence 1,1,2,3,5,8 as a result and you want to save this for later use. You can put the following into a text file "fib.txt":
+
+```
+X:=[1,1,2,3,5,8];
+return X
 ```
 
 (Be aware of the missing semicolon in the return statement.) In Magma, you can now do:
@@ -96,19 +111,15 @@ Matrix(RationalField(), 4, 4, [ 1, 0, 0, 0, 0, 1, 2, 0, 0, 0, -1, 0, 0, 0, 1, 1 
 Matrix(RationalField(), 4, 4, [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, -1 ]) >
 ```
 
-But where Magma-UT can help is the management, i.e. the storing and retrieving, of such "string-objects". Like with packages you create an empty database via
+But where Magma-UT can help is the management, i.e. the storing and retrieving, of such "string-objects". 
+
+Let's create an empty database via
 
 ```
 > CreateDatabase("Test-DB");
-> AddDatabase("Test-DB");
 ```
 
-This creates a subdirectory "Test-DB" in the directory "Databases". Again, this is automatically put under Git version control. Like with packages the ```AddDatabase``` functions add the database to the list of available databases in the config file. You now have to restart Magma-UT so that the config file is read again and the database is available for access:
-
-```
-> GetDatabaseNames(); //list of available databases
-[ Test-DB ]
-```
+This creates a subdirectory "Test-DB" in the directory "Databases". Again, this is automatically put under Git version control with the appropriate Git LFS settings. 
 
 For the database organization we need two things:
 
@@ -128,19 +139,7 @@ Let's look at an example:
 [ 1, 1, 2, 3, 5, 8 ]
 ```
 
-There is now the file "fib.o.m" in the directory "Databases/Test-DB/Sequences" containing the above sequence as an evaluatable string. In this way you can manage arbitrarily many databases with whatever objects you're interested in.
-
-Now, here's an additional functionality that is very convenient. The databases will be Git LFS managed. If you don't know what Git LFS is, read the following sentence (from [here](https://git-lfs.github.com)):
-
-> Git Large File Storage (LFS) replaces large files such as audio samples, videos, datasets, and graphics with text pointers inside Git, while storing the file contents on a remote server like GitHub.com or GitHub Enterprise.
-
-The big idea behind databases in Magma-UT is to store them on a remote server (like GitHub). A user can then add this remote database to Magma-UT, e.g.
-
-```
-> AddGitDatabase("https://github.com/ulthiel/Champ-DB.git")
-```
-
-And now here's the thing is: the objects will *not* be downloaded—only the (very small) LFS pointers! Only when a user explicitly asks for an object from database (using GetFromDatabase) the object will be pulled from the repository. In this way you can have an arbitrarily large database and if user doesn't care about 99% of it, they don't have to download the huge database!
+There is now the file "fib.o.m" in the directory "Databases/Test-DB/Sequences" containing the above sequence as an evaluatable string. In this way you can manage arbitrarily many databases with whatever objects you're interested in. With the optional argument "Description" of ```SaveToDatabase``` you can also save a description of an object (this will be an additional text file with the same name as the object). 
 
 Internally, the Git LFS management works by setting the following in the ```.gitattributes``` file:
 
@@ -154,15 +153,17 @@ This means all the object files are filtered out and are stored with LFS. Everyt
 
 ### Automatic package documenter
 
-In the directory "Tools/Documenter" there is the Python script "documenter.py" that will automatically create a package documentation consisting of all the intrinsics in the package together with the description given in the source code. The documentation is stored in the directory "Doc" of the package directory. Here's an example:
+In the directory "Tools/Documenter" there is the Python script "documenter.py" that will automatically create a package documentation consisting of all the intrinsics in the package together with the description given in the source code. The documentation is stored in the markdown file "Autodoc.md" of the package directory. Here's an example call:
 
 ```
 python2 documenter.py -p "Magma-UT"
 ```
 
+You can see the result [here](https://github.com/ulthiel/Magma-UT/blob/master/Packages/Magma-UT/Autodoc.md).
+
 ### Automatic self check system
 
-In "Tools/Selfcheck" there is a script selfcheck (and its Windows analogue selfcheck.bat) that runs an automatic self check on a package. The idea is to have a subdirectory "Selfchecks" in the directory of the package that contains Magma program files doing some tests on the package. If something is wrong, the code should raise an error. Here's an example for the self check testing my compression functions:
+In "Tools/Selfcheck" there is a script ```selfcheck``` (and its Windows analogue ```selfcheck.bat```) that runs an automatic self check on a package. The idea is to have a subdirectory "Selfchecks" in the directory of the package that contains Magma program files doing some tests on the package. If something is wrong, the code should raise an error. Here's an example for the self check testing my compression functions:
 
 ```
 //We create a large random string, write it to a compressed file and read it
@@ -209,4 +210,27 @@ SystemCall     OK  4.110s	234MB
 Logfiles can be found in "Tools/Selfcheck/Log". The self check script also allows reporting to a server. See the comments in the script for details.
 
 ### Notifications
+
+If you ever had computations running for several weeks, you'd appreciate if someone would tell you when they're finished. Magma-UT can do this for you. [Pushover](https://pushover.net) is a free notification service provided cell phone and desktop apps to receive notifications. Once you've set up an account you can add an application token (you can call it e.g. "Magma-UT"). You have to add your user and token to the variables "MAGMA_UT_PUSHOVER_USER" and "MAGMA_UT_PUSHOVER_TOKEN" in the config file "Config/Config.txt" (or as environment variables). Then you can send notifications via
+
+```
+Pushover("This is a test message");
+```
+
+I'm putting this at the end of program code for (presumably) long computations and thus receive a message on my cell phone when they're finished.
+
+### GAP3 commands
+
+When you have [GAP3](https://webusers.imj-prg.fr/~jean.michel/gap3/) installed and set the config (or environment) variable "MAGMA_UT_GAP3" to the command of GAP3 you can execute GAP3 commands from within Magma and get the (final) result as a string. Here's an example:
+
+```
+> Wstr := GAP3("W:=ComplexReflectionGroup(28); W.matgens;");
+> Wstr;
+[ [ [ -1, 0, 0, 0 ], [ 1, 1, 0, 0 ], [ 0, 0, 1, 0 ], [ 0, 0, 0, 1 ] ],
+  [ [ 1, 1, 0, 0 ], [ 0, -1, 0, 0 ], [ 0, 1, 1, 0 ], [ 0, 0, 0, 1 ] ],
+  [ [ 1, 0, 0, 0 ], [ 0, 1, 2, 0 ], [ 0, 0, -1, 0 ], [ 0, 0, 1, 1 ] ],
+  [ [ 1, 0, 0, 0 ], [ 0, 1, 0, 0 ], [ 0, 0, 1, 1 ], [ 0, 0, 0, -1 ] ] ]
+```
+
+You can use Magma's ```eval``` (combined with additional code and string manipulation) to create a Magma object from the output. I could add similar wrappers for any other system as it's all just based on strings and reading/writing temporary files with program code/output.
 
