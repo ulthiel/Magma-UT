@@ -21,23 +21,22 @@ This is a package for the computer algebra system [Magma](http://magma.maths.usy
 * An automatic package documenter (see automatic [documentation](https://github.com/ulthiel/Magma-UT/blob/master/Packages/Magma-UT/Autodoc.md) of this package)
 * An automatic package self check system
 * Notifications (e.g. on cell phone) via [Pushover](https://pushover.net)
-* And more, e.g. executing GAP3 commands, reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing things in an external editor, printing Markdown tables, printing status messages, ...
+* And more, e.g. executing GAP commands, reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing things in an external editor, printing Markdown tables, printing status messages, ...
 
-Magma-UT is supposed to work under all operating systems supported by Magma, i.e. Linux, macOS, and Windows.
+Magma-UT is supposed to work on all operating systems supported by Magma, i.e. Linux, macOS, and Windows.
 
 ### Running Magma-UT
 
 I assume you have [Magma](http://magma.maths.usyd.edu.au/magma/) installed and working (I recommend version at least 2.25). To get Magma-UT you can either:
 
-* Download the [most recent version](https://github.com/ulthiel/Magma-UT/archive/master.zip) (simplest);
-* Download the most recent release (most stable);
+* Download the most recent release (simplest);
 * Clone the Git repository using ```git clone https://github.com/ulthiel/Magma-UT.git``` (recommended).
 
-Now, you should be able to start Magma-UT via the command ```./magma-ut``` (Linux and macOS) or ```magma.bat``` (Windows). This starts a Magma session with all the extensions from Magma-UT attached. 
+Now, you can start Magma-UT simply via the command ```./magma-ut``` (Linux and macOS) or ```magma.bat``` (Windows). This starts a Magma session with all the extensions from Magma-UT attached. Basically, you can use the command ```magma-ut``` as a replacement for ```magma```.
 
-The startup script tries to find the Magma executable automatically. It's easiest if you have the Magma directory in your system PATH variable. If there are any issues, you can set the Magma directory (and other options) in the config file "Config/Config.txt". Usually, this should not be necessary.
+The Magma-UT startup script automatically determines some environment information and sets environment variables. These are all listed in the file "Config/Config.txt" and if something isn't set properly you can set the variable here manually. Usually, this should not be necessary.
 
-For the remote package and database functionality I assume you have [Git](https://git-scm.com/downloads) and the [Git LFS extension](https://git-lfs.github.com) installed. This is both very easy to set up under all operating systems, see [here](https://stackoverflow.com/questions/48734119/git-lfs-is-not-a-git-command-unclear).
+For the remote package and database functionality I assume you have [Git](https://git-scm.com/downloads) and the [Git LFS extension](https://git-lfs.github.com) installed. This is both very easy to set up on all operating systems, see [here](https://stackoverflow.com/questions/48734119/git-lfs-is-not-a-git-command-unclear).
 
 ### Package manager
 
@@ -221,19 +220,9 @@ SystemCall     OK  4.140s	267MB
 
 Logfiles can be found in "Tools/Selfcheck/Log". The self check script also allows reporting to a server. See the comments in the script for details.
 
-### Notifications
+### GAP commands
 
-If you ever had computations running for several weeks, you'd appreciate if someone would tell you when they're finished. Magma-UT can do this for you. [Pushover](https://pushover.net) is a free notification service provided cell phone and desktop apps to receive notifications. Once you've set up an account you can add an application token (you can call it e.g. "Magma-UT"). You have to add your user and token to the variables "MAGMA_UT_PUSHOVER_USER" and "MAGMA_UT_PUSHOVER_TOKEN" in the config file "Config/Config.txt" (or as environment variables). Then you can send notifications via
-
-```
-Pushover("This is a test message");
-```
-
-I'm putting this at the end of program code for (presumably) long computations and thus receive a message on my cell phone when they're finished.
-
-### GAP3 commands
-
-When you have [GAP3](https://webusers.imj-prg.fr/~jean.michel/gap3/) installed and set the config (or environment) variable "MAGMA_UT_GAP3" to the command of GAP3 you can execute GAP3 commands from within Magma and get the (final) result as a string. Here's an example:
+The following example concerns [GAP3](https://webusers.imj-prg.fr/~jean.michel/gap3/) (because I'm interested in the CHEVIE part) but basically one can implement a similar wrapper for any other system. It's all simply based on strings—but it's very convenient. I assume you have GAP3 installed and set the config (or environment) variable "MAGMA_UT_GAP3" to the command of GAP3. You can then execute GAP3 commands from within Magma and get the (final) result as a string. Here's an example:
 
 ```
 > Wstr := GAP3("W:=ComplexReflectionGroup(28); W.matgens;");
@@ -244,7 +233,17 @@ When you have [GAP3](https://webusers.imj-prg.fr/~jean.michel/gap3/) installed a
   [ [ 1, 0, 0, 0 ], [ 0, 1, 0, 0 ], [ 0, 0, 1, 1 ], [ 0, 0, 0, -1 ] ] ]
 ```
 
-You can then use Magma's ```eval``` (likely combined with prior string and code manipulation) to create a Magma object from the output. I could add similar wrappers for any other system as it's all just based on strings and reading/writing temporary files with program code/output.
+You can then use Magma's ```eval``` (likely combined with prior string and code manipulation) to create a Magma object from the output.
+
+### Notifications
+
+If you ever had computations running for several weeks, you'd appreciate if someone would tell you when they're finished. Magma-UT can do this for you. [Pushover](https://pushover.net) is a free notification service provided cell phone and desktop apps to receive notifications. Once you've set up an account you can add an application token (you can call it e.g. "Magma-UT"). You have to add your user and token to the variables "MAGMA_UT_PUSHOVER_USER" and "MAGMA_UT_PUSHOVER_TOKEN" in the config file "Config/Config.txt" (or as environment variables). Then you can send notifications via
+
+```
+Pushover("This is a test message");
+```
+
+I'm putting this at the end of program code for (presumably) long computations and thus receive a message on my cell phone when they're finished.
 
 ### Messages
 
