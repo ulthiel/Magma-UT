@@ -55,3 +55,12 @@ end procedure;
 //	Attach all packages to be attached at startup
 //############################################################################
 AttachStartupPackages();
+
+//############################################################################
+// Attach dummy intrinsics for Magma version < 2.25.
+//############################################################################
+__MAGMA_UT_M1, __MAGMA_UT_M2, __MAGMA_UT_M3 := GetVersion();
+if __MAGMA_UT_M1 eq 2 and __MAGMA_UT_M2 lt 25 then
+	print "\nWarning: Magma version < 2.25. Some functions won't work.";
+	Attach(MakePath([GetBaseDir(), "Packages", "Magma-UT", "Magma-Old.i.m"]));
+end if;

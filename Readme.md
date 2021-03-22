@@ -21,7 +21,7 @@ This is a package for the computer algebra system [Magma](http://magma.maths.usy
 * An automatic package documenter (see automatic [documentation](https://github.com/ulthiel/Magma-UT/blob/master/Packages/Magma-UT/Autodoc.md) of this package)
 * An automatic package self check system
 * Notifications (e.g. on cell phone) via [Pushover](https://pushover.net)
-* And more, e.g. executing GAP commands, reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing things in an external editor, printing Markdown tables, printing status messages, ...
+* And more, e.g. executing GAP commands, reading output from system calls, reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing things in an external editor, printing Markdown tables, printing status messages, computing MD5 hashes, ...
 
 Magma-UT is supposed to work on all operating systems supported by Magma, i.e. Linux, macOS, and Windows.
 
@@ -222,7 +222,7 @@ Logfiles can be found in "Tools/Selfcheck/Log". The self check script also allow
 
 ### GAP commands
 
-The following example concerns [GAP3](https://webusers.imj-prg.fr/~jean.michel/gap3/) (because I'm interested in the CHEVIE part) but basically one can implement a similar wrapper for any other system. It's all simply based on strings—but it's very convenient. I assume you have GAP3 installed and set the config (or environment) variable "MAGMA_UT_GAP3" to the command of GAP3. You can then execute GAP3 commands from within Magma and get the (final) result as a string. Here's an example:
+The following example concerns [GAP3](https://webusers.imj-prg.fr/~jean.michel/gap3/) (because I'm interested in the CHEVIE part) but basically one can implement a similar wrapper for any other system like GAP4, Sage, etc; it's all simply based on strings—but it's very convenient. I assume you have GAP3 installed and set the config (or environment) variable "MAGMA_UT_GAP3" to the command of GAP3. You can then execute GAP3 commands from within Magma and get the (final) result as a string. Here's an example:
 
 ```
 > Wstr := GAP3("W:=ComplexReflectionGroup(28); W.matgens;");
@@ -253,3 +253,13 @@ I like to see status messages for long computations—whenever this is possible.
 msg := Message(); PrintMessage(msg, "Starting computation"); Sleep(1); Clear(msg); for i:=1 to 10 do; Sleep(1); PrintPercentage(msg, "Status: ", i, 10); end for; PrintMessage(msg, "Done"); Flush(msg);
 ```
 
+### System calls
+
+Using the command ```SystemCall``` you can run an external program and read its output into a variable, e.g.
+
+```
+> date := SystemCall("date");
+Mon Mar 22 15:59:59 CET 2021
+```
+
+This uses pipes, handles errors correctly, and also works under Windows.
