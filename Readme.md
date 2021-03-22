@@ -21,7 +21,7 @@ This is a package for the computer algebra system [Magma](http://magma.maths.usy
 * An automatic package documenter (see automatic [documentation](https://github.com/ulthiel/Magma-UT/blob/master/Packages/Magma-UT/Autodoc.md) of this package)
 * An automatic package self check system
 * Notifications (e.g. on cell phone) via [Pushover](https://pushover.net)
-* And more, e.g. executing GAP3 commands, reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing things in an external editor, printing Markdown tables, ...
+* And more, e.g. executing GAP3 commands, reading and writing of compressed files, downloading files, file handling (copy, moving, deleting, and more of files and directories), host and machine info (CPU, memory, operating system), string search and replace with regular expressions, viewing things in an external editor, printing Markdown tables, printing status messages, ...
 
 Magma-UT is supposed to work under all operating systems supported by Magma, i.e. Linux, macOS, and Windows.
 
@@ -81,7 +81,15 @@ In the above example, the test database from [https://github.com/ulthiel/Magma-U
 
 > Git Large File Storage (LFS) replaces large files such as audio samples, videos, datasets, and graphics with text pointers inside Git, while storing the file contents on a remote server like GitHub.com or GitHub Enterprise.
 
-So, the whole database is stored in a remote location. The ```AddDatabase``` function only retrieves the *pointers* to the data files. These are *small* text files giving the URL to the remote (and potentially *large*) file. When we first called  ```GetFromDatabase``` on the particular object F4 it was detected that the object itself was not yet downloaded, only its pointer. Hence, the remote file is downloaded to the local repository. And from now on any future retrieval of F4 will be immediate because the object exists locally. This *on demand* design allows to share huge databases without forcing users to download the whole databases. Moreover, databases can be updated conveniently.
+So, the whole database is stored in a remote location. The ```AddDatabase``` function only retrieves the *pointers* to the data files. These are *small* text files giving the URL to the remote (and potentially *large*) file. Here's how it look like in the example:
+
+```
+version https://git-lfs.github.com/spec/v1
+oid sha256:2a20dd95405676dc7a64159107873f82325a1831709a1b1bb4e323a754b0eced
+size 109
+```
+
+ When we first called  ```GetFromDatabase``` on the particular object F4 it was detected that the object itself was not yet downloaded, only its pointer. Hence, the remote file is downloaded to the local repository. And from now on any future retrieval of F4 will be immediate because the object exists locally. This *on demand* design allows to share huge databases without forcing users to download the whole databases. Moreover, databases can be updated conveniently.
 
 Let's now describe how objects are stored in the database. Suppose an incredibly complicated computation yields the sequence 1,1,2,3,5,8 as a result and you want to save this for later use. You can put the following into a text file "fib.txt":
 
@@ -188,23 +196,27 @@ The point of this script is that you can run all self checks on a package automa
 
 ```
 ./selfcheck -p Magma-UT
-Compression    OK  3.820s	267MB
-Databases-1    OK  1.570s	34MB
-Databases-2    OK  1.120s	34MB
-Date           OK  0.020s	34MB
-Download       OK  0.900s	34MB
-Environment    OK  0.050s	34MB
+Compression    OK  3.950s	267MB
+Databases-1    OK  1.680s	34MB
+Databases-2    OK  0.380s	34MB
+Date           OK  0.030s	34MB
+Download       OK  0.860s	34MB
 Files          OK  0.100s	34MB
-Git            OK  0.520s	34MB
+Git            OK  0.530s	34MB
+HTML           OK  0.080s	34MB
+HostInfo       OK  0.000s	34MB
 MD5            OK  0.020s	34MB
+Markdown       OK  0.000s	34MB
 Messages       OK  0.000s	34MB
-Packages       OK  0.560s	34MB
-Pushover       OK  0.950s	34MB
+Packages-1     OK  0.470s	34MB
+Packages-2     OK  0.070s	34MB
+Packages-3     OK  0.110s	34MB
+Pushover       OK  0.930s	34MB
 RandomStrings  OK  0.120s	34MB
 Sleep          OK  1.010s	34MB
-Startup        OK  0.010s	34MB
-Strings        OK  3.640s	44MB
-SystemCall     OK  4.110s	234MB
+Startup        OK  0.000s	34MB
+Strings        OK  3.730s	44MB
+SystemCall     OK  4.140s	267MB
 ```
 
 Logfiles can be found in "Tools/Selfcheck/Log". The self check script also allows reporting to a server. See the comments in the script for details.
@@ -233,4 +245,12 @@ When you have [GAP3](https://webusers.imj-prg.fr/~jean.michel/gap3/) installed a
 ```
 
 You can use Magma's ```eval``` (combined with additional code and string manipulation) to create a Magma object from the output. I could add similar wrappers for any other system as it's all just based on strings and reading/writing temporary files with program code/output.
+
+### Messages
+
+I like to see status messages for long computations—whenever this is possible. In the following example we nicely print the progress of a "computation":
+
+```
+msg := Message(); PrintMessage(msg, "Starting computation"); Sleep(1); Clear(msg); for i:=1 to 10 do; Sleep(1); PrintPercentage(msg, "Status: ", i, 10); end for; PrintMessage(msg, "Done"); Flush(msg);
+```
 
