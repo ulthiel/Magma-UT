@@ -19,6 +19,9 @@ intrinsic GAP3(code::MonStgElt) -> MonStgElt
 	code *:= "\nPrintTo(\""*out_file_name*"\", last);";
 	Write(in_file_name, code : Overwrite:=true);
 	gap_cmd := GetEnv("MAGMA_UT_GAP3");
+	if gap_cmd eq "" then
+		error "You need to set the GAP3 command in the variable MAGMA_UT_GAP3 in Config/Config.txt";
+	end if;
 	ret := System(gap_cmd*" -q < \""*in_file_name*"\" > /dev/null");
 	res := Read(out_file_name);
 	return res;
