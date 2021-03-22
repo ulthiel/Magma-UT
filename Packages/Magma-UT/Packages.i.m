@@ -36,10 +36,7 @@ intrinsic GetPackageDir(pkgname::MonStgElt) -> SeqEnum
 	pkgs := Split(GetEnv("MAGMA_UT_PKGS"), ",");
 	for pkg in pkgs do
 		if FileName(pkg) eq pkgname then
-			file := MakePath([pkg, pkgname*".s.m"]);
-			if FileExists(file) then
-				return pkg;
-			end if;
+			return pkg;
 		end if;
 	end for;
 
@@ -56,9 +53,6 @@ intrinsic GetPackageSpecFile(pkg::MonStgElt) -> MonStgElt
 	dir := GetPackageDir(pkg);
 	pkgname := FileName(pkg);
 	file := MakePath([dir, pkgname*".s.m"]);
-	if not FileExists(file) then
-		error "Cannot find spec file of package";
-	end if;
 	return file;
 
 end intrinsic;

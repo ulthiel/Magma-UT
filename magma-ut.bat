@@ -92,6 +92,13 @@ for /f "delims== tokens=2-3" %%f in ('wmic os get OSArchitecture /value ^| find 
     set MAGMA_UT_OS_ARCH=%%f
 )
 
+:: Memory
+for /f "delims== tokens=2-3" %%f in ('wmic ComputerSystem get TotalPhysicalMemory /value ^| find "="') do (
+    set MAGMA_UT_TOTAL_MEM=%%f
+)
+
+
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Find Magma (first user defined path, then environment path, then trying
 :: some directories, then give up).

@@ -1,21 +1,13 @@
-//We assume Databases-1 has been called before so that test-db exists
-assert "Magma-UT-Test-DB" in GetDatabaseNames();
-GetDatabaseDir("Magma-UT-Test-DB");
-GetDatabaseDirs();
-
-assert ExistsInDatabase(["Magma-UT-Test-DB", "Objects", "F4"]);
-
-F4,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "Objects", "F4"]);
+//We assume Databases-1 has been called before so that Magma-UT-Test-DB-2
+//in temp directory exists
+F4,dbrec := GetFromDatabase(["Magma-UT-Test-DB-2", "Objects", "F4"]);
 assert Type(F4) eq GrpMat;
 assert Order(F4) eq 1152;
 assert dbrec`Description eq "Weyl group of type F4.";
 
-SaveToDatabase(["Magma-UT-Test-DB", "test", "F4"], Sprint(F4, "Magma"), "o.m" : Description:="F4 copy");
-H,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "test", "F4"]);
-assert F4 eq H;
-assert dbrec`Description eq "F4 copy";
+dir2 := MakePath([GetTempDir(), "Magma-UT-Test-DB-2"]);
+DeleteDirectory(dir2);
+RemoveDatabase("Magma-UT-Test-DB-2");
 
-DeleteDatabase("Magma-UT-Test-DB");
-
-CreateDatabase(GetTempDir(), "Magma-UT-Test-DB");
-DeleteFile(MakePath([GetTempDir(), "Magma-UT-Test-DB"]));
+CreateDatabase("Magma-UT-Test-DB-3");
+DeleteDirectory(MakePath([GetDatabaseDir(), "Magma-UT-Test-DB-3"]));

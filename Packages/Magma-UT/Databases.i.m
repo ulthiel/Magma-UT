@@ -35,9 +35,7 @@ intrinsic GetDatabaseDir(dbname::MonStgElt) -> SeqEnum
 	dbs := Split(GetEnv("MAGMA_UT_DBS"), ",");
 	for db in dbs do
 		if FileName(db) eq dbname then
-			if FileExists(db) then
-				return db;
-			end if;
+			return db;
 		end if;
 	end for;
 
@@ -352,5 +350,13 @@ intrinsic AddDatabase(url::MonStgElt)
 		AddToConfig("MAGMA_UT_DBS", url);
 
 	end if;
+
+end intrinsic;
+
+intrinsic RemoveDatabase(dbname::MonStgElt)
+{Removes a database from the config file.}
+
+	dbdir := GetDatabaseDir(dbname);
+	RemoveFromConfig("MAGMA_UT_DBS", dbdir);
 
 end intrinsic;
