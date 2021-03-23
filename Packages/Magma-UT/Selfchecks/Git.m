@@ -5,3 +5,4 @@ V := GitRepositoryVersion(dir);
 DeleteDirectory(dir);
 IsGitInstalled();
 IsGitLFSInstalled();
+ver := GetPackageVersion("Magma-UT");

@@ -126,10 +126,6 @@ intrinsic AddPackage(url::MonStgElt)
 		//Clone repo into dir
 		GitCloneRemote(url, GetPackageDir());
 
-		//Ignore this directory (alternative to .gitignore, and better for this
-		//purpose as local only)
-		Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Packages/"*pkgname);
-
 		return;
 
 	else

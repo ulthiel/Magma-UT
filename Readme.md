@@ -25,9 +25,9 @@ This is a package for the computer algebra system [Magma](http://magma.maths.usy
 
 Magma-UT is supposed to work on all operating systems supported by Magma, i.e. Linux, macOS, and Windows.
 
-### Running Magma-UT
+## Running Magma-UT
 
-1. I assume you have [Magma](http://magma.maths.usyd.edu.au/magma/) installed and working, i.e. when you enter ```magma``` in a terminal, Magma will start. It's easiest when you add the Magma directory to your PATH environment variable.
+1. I assume you have [Magma](http://magma.maths.usyd.edu.au/magma/) installed and working, i.e. when you enter ```magma``` in a terminal, Magma will start. It's easiest when you add the Magma directory to your PATH environment variable. It's best when you have a recent Magma version (I have tested 2.25).
 2.  To get Magma-UT you can either:
    * Download the most recent release (simplest);
    * Clone the Git repository using ```git clone https://github.com/ulthiel/Magma-UT.git``` (recommended).

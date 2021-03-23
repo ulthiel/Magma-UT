@@ -333,10 +333,6 @@ intrinsic AddDatabase(url::MonStgElt)
 		//Clone repo
 		GitCloneRemote(url, GetDatabaseDir() : SkipLFS:=true);
 
-		//Ignore this directory (alternative to .gitignore, and better for this
-		//purpose as local only)
-		Write(MakePath([GetBaseDir(), ".git", "info", "exclude"]), "Databases/"*dbname);
-
 		return;
 
 	else
