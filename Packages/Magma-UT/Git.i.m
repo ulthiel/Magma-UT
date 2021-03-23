@@ -64,6 +64,14 @@ intrinsic GitRepositoryVersion(dir::MonStgElt) -> MonStgElt
 	end if;
 
 	if not assigned ver then
+		try
+			ver := Read(MakePath([dir, "version.txt"]));
+		catch e
+			;
+		end try;
+	end if;
+
+	if not assigned ver then
 		error "Cannot obtain repository version";
 	end if;
 

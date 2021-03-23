@@ -243,3 +243,14 @@ intrinsic CreatePackage(pkgname::MonStgElt)
 	end try;
 
 end intrinsic;
+
+//##############################################################################
+//	Get package version
+//##############################################################################
+intrinsic GetPackageVersion(pkgname::MonStgElt) -> MonStgElt
+{}
+
+	pkgdir := GetPackageDir(pkgname);
+	return GitRepositoryVersion(pkgdir);
+
+end intrinsic;
