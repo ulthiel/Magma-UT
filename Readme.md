@@ -28,9 +28,7 @@ Magma-UT is supposed to work on all operating systems supported by Magma, i.e. L
 ## Running Magma-UT
 
 1. I assume you have [Magma](http://magma.maths.usyd.edu.au/magma/) installed and working, i.e. when you enter ```magma``` in a terminal, Magma will start. It's easiest when you add the Magma directory to your PATH environment variable. It's best when you have a recent Magma version (I have tested 2.25).
-2.  To get Magma-UT you can either:
-   * Download the most recent release (simplest);
-   * Clone the Git repository using ```git clone https://github.com/ulthiel/Magma-UT.git``` (recommended).
+2. To get Magma-UT you can either download the [most recent release](https://github.com/ulthiel/Magma-UT/releases/latest) (simplest) or clone this Git repository using ```git clone https://github.com/ulthiel/Magma-UT.git``` (recommended).
 
 2. You can start Magma-UT simply via the command ```./magma-ut``` (Linux and macOS) or ```magma.bat``` (Windows). This starts a Magma session with all the extensions from Magma-UT attached. Basically, you can use the command ```magma-ut``` as a replacement for ```magma```, so e.g. ```magma-ut myprogram.m``` will work.
 3. The Magma-UT startup script automatically determines some environment information and sets environment variables. These are all listed in the file "Config/Config.txt" and if something isn't set properly (e.g. if Magma cannot be found) you can set the variable here manually. Usually, this should not be necessary. If you want to modify things, don't forget to remove the comment symbol # at the beginning of a variable definition.
