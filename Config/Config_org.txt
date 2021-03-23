@@ -21,6 +21,8 @@
 # The variable $MAGMA_UT_BASE_DIR will be set to the MAGMA_UT base directory by
 # the startup script, so you can use this here.
 #
+# Do not forget to remove the # at the beginning of a variable definition line! 
+#
 ################################################################################
 
 ################################################################################

@@ -27,13 +27,14 @@ Magma-UT is supposed to work on all operating systems supported by Magma, i.e. L
 
 ### Running Magma-UT
 
-1. I assume you have [Magma](http://magma.maths.usyd.edu.au/magma/) installed and working. To get Magma-UT you can either:
+1. I assume you have [Magma](http://magma.maths.usyd.edu.au/magma/) installed and working, i.e. when you enter ```magma``` in a terminal, Magma will start. It's easiest when you add the Magma directory to your PATH environment variable.
+2.  To get Magma-UT you can either:
    * Download the most recent release (simplest);
    * Clone the Git repository using ```git clone https://github.com/ulthiel/Magma-UT.git``` (recommended).
 
 2. You can start Magma-UT simply via the command ```./magma-ut``` (Linux and macOS) or ```magma.bat``` (Windows). This starts a Magma session with all the extensions from Magma-UT attached. Basically, you can use the command ```magma-ut``` as a replacement for ```magma```, so e.g. ```magma-ut myprogram.m``` will work.
-3. The Magma-UT startup script automatically determines some environment information and sets environment variables. These are all listed in the file "Config/Config.txt" and if something isn't set properly (e.g. if Magma cannot be found) you can set the variable here manually. Usually, this should not be necessary.
-4. For the remote package and database functionality I assume you have [Git](https://git-scm.com/downloads) and the [Git LFS extension](https://git-lfs.github.com) installed. This is both very easy to set up on all operating systems, see [here](https://stackoverflow.com/questions/48734119/git-lfs-is-not-a-git-command-unclear).
+3. The Magma-UT startup script automatically determines some environment information and sets environment variables. These are all listed in the file "Config/Config.txt" and if something isn't set properly (e.g. if Magma cannot be found) you can set the variable here manually. Usually, this should not be necessary. If you want to modify things, don't forget to remove the comment symbol # at the beginning of a variable definition.
+4. For the remote package and database functionality I assume you have [Git](https://git-scm.com/downloads) and the [Git LFS extension](https://git-lfs.github.com) installed. This is both very easy to set up on all operating systems, see [here](https://stackoverflow.com/questions/48734119/git-lfs-is-not-a-git-command-unclear). If you later get some Git LFS troubles, I recommend updating Git (I tested version 2.24).
 
 ## Overview of the functionality
 
@@ -75,11 +76,13 @@ By *database* I mean a collection of files from which one can obtain a Magma obj
 Weyl group of type F4.
 ```
 
-In the above example, the test database from [https://github.com/ulthiel/Magma-UT-Test-DB](https://github.com/ulthiel/Magma-UT-Test-DB) is cloned automatically in the local "Databases" directory. We then retrieved a particular object (the Weyl group F4 in as a matrix group) from the database. Before I go into the details, I want to point out the main idea behind remote databases in Magma-UT. You may have noticed that the ```GetFromDatabase``` call took about 1 or 2 seconds. Call it again and it will return the object instantaneously! What happened? The database is managed via Git LFS. If you've never heard about Git LFS, here's a description:
+In the above example, the test database from [https://github.com/ulthiel/Magma-UT-Test-DB](https://github.com/ulthiel/Magma-UT-Test-DB) is cloned automatically in the local "Databases" directory. We then retrieved a particular object—the Weyl group F4 in as a matrix group—from the database. 
+
+Before I go into the details, I want to point out the main idea behind remote databases in Magma-UT. You may have noticed that the ```GetFromDatabase``` call took about 1 or 2 seconds. Call it again and it will return the object instantaneously! What happened? The database is managed via [Git LFS](https://git-lfs.github.com). If you've never heard about Git LFS, here's a description:
 
 > Git Large File Storage (LFS) replaces large files such as audio samples, videos, datasets, and graphics with text pointers inside Git, while storing the file contents on a remote server like GitHub.com or GitHub Enterprise.
 
-So, the whole database is stored in a remote location. The ```AddDatabase``` function only retrieves the *pointers* to the data files. These are *small* text files giving the URL to the remote (and potentially *large*) file. Here's how it look like in the example:
+So, the whole database is stored in a remote location. The ```AddDatabase``` function only retrieves the *pointers* to the data files. These are *small* text files giving the URL to the remote (and potentially *large*) file. Here's how it looks like in the example:
 
 ```
 version https://git-lfs.github.com/spec/v1
@@ -87,7 +90,7 @@ oid sha256:2a20dd95405676dc7a64159107873f82325a1831709a1b1bb4e323a754b0eced
 size 109
 ```
 
- When we first called  ```GetFromDatabase``` on the particular object F4 it was detected that the object itself was not yet downloaded, only its pointer. Hence, the remote file is downloaded to the local repository. And from now on any future retrieval of F4 will be immediate because the object exists locally. This *on demand* design allows to share huge databases without forcing users to download the whole databases. Moreover, databases can be updated conveniently.
+When we first called  ```GetFromDatabase``` on the particular object F4 it was detected that the object itself was not yet downloaded, only its pointer. Hence, the remote file is downloaded to the local repository. And from now on any future retrieval of F4 will be immediate because the object exists locally. This *on demand* design allows to share huge databases without forcing users to download the whole database. Moreover, databases can be updated conveniently.
 
 Let's now describe how objects are stored in the database. Suppose an incredibly complicated computation yields the sequence 1,1,2,3,5,8 as a result and you want to save this for later use. You can put the following into a text file "fib.txt":
 
@@ -105,7 +108,7 @@ return X
 [ 1, 1, 2, 3, 5, 8 ]
 ```
 
-And you get back your result. This is basically how one can set up a database of computational results. You can save arbitrarily complicated objects if you manage to write program code constructing them again. How this is done, depends on the situation and here Magma-UT can't help. For "simple" objects you can often get an encoding string via Magma level printing, e.g.
+And you get back your result. This is basically how one can set up a database of computational results. You can save arbitrarily complicated objects if you manage to write program code constructing them again. How this is done, depends on the situation and you need to figure this out yourself. For "simple" objects you can often get an encoding string via Magma level printing, e.g.
 
 ```
 > W:=ShephardTodd(28); //The Weyl group F4 as a matrix group
@@ -117,9 +120,7 @@ Matrix(RationalField(), 4, 4, [ 1, 0, 0, 0, 0, 1, 2, 0, 0, 0, -1, 0, 0, 0, 1, 1 
 Matrix(RationalField(), 4, 4, [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, -1 ]) >
 ```
 
-But where Magma-UT can help is the management, i.e. the storing and retrieving, of such "string-objects". 
-
-Let's create an empty database via
+Magma-UT helps with the management, i.e. the storing and retrieving, of such "string-objects". Let's create an empty database via
 
 ```
 > CreateDatabase("Test-DB");
