@@ -43,39 +43,55 @@ end intrinsic;
 //##############################################################################
 intrinsic GitRepositoryVersion(dir::MonStgElt) -> MonStgElt
 {Retrieves the version or commit id from a Git repository in directory dir.}
+
+	if GetOSType() eq "Unix" then
+		cmd := "cd \""*dir*"\" && git describe --long 2>/dev/null";
+	else
+		cmd := "cd /d \""*dir*"\" && git describe --long 2>NUL";
+	end if;
+
 	try
-		if GetOSType() eq "Unix" then
-			cmd := "cd \""*dir*"\" && git describe --long 2>/dev/null";
-		else
-			cmd := "cd /d \""*dir*"\" && git describe --long 2>NUL";
-		end if;
 		ver := SystemCall(cmd);
+		ver := ver[1..#ver-1];
 	catch e
 		;
 	end try;
 
-	if not assigned ver then
-		if GetOSType() eq "Unix" then
-			cmd := "cd \""*dir*"\" && git log --format=\"%h\" -n1 2>/dev/null";
-		else
-			cmd := "cd /d \""*dir*"\" && git log --format=\"%h\" -n1 2>NUL";
-		end if;
-		ver := SystemCall(cmd);
+	if assigned ver then
+		return ver;
 	end if;
 
-	if not assigned ver then
-		try
-			ver := Read(MakePath([dir, "version.txt"]));
-		catch e
-			;
-		end try;
+	if GetOSType() eq "Unix" then
+		cmd := "cd \""*dir*"\" && git log --format=\"%h\" -n1 2>/dev/null";
+	else
+		cmd := "cd /d \""*dir*"\" && git log --format=\"%h\" -n1 2>NUL";
+	end if;
+
+	try
+		ver := SystemCall(cmd);
+		ver := ver[1..#ver-1];
+	catch e
+		;
+	end try;
+
+	if assigned ver then
+		return ver;
+	end if;
+
+	try
+		ver := Read(MakePath([dir, "version.txt"]));
+		ver := ver[1..#ver-1];
+	catch e
+		;
+	end try;
+
+	if assigned ver then
+		return ver;
 	end if;
 
 	if not assigned ver then
 		error "Cannot obtain repository version";
 	end if;
-
-	return ver[1..#ver-1];
 
 end intrinsic;
 
