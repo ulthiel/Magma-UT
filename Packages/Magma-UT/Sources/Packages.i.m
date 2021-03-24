@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 // Magma-UT
@@ -27,8 +27,7 @@ intrinsic GetPackageDir(pkgname::MonStgElt) -> SeqEnum
 	//First, check if there is a package with name pkgname in the Packages
 	//directory.
 	dir := MakePath([GetPackageDir(), pkgname]);
-	file := MakePath([dir, pkgname*".s.m"]);
-	if FileExists(file) then
+	if DirectoryExists(dir) then
 		return dir;
 	end if;
 
@@ -52,8 +51,29 @@ intrinsic GetPackageSpecFile(pkg::MonStgElt) -> MonStgElt
 
 	dir := GetPackageDir(pkg);
 	pkgname := FileName(pkg);
+
+	//First check for pkgname.s.m
 	file := MakePath([dir, pkgname*".s.m"]);
-	return file;
+	if FileExists(file) then
+		return file;
+	end if;
+
+	//Next, check for pkgname.spec
+	file := MakePath([dir, pkgname*".spec"]);
+	if FileExists(file) then
+		return file;
+	end if;
+
+	//Next, check for any .spec or .s.m file and take the first one that is found
+	for file in ListFiles(dir) do
+		parts := Split(file, ".");
+		ext := parts[#parts];
+		if ext eq "spec" or ext eq ".s.m" then
+			return MakePath([dir, file]);
+		end if;
+	end for;
+
+	error "Cannot find package spec file.";
 
 end intrinsic;
 
