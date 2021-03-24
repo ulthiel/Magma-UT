@@ -1,6 +1,7 @@
 GetDatabaseDir();
 AddDatabase("https://github.com/ulthiel/Magma-UT-Test-DB");
 assert ExistsInDatabase(["Magma-UT-Test-DB", "Objects", "F4"]);
+UpdateDatabase("Magma-UT-Test-DB");
 
 F4,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "Objects", "F4"]);
 assert Type(F4) eq GrpMat;

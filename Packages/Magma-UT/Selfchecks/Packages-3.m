@@ -8,3 +8,5 @@ DeleteDirectory(dir);
 CreatePackage("Magma-UT-Test-Pkg-3");
 dir := MakePath([GetBaseDir(), "Packages", "Magma-UT-Test-Pkg-3"]);
 DeleteDirectory(dir);
+GetPackageFiles("Magma-UT");
+GetPackageVersion("Magma-UT");
