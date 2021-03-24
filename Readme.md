@@ -53,6 +53,12 @@ In the above example, the test package from [https://github.com/ulthiel/Magma-UT
 > AddStartupPackage("Magma-UT-Test-Pkg");
 ```
 
+You can update a package via
+
+```
+UpdatePackage("Magma-UT-Test-Pkg");
+```
+
 You can create an empty package via
 
 ```
@@ -74,7 +80,11 @@ By *database* I mean a collection of files from which one can obtain a Magma obj
 Weyl group of type F4.
 ```
 
-In the above example, the test database from [https://github.com/ulthiel/Magma-UT-Test-DB](https://github.com/ulthiel/Magma-UT-Test-DB) is cloned automatically in the local "Databases" directory. We then retrieved a particular object—the Weyl group F4 in as a matrix group—from the database. 
+In the above example, the test database from [https://github.com/ulthiel/Magma-UT-Test-DB](https://github.com/ulthiel/Magma-UT-Test-DB) is cloned automatically in the local "Databases" directory. We then retrieved a particular object—the Weyl group F4 in as a matrix group—from the database. You can update a database via
+
+```
+UpdateDatabase("Magma-UT-Test-DB");
+```
 
 Before I go into the details, I want to point out the main idea behind remote databases in Magma-UT. You may have noticed that the ```GetFromDatabase``` call took about 1 or 2 seconds. Call it again and it will return the object instantaneously! What happened? The database is managed via [Git LFS](https://git-lfs.github.com). If you've never heard about Git LFS, here's a description:
 
@@ -158,13 +168,13 @@ This means all the object files are filtered out and are stored with LFS. Everyt
 
 ### Automatic package documenter
 
-In the directory "Tools/Documenter" there is the Python script "documenter.py" that will automatically create a package documentation consisting of all the intrinsics in the package together with the description given in the source code. The documentation is stored in the markdown file "Autodoc.md" of the package directory. Here's an example call:
+You can create an automatic documentation of a package (list of intrinsics with their comments) via
 
 ```
-python2 documenter.py -p "Magma-UT"
+AutodocPackage("Magma-UT");
 ```
 
-You can see the result [here](https://github.com/ulthiel/Magma-UT/blob/master/Packages/Magma-UT/Autodoc.md).
+This creates a file "Autodoc.md" in the package directory. You can see an example [here](https://github.com/ulthiel/Magma-UT/blob/master/Packages/Magma-UT/Autodoc.md).
 
 ### Automatic self check system
 
