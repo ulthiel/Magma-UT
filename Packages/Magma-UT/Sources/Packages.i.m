@@ -335,7 +335,7 @@ end intrinsic;
 // Autodoc
 //##############################################################################
 intrinsic AutodocPackage(pkgname::MonStgElt)
-{}
+{Creates automatic package documentation (will be in file Autodoc.md in the package directory).}
 
 	pkgdir := GetPackageDir(pkgname);
 	files := GetPackageFiles(pkgname);
