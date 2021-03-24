@@ -330,3 +330,73 @@ intrinsic GetPackageFiles(pkgname::MonStgElt) -> MonStgElt
 	return files;
 
 end intrinsic;
+
+//##############################################################################
+// Autodoc
+//##############################################################################
+intrinsic AutodocPackage(pkgname::MonStgElt)
+{}
+
+	pkgdir := GetPackageDir(pkgname);
+	files := GetPackageFiles(pkgname);
+
+	autodoc_file := MakePath([pkgdir, "Autodoc.md"]);
+	Write(autodoc_file, "# "*pkgname*" Autodoc" : Overwrite:=true);
+
+	for file in files do
+		Write(autodoc_file, "## "*file);
+		FP := Open(MakePath([pkgdir, file]), "r");
+		lines := [];
+		comment_block := false;
+		intrinsic_block := false;
+		intrinsic_description_block := false;
+		intrinsic_description_done := false;
+		while true do
+			line := Gets(FP);
+			if IsEof(line) then
+				break;
+			end if;
+			line := RemoveLeadingInvisibles(RemoveTrailingInvisibles(line));
+			if line eq "" then
+				continue;
+			end if;
+			if Position(line, "//") gt 0 then
+				continue;
+			end if;
+			if Position(line, "/*") gt 0 then
+				comment_block := true;
+			end if;
+			if Position(line, "*/") gt 0 then
+				comment_block := false;
+				continue;
+			end if;
+			if comment_block then
+				continue;
+			end if;
+			//print(line);
+			if Position(line, "intrinsic ") eq 1 then
+				intrinsic_block := true;
+				intrinsic_name := line[11..#line];
+				Write(autodoc_file, "#### "*intrinsic_name);
+				intrinsic_description_done := false;
+				continue;
+			end if;
+			if Position(line, "end intrinsic") eq 1 then
+				intrinsic_block := false;
+				continue;
+			end if;
+			if intrinsic_block and not intrinsic_description_done then
+				if Position(line, "{") gt 0 then
+					line := RemoveLeadingInvisibles(line[2..#line]);
+				end if;
+				if Position(line, "}") gt 0 then
+					intrinsic_description_done := true;
+					line := line[1..Position(line, "}")-1];
+				end if;
+				Write(autodoc_file, line);
+			end if;
+		end while;
+		delete FP;
+	end for;
+
+end intrinsic;
