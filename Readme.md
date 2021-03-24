@@ -80,7 +80,7 @@ Before I go into the details, I want to point out the main idea behind remote da
 
 > Git Large File Storage (LFS) replaces large files such as audio samples, videos, datasets, and graphics with text pointers inside Git, while storing the file contents on a remote server like GitHub.com or GitHub Enterprise.
 
-So, the whole database is stored in a remote location. The ```AddDatabase``` function only retrieves the *pointers* to the data files. These are *small* text files giving the URL to the remote (and potentially *large*) file. Here's how it looks like in the example:
+Some more information on Git LFS is [here](https://www.atlassian.com/git/tutorials/git-lfs). So, the whole database is stored in a remote location. The ```AddDatabase``` function only retrieves the *pointers* to the data files. These are *small* text files giving the URL to the remote (and potentially *large*) file. Here's how it looks like in the example:
 
 ```
 version https://git-lfs.github.com/spec/v1
