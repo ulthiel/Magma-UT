@@ -363,7 +363,7 @@ end intrinsic;
 intrinsic UpdateDatabase(dbname::MonStgElt)
 {}
 
-	dir := GetDatabaseDir(pkgname);
+	dir := GetDatabaseDir(dbname);
 	GitPull(dir : SkipLFS:=true);
 
 end intrinsic;
