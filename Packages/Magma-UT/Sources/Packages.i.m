@@ -270,3 +270,14 @@ intrinsic GetPackageVersion(pkgname::MonStgElt) -> MonStgElt
 	return GitRepositoryVersion(pkgdir);
 
 end intrinsic;
+
+//##############################################################################
+//	Update package
+//##############################################################################
+intrinsic UpdatePackage(pkgname::MonStgElt)
+{}
+
+	dir := GetPackageDir(pkgname);
+	GitPull(dir);
+
+end intrinsic;

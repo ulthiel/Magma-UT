@@ -126,3 +126,35 @@ intrinsic GitCloneRemote(url::MonStgElt, dir::MonStgElt : SkipLFS:=false)
 	end try;
 
 end intrinsic;
+
+//##############################################################################
+//  Pull on repository
+//##############################################################################
+intrinsic GitPull(dir::MonStgElt : SkipLFS:=false)
+{}
+
+	cmd := "";
+
+	if GetOSType() eq "Unix" then
+		cmd *:= "cd \""*dir*"\" && ";
+	else
+		cmd *:= "cd /d \""*dir*"\" && ";
+	end if;
+
+	if SkipLFS then
+		if GetOSType() eq "Unix" then
+			cmd *:= "GIT_LFS_SKIP_SMUDGE=1 ";
+		else
+			cmd *:= "set \"GIT_LFS_SKIP_SMUDGE=1\" & ";
+		end if;
+	end if;
+
+	cmd *:= "git pull";
+
+	try
+		res := SystemCall(cmd);
+	catch e
+		error "Error pulling repository";
+	end try;
+
+end intrinsic;

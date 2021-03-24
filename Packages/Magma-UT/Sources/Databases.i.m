@@ -356,3 +356,14 @@ intrinsic RemoveDatabase(dbname::MonStgElt)
 	RemoveFromConfig("MAGMA_UT_DBS", dbdir);
 
 end intrinsic;
+
+//##############################################################################
+//	Update database
+//##############################################################################
+intrinsic UpdateDatabase(dbname::MonStgElt)
+{}
+
+	dir := GetDatabaseDir(pkgname);
+	GitPull(dir : SkipLFS:=true);
+
+end intrinsic;
