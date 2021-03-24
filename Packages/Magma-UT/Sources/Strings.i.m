@@ -1,4 +1,4 @@
-freeze;
+//freeze;
 //##############################################################################
 //
 // Magma-UT
@@ -250,5 +250,32 @@ intrinsic CodesToString(code::SeqEnum[RngIntElt]) -> MonStgElt
 	else
 		return &*[ CodeToString(code[i]) : i in [1..#code] ];
 	end if;
+
+end intrinsic;
+
+//##############################################################################
+// Remove leading and trailing invisible characters (whitespace, tabs)
+//##############################################################################
+intrinsic RemoveLeadingInvisibles(str::MonStgElt) -> SeqEnum
+{}
+
+	i:=1;
+	while i le #str and (str[i] eq " " or str[i] eq "\t") do
+		i +:= 1;
+	end while;
+
+	return str[i..#str];
+
+end intrinsic;
+
+intrinsic RemoveTrailingInvisibles(str::MonStgElt) -> SeqEnum
+{}
+
+	i:=#str;
+	while i gt 0 and (str[i] eq " " or str[i] eq "\t") do
+		i -:= 1;
+	end while;
+
+	return str[1..i];
 
 end intrinsic;

@@ -281,3 +281,52 @@ intrinsic UpdatePackage(pkgname::MonStgElt)
 	GitPull(dir);
 
 end intrinsic;
+
+//##############################################################################
+//	Get list of source files of a package
+//##############################################################################
+intrinsic GetPackageFiles(pkgname::MonStgElt) -> MonStgElt
+{List of source files of the package as defined in its spec file.}
+
+	spec := GetPackageSpecFile(pkgname);
+	FP := Open(spec, "r");
+	lines := [];
+	while true do
+		line := Gets(FP);
+		if IsEof(line) then
+			break;
+		end if;
+		line := RemoveLeadingInvisibles(RemoveTrailingInvisibles(line));
+		if line eq "" then
+			continue;
+		else
+			Append(~lines, line);
+		end if;
+	end while;
+	delete FP;
+
+	files := [];
+	curdir := [];
+	i:=1;
+	while i le #lines do
+		if lines[i] eq "{" then
+			if i+2 le #lines and lines[i+2] eq "{" then
+				Append(~curdir, lines[i+1]);
+				i +:= 2;
+			else
+				i +:= 1;
+			end if;
+		elif lines[i] eq "}" then
+			if #curdir gt 0 then
+				Remove(~curdir, #curdir);
+			end if;
+			i +:= 1;
+		else
+			Append(~files, MakePath(curdir cat [lines[i]]));
+			i +:= 1;
+		end if;
+	end while;
+
+	return files;
+
+end intrinsic;
