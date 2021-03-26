@@ -177,11 +177,9 @@ intrinsic GetFromDatabase(key::SeqEnum[MonStgElt]) -> ., Rec
 
 	//Try to set dbrec as DatabaseRecord attribute (may not exist for
 	//the category of X)
-	try
+	if "DatabaseRecord" in GetAttributes(Type(X)) then
 		X`DatabaseRecord := dbrec;
-	catch e
-		;
-	end try;
+	end if;
 
 	return X, dbrec;
 
@@ -365,5 +363,19 @@ intrinsic UpdateDatabase(dbname::MonStgElt)
 
 	dir := GetDatabaseDir(dbname);
 	GitPull(dir : SkipLFS:=true);
+
+end intrinsic;
+
+//##############################################################################
+//	Check if an object came from the database
+//##############################################################################
+intrinsic ComesFromDatabase(X::.) -> BoolElt
+{Returns true if the attribute DatabaseRecord of X is set and ObjectPath is set as well.}
+
+	if "DatabaseRecord" in GetAttributes(Type(X)) and assigned X`DatabaseRecord and assigned X`DatabaseRecord`ObjectPath then
+		return true;
+	else
+		return false;
+	end if;
 
 end intrinsic;

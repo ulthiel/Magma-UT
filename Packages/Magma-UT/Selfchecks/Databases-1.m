@@ -3,10 +3,12 @@ AddDatabase("https://github.com/ulthiel/Magma-UT-Test-DB");
 assert ExistsInDatabase(["Magma-UT-Test-DB", "Objects", "F4"]);
 UpdateDatabase("Magma-UT-Test-DB");
 
+AddAttribute(GrpMat, "DatabaseRecord");
 F4,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "Objects", "F4"]);
 assert Type(F4) eq GrpMat;
 assert Order(F4) eq 1152;
 assert dbrec`Description eq "Weyl group of type F4.";
+assert ComesFromDatabase(F4);
 
 SaveToDatabase(["Magma-UT-Test-DB", "test", "F4"], Sprint(F4, "Magma"), "o.m" : Description:="F4 copy");
 H,dbrec := GetFromDatabase(["Magma-UT-Test-DB", "test", "F4"]);
